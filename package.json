@@ -5,6 +5,9 @@
   "main": "public/electron.js",
   "homepage": "./",
   "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.8.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",
@@ -21,15 +24,29 @@
   "devDependencies": {
     "concurrently": "^7.2.1",
     "cross-env": "^7.0.3",
+    "wait-on": "^6.0.1",
     "electron": "^19.0.0",
     "electron-is-dev": "^2.0.0",
-    "wait-on": "^6.0.1"
+
+    "@mui/types": "^7.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@typescript-eslint/parser": "^5.0.0",
+
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint": "eslint . --ext .tsx",
+    "lint-fix": "eslint . --ext .tsx --fix",
     "dev": "concurrently -k \"cross-env BROWSER=none npm run start\" \"npm:electron\"",
     "electron": "wait-on tcp:3000 && electron ."
   },
