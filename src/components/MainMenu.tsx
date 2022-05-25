@@ -4,8 +4,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import ExploreIcon from '@mui/icons-material/Explore';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -57,18 +55,6 @@ function MainMenu() {
       icon: <DashboardIcon color="inherit" />,
       position: menuItemPosition.top,
       action: () => navigate(RouteTypes.root),
-    },
-    {
-      title: 'Locations',
-      icon: <LocationOnIcon />,
-      position: menuItemPosition.top,
-      action: () => navigate(RouteTypes.plans),
-    },
-    {
-      title: 'Plans',
-      icon: <ExploreIcon />,
-      position: menuItemPosition.top,
-      action: () => navigate(RouteTypes.labPlans),
     },
     {
       title: 'Settings',
