@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router';
 import RouteTypes from '../common/RouteTypes';
 import MainMenu from '../components/MainMenu';
 import DashboardPage from '../pages/DashboardPage';
+import ProjectPage from '../pages/ProjectPage';
 
 const PageLayout = styled('div')({
   display: 'flex',
@@ -24,6 +25,10 @@ function AppContent() {
           <Route
             path={RouteTypes.root}
             element={<DashboardPage />}
+          />
+          <Route
+            path={RouteTypes.project}
+            element={<ProjectPage />}
           />
         </Routes>
       </Content>
