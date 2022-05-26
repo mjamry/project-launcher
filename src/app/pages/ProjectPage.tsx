@@ -1,37 +1,17 @@
 import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
   Grid, styled, Typography,
 } from '@mui/material';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useRecoilValue } from 'recoil';
-import LinkIcon from '@mui/icons-material/Link';
-import TerminalIcon from '@mui/icons-material/Terminal';
 import RouteTypes from '../common/dto/RouteTypes';
 import projectsState from '../state/ProjectState';
-import { Project } from '../common/dto/ProjectDto';
-
-const { shell } = window.require('electron');
+import ProjectScriptList from '../components/ProjectScriptList';
+import ProjectLinkList from '../components/ProjectLinkList';
+import { ProjectCard } from '../components/ProjectStyledComponents';
 
 const Root = styled('div')({
   margin: '10px',
-});
-
-const ProjectCard = styled(Card)(({ theme }) => ({
-  padding: '10px',
-  backgroundColor: theme.palette.secondary.main,
-}));
-
-const ProjectCardContent = styled(CardContent)({
-  display: 'flex',
-  flexDirection: 'column',
-});
-
-const ProjectListItem = styled(Button)({
-  marginTop: '5px',
 });
 
 type RouteParams = {
@@ -43,64 +23,6 @@ function ProjectPage() {
   const { projectId } = useParams<RouteParams>();
   const navigate = useNavigate();
 
-  const renderLinks = (project: Project): JSX.Element => {
-    if (project.links && project.links.length > 0) {
-      return (
-        <Grid item xs={12} sm={6}>
-          <ProjectCard>
-            <CardHeader
-              avatar={<LinkIcon />}
-              title="Links"
-            />
-            <ProjectCardContent>
-              {project.links.map((l) => (
-                <ProjectListItem
-                  variant="contained"
-                  key={l.name}
-                  onClick={() => shell.openExternal(l.url)}
-                  title={l.description}
-                >
-                  {l.name}
-                </ProjectListItem>
-              ))}
-            </ProjectCardContent>
-          </ProjectCard>
-        </Grid>
-      );
-    }
-
-    return <></>;
-  };
-
-  const renderScripts = (project: Project) => {
-    if (project.scripts && project.scripts.length > 0) {
-      return (
-        <Grid item xs={12} sm={6}>
-          <ProjectCard>
-            <CardHeader
-              avatar={<TerminalIcon />}
-              title="Scripts"
-            />
-            <ProjectCardContent>
-              {project.scripts.map((l) => (
-                <ProjectListItem
-                  variant="contained"
-                  key={l.name}
-                  onClick={() => shell.openPath(l.path)}
-                  title={l.description}
-                >
-                  {l.name}
-                </ProjectListItem>
-              ))}
-            </ProjectCardContent>
-          </ProjectCard>
-        </Grid>
-      );
-    }
-
-    return <></>;
-  };
-
   const render = () => {
     const project = projects.find((p) => p.id === projectId);
 
@@ -108,6 +30,7 @@ function ProjectPage() {
       navigate(RouteTypes.root);
       return <></>;
     }
+
     return (
       <Root>
         <Grid container spacing={3}>
@@ -118,8 +41,8 @@ function ProjectPage() {
               </Typography>
             </ProjectCard>
           </Grid>
-          { renderLinks(project) }
-          { renderScripts(project) }
+          <ProjectLinkList links={project.links} />
+          <ProjectScriptList scripts={project.scripts} />
         </Grid>
       </Root>
     );
