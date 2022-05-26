@@ -29,7 +29,7 @@ const CollapsibleButtonContainer = styled('div')({
   display: 'flex',
   flexDirection: 'row',
   flexJustifyContent: 'end',
-  paddingLeft: '7px',
+  paddingLeft: '8px',
 });
 
 const MenuTopItems = styled(List)({
@@ -40,6 +40,11 @@ const MenuBottomItems = styled(List)();
 
 const CollapseIcon = styled(ExpandMoreIcon)({
   transform: 'rotate(90deg)',
+});
+
+const ProjectAvatar = styled('img')({
+  height: '24px',
+  width: '24px',
 });
 
 enum MenuItemPosition {
@@ -64,9 +69,8 @@ function MainMenu() {
     projects.forEach((project) => {
       output.push({
         title: project.name,
-        icon: <DashboardIcon />,
+        icon: project.avatarUrl ? <ProjectAvatar src={project.avatarUrl} /> : <DashboardIcon />,
         position: MenuItemPosition.top,
-        // eslint-disable-next-line no-console
         action: () => navigate(generatePath(RouteTypes.project, { projectId: `${project.id}` })),
       });
     });

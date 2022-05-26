@@ -12,6 +12,7 @@ export type ProjectScript = {
 
 export type Project = {
   id: string;
+  avatarUrl: string;
   name: string;
   jiraId?: string;
   description?: string;
