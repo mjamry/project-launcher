@@ -11,8 +11,10 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Collapse, IconButton } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useNavigate } from 'react-router-dom';
+import { generatePath, useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import RouteTypes from '../common/RouteTypes';
+import projectsState from '../state/ProjectState';
 
 const DrawerContainer = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -40,32 +42,56 @@ const CollapseIcon = styled(ExpandMoreIcon)({
   transform: 'rotate(90deg)',
 });
 
-const menuItemPosition = {
-  top: 'top',
-  bottom: 'bottom',
+enum MenuItemPosition {
+  top = 'top',
+  bottom = 'bottom',
+}
+
+type MenuItem = {
+  title: string;
+  icon: JSX.Element;
+  position: MenuItemPosition;
+  action: () => void;
 };
 
 function MainMenu() {
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const projects = useRecoilValue(projectsState);
 
-  const getMenuItems = () => [
+  const getProjects = (): MenuItem[] => {
+    const output: MenuItem[] = [];
+    projects.forEach((project) => {
+      output.push({
+        title: project.name,
+        icon: <DashboardIcon />,
+        position: MenuItemPosition.top,
+        // eslint-disable-next-line no-console
+        action: () => navigate(generatePath(RouteTypes.project, { projectId: `${project.id}` })),
+      });
+    });
+
+    return output;
+  };
+
+  const getMenuItems = (): MenuItem[] => [
     {
       title: 'Dashboard',
-      icon: <DashboardIcon color="inherit" />,
-      position: menuItemPosition.top,
+      icon: <DashboardIcon />,
+      position: MenuItemPosition.top,
       action: () => navigate(RouteTypes.root),
     },
+    ...getProjects(),
     {
       title: 'Settings',
       icon: <SettingsIcon />,
-      position: menuItemPosition.bottom,
+      position: MenuItemPosition.bottom,
       action: () => navigate(RouteTypes.settings),
     },
     {
       title: 'About',
       icon: <InfoIcon />,
-      position: menuItemPosition.bottom,
+      position: MenuItemPosition.bottom,
       action: () => navigate(RouteTypes.about),
     },
   ];
@@ -90,7 +116,7 @@ function MainMenu() {
         <MenuTopItems>
           {
             getMenuItems()
-              .filter((item) => item.position === menuItemPosition.top)
+              .filter((item) => item.position === MenuItemPosition.top)
               .map((menuItem) => (
                 <ListItem button key={menuItem.title} onClick={menuItem.action}>
                   <ListItemIcon>{menuItem.icon}</ListItemIcon>
@@ -102,7 +128,7 @@ function MainMenu() {
         <MenuBottomItems>
           {
             getMenuItems()
-              .filter((item) => item.position === menuItemPosition.bottom)
+              .filter((item) => item.position === MenuItemPosition.bottom)
               .map((menuItem) => (
                 <ListItem button key={menuItem.title} onClick={menuItem.action}>
                   <ListItemIcon>{menuItem.icon}</ListItemIcon>
