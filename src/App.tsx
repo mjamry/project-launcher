@@ -2,7 +2,9 @@ import { ThemeProvider } from '@emotion/react';
 import { createTheme, responsiveFontSizes, StyledEngineProvider } from '@mui/material';
 import React from 'react';
 import './App.css';
+import IpcCommunicationService from './components/IpcCommunicationService';
 import AppContent from './root/AppContent';
+import DebugStateObserver from './state/DebugStateObserver';
 
 let theme = createTheme({
   palette: {
@@ -22,6 +24,8 @@ theme = responsiveFontSizes(theme);
 function App() {
   return (
     <div className="App">
+      <IpcCommunicationService />
+      <DebugStateObserver />
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <AppContent />
