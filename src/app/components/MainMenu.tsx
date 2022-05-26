@@ -13,7 +13,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MenuIcon from '@mui/icons-material/Menu';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import RouteTypes from '../common/RouteTypes';
+import RouteTypes from '../common/dto/RouteTypes';
 import projectsState from '../state/ProjectState';
 
 const DrawerContainer = styled('div')(({ theme }) => ({

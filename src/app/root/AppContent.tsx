@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { Routes, Route } from 'react-router';
-import RouteTypes from '../common/RouteTypes';
+import RouteTypes from '../common/dto/RouteTypes';
 import MainMenu from '../components/MainMenu';
 import DashboardPage from '../pages/DashboardPage';
 import ProjectPage from '../pages/ProjectPage';

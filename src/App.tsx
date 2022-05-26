@@ -2,9 +2,9 @@ import { ThemeProvider } from '@emotion/react';
 import { createTheme, responsiveFontSizes, StyledEngineProvider } from '@mui/material';
 import React from 'react';
 import './App.css';
-import IpcCommunicationService from './components/IpcCommunicationService';
-import AppContent from './root/AppContent';
-import DebugStateObserver from './state/DebugStateObserver';
+import IpcCommunicationService from './app/components/IpcCommunicationService';
+import AppContent from './app/root/AppContent';
+import DebugStateObserver from './app/state/DebugStateObserver';
 
 let theme = createTheme({
   palette: {

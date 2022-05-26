@@ -10,7 +10,7 @@ import { useNavigate, useParams } from 'react-router';
 import { useRecoilValue } from 'recoil';
 import LinkIcon from '@mui/icons-material/Link';
 import TerminalIcon from '@mui/icons-material/Terminal';
-import RouteTypes from '../common/RouteTypes';
+import RouteTypes from '../common/dto/RouteTypes';
 import projectsState from '../state/ProjectState';
 import { Project } from '../common/dto/ProjectDto';
 
