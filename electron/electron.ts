@@ -83,7 +83,7 @@ app.whenReady().then(() => {
         ],
         scripts: [
           {
-            name: 'Test',
+            name: 'Run shell script',
             path: 'E:/Projects/GitHub/plan-your-trip/scripts/run.bat',
           },
           {

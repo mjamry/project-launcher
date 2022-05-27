@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { Project } from '../../shared/dto/ProjectDto';
+import { Project } from '../../../shared/dto/ProjectDto';
 import projectsState from '../state/ProjectState';
 
 const { ipcRenderer } = window.require('electron');
