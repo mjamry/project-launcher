@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import React from 'react';
 import LinkIcon from '@mui/icons-material/Link';
-import { ProjectLink } from '../common/dto/ProjectDto';
+import { ProjectLink } from '../../shared/dto/ProjectDto';
 import { useLinkLaunchService } from '../services/IpcLaunchServices';
 import {
   ProjectCard, ProjectCardContent, ProjectCardHeader, ProjectListItem,

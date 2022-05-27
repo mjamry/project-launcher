@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { Project } from '../common/dto/ProjectDto';
+import { Project } from '../../shared/dto/ProjectDto';
 
 const projectsState = atom<Project[]>({
   key: 'projectsState',

@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import React from 'react';
 import TerminalIcon from '@mui/icons-material/Terminal';
-import { ProjectScript } from '../common/dto/ProjectDto';
+import { ProjectScript } from '../../shared/dto/ProjectDto';
 import { useScriptLaunchService } from '../services/IpcLaunchServices';
 import {
   ProjectCard, ProjectCardContent, ProjectCardHeader, ProjectListItem,
