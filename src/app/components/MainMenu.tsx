@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
-import { Collapse, IconButton } from '@mui/material';
+import { Collapse, IconButton, ListItemButton } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MenuIcon from '@mui/icons-material/Menu';
 import { generatePath, useNavigate } from 'react-router-dom';
@@ -16,11 +15,26 @@ import { useRecoilValue } from 'recoil';
 import RouteTypes from '../common/dto/RouteTypes';
 import projectsState from '../state/ProjectState';
 
+// eslint-disable-next-line react/jsx-props-no-spreading
+const MenuItem = styled(ListItemButton)(({ theme }) => ({
+  ...theme.typography.button,
+  color: theme.palette.primary.contrastText,
+  '&.Mui-selected:hover': {
+    backgroundColor: theme.palette.secondary.light,
+  },
+  '&:hover': {
+    backgroundColor: theme.palette.secondary.dark,
+  },
+  '&.Mui-selected': {
+    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.text.primary,
+  },
+}));
+
 const DrawerContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: theme.palette.primary.main,
-  color: theme.palette.text.primary,
   height: '100vh',
   boxSizing: 'border-box',
 }));
@@ -32,11 +46,11 @@ const CollapsibleButtonContainer = styled('div')({
   paddingLeft: '8px',
 });
 
-const MenuTopItems = styled(List)({
+const MenuTopItemsList = styled(List)({
   flexGrow: 1,
 });
 
-const MenuBottomItems = styled(List)();
+const MenuBottomItemsList = styled(List)();
 
 const CollapseIcon = styled(ExpandMoreIcon)({
   transform: 'rotate(90deg)',
@@ -52,7 +66,7 @@ enum MenuItemPosition {
   bottom = 'bottom',
 }
 
-type MenuItem = {
+type MenuItemDto = {
   title: string;
   icon: JSX.Element;
   position: MenuItemPosition;
@@ -62,10 +76,11 @@ type MenuItem = {
 function MainMenu() {
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [selectedButtonTitle, setSelectedButtonTitle] = useState<string>('');
   const projects = useRecoilValue(projectsState);
 
-  const getProjects = (): MenuItem[] => {
-    const output: MenuItem[] = [];
+  const getProjects = (): MenuItemDto[] => {
+    const output: MenuItemDto[] = [];
     projects.forEach((project) => {
       output.push({
         title: project.name,
@@ -78,7 +93,7 @@ function MainMenu() {
     return output;
   };
 
-  const getMenuItems = (): MenuItem[] => [
+  const getMenuItems = (): MenuItemDto[] => [
     {
       title: 'Dashboard',
       icon: <DashboardIcon />,
@@ -117,30 +132,44 @@ function MainMenu() {
             { isCollapsed ? <MenuIcon /> : <CollapseIcon />}
           </IconButton>
         </CollapsibleButtonContainer>
-        <MenuTopItems>
+        <MenuTopItemsList>
           {
             getMenuItems()
               .filter((item) => item.position === MenuItemPosition.top)
               .map((menuItem) => (
-                <ListItem button key={menuItem.title} onClick={menuItem.action}>
+                <MenuItem
+                  selected={selectedButtonTitle === menuItem.title}
+                  key={menuItem.title}
+                  onClick={() => {
+                    menuItem.action();
+                    setSelectedButtonTitle(menuItem.title);
+                  }}
+                >
                   <ListItemIcon>{menuItem.icon}</ListItemIcon>
-                  <ListItemText primary={menuItem.title} />
-                </ListItem>
+                  <ListItemText disableTypography primary={menuItem.title} />
+                </MenuItem>
               ))
           }
-        </MenuTopItems>
-        <MenuBottomItems>
+        </MenuTopItemsList>
+        <MenuBottomItemsList>
           {
             getMenuItems()
               .filter((item) => item.position === MenuItemPosition.bottom)
               .map((menuItem) => (
-                <ListItem button key={menuItem.title} onClick={menuItem.action}>
+                <MenuItem
+                  selected={selectedButtonTitle === menuItem.title}
+                  key={menuItem.title}
+                  onClick={() => {
+                    menuItem.action();
+                    setSelectedButtonTitle(menuItem.title);
+                  }}
+                >
                   <ListItemIcon>{menuItem.icon}</ListItemIcon>
-                  <ListItemText primary={menuItem.title} />
-                </ListItem>
+                  <ListItemText disableTypography primary={menuItem.title} />
+                </MenuItem>
               ))
           }
-        </MenuBottomItems>
+        </MenuBottomItemsList>
       </DrawerContainer>
     </Collapse>
   );
