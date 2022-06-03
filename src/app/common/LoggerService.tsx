@@ -2,12 +2,12 @@ import { Log, LogLevel } from './Log';
 import { Nullable } from './Nullable';
 import useConsoleLog from './ConsoleLog';
 
-type Exception = {
+export type Exception = {
   message: string,
   stack: string,
 };
 
-type DebugData = Nullable<object | string>;
+export type DebugData = Nullable<object | string>;
 
 type ILoggerService = {
   error: (msg: string, ex?: Exception) => void;
