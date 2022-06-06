@@ -1,6 +1,6 @@
 import { dialog } from 'electron/main';
 import * as fs from 'fs';
-import { Project } from '../shared/dto/ProjectDto';
+import { Project } from '../src/shared/dto/ProjectDto';
 
 type IProjectFileConfigReader = {
   readAllFiles: () => Project[];
