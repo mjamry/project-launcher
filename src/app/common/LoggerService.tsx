@@ -1,5 +1,5 @@
 import { Log, LogLevel } from './Log';
-import { Nullable } from './Nullable';
+import { Nullable } from '../../shared/dto/Nullable';
 import useConsoleLog from './ConsoleLog';
 
 export type Exception = {

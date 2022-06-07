@@ -1,4 +1,4 @@
-import { Nullable } from './Nullable';
+import { Nullable } from '../../shared/dto/Nullable';
 
 enum LogLevel {
   error = 'error',
