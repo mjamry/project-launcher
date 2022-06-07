@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import App from './App';
 
@@ -10,10 +10,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <RecoilRoot>
         <App />
       </RecoilRoot>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>,
 );
