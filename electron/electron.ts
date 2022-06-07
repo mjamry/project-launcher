@@ -1,8 +1,10 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import {
   app, BrowserWindow, dialog, ipcMain,
 } from 'electron';
 import * as path from 'path';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
+import IpcChannelTypes from '../src/shared/dto/IpcChannelTypes';
 import useProjectFileConfigReader from './ConfigReader';
 
 function createWindow() {
@@ -70,10 +72,10 @@ app.whenReady().then(() => {
     const configReader = useProjectFileConfigReader(configPath);
     const config = configReader.readAllFiles();
 
-    win.webContents.send('test', [...config]);
+    win.webContents.send(IpcChannelTypes.appStarted, [...config]);
   });
 
   ipcMain.on('error', (event, data) => {
-    dialog.showErrorBox('Error', data);
+    dialog.showErrorBox(IpcChannelTypes.error, data);
   });
 });

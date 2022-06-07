@@ -22,7 +22,7 @@ const useProjectFileConfigReader = (configPath: string): IProjectFileConfigReade
       try {
         output.push(loadProject(file.name));
       } catch (ex: any) {
-        dialog.showErrorBox('Config read error', ex);
+        dialog.showErrorBox('Config read error', `Error occurred while loading file. ${file.name}\r\n ${ex}`);
       }
     });
 

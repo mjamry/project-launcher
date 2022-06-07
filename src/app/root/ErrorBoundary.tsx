@@ -1,6 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import IpcChannelTypes from '../../shared/dto/IpcChannelTypes';
 import useLoggerService from '../common/LoggerService';
 
 const { ipcRenderer } = window.require('electron');
@@ -27,7 +28,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: any, errorInfo: any) {
     this.logger.error(error, errorInfo);
-    ipcRenderer.send('error', errorInfo);
+    ipcRenderer.send(IpcChannelTypes.error, errorInfo);
   }
 
   render() {
