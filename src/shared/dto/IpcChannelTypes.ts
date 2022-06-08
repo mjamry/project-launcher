@@ -1,5 +1,6 @@
 enum IpcChannelTypes {
-  appStarted = 'appStarted',
+  appSettingsLoaded = 'appSettingsLoaded',
+  projectsConfigsLoaded = 'projectsConfigsLoaded',
   appInitialized = 'appInitialized',
   error = 'error',
 }

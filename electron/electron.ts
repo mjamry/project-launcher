@@ -6,6 +6,7 @@ import * as path from 'path';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import IpcChannelTypes from '../src/shared/dto/IpcChannelTypes';
 import useProjectFileConfigReader from './ConfigReader';
+import useAppSettingsService from './AppSettingsService';
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -67,12 +68,15 @@ app.whenReady().then(() => {
   });
 
   win.webContents.on('did-finish-load', () => {
-    const configPath = path.join('./', 'config');
+    const settingsPath = path.join('./', 'config');
+    const appSettingsService = useAppSettingsService(settingsPath);
+    const appSettings = appSettingsService.readAppSettings();
+    win.webContents.send(IpcChannelTypes.appSettingsLoaded, appSettings);
 
+    const configPath = path.join('./', 'config');
     const configReader = useProjectFileConfigReader(configPath);
     const config = configReader.readAllFiles();
-
-    win.webContents.send(IpcChannelTypes.appStarted, [...config]);
+    win.webContents.send(IpcChannelTypes.projectsConfigsLoaded, [...config]);
   });
 
   ipcMain.on('error', (event, data) => {
