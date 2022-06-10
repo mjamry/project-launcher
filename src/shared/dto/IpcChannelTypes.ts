@@ -3,6 +3,7 @@ enum IpcChannelTypes {
   projectsConfigsLoaded = 'projectsConfigsLoaded',
   appInitialized = 'appInitialized',
   error = 'error',
+  jiraUpdate = 'jiraUpdate',
 }
 
 export default IpcChannelTypes;

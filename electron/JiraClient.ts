@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import useRestClient from '../src/shared/RestClient';
 import { AppSettings } from '../src/shared/dto/AppSettings';
+import { JiraChangelogItem, JiraIssue, JiraUpdate } from '../src/shared/dto/JiraTypes';
 
 enum JiraIssueFields {
   key = 'key',
@@ -14,32 +15,8 @@ enum JiraIssueFields {
   comments = 'comment',
 }
 
-type JiraIssue = {
-  id: string,
-  url: string,
-  assignee: string,
-  status: string,
-  description: string,
-  updated: Date,
-  isNew: boolean,
-  priority: string,
-  changes?: JiraChangelogItem[]
-};
-
-type JiraChangelogItem = {
-  author: string;
-  created: Date;
-  field: string;
-  content?: string;
-};
-
 type JiraResponse = {
   issues: JiraIssue[],
-};
-
-type JiraUpdate = {
-  project: string;
-  issues: JiraIssue[];
 };
 
 type IJiraClient = {

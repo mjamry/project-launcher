@@ -83,7 +83,7 @@ app.whenReady().then(() => {
     console.log('Jira Start:');
     const jiraClient = useJiraClient(appSettings);
     const result = jiraClient.getUpdatesForProject('SMNSS');
-
+    win.webContents.send(IpcChannelTypes.jiraUpdate, [result]);
     // eslint-disable-next-line no-console
     console.log(result);
   });
