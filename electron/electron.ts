@@ -7,6 +7,7 @@ import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-insta
 import IpcChannelTypes from '../src/shared/dto/IpcChannelTypes';
 import useProjectFileConfigReader from './ConfigReader';
 import useAppSettingsService from './AppSettingsService';
+import useJiraClient from './JiraClient';
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -77,6 +78,14 @@ app.whenReady().then(() => {
     const configReader = useProjectFileConfigReader(configPath);
     const config = configReader.readAllFiles();
     win.webContents.send(IpcChannelTypes.projectsConfigsLoaded, [...config]);
+
+    // eslint-disable-next-line no-console
+    console.log('Jira Start:');
+    const jiraClient = useJiraClient(appSettings);
+    const result = jiraClient.getUpdatesForProject('SMNSS');
+
+    // eslint-disable-next-line no-console
+    console.log(result);
   });
 
   ipcMain.on('error', (event, data) => {
