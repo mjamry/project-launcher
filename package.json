@@ -26,6 +26,7 @@
     "@types/electron-devtools-installer": "^2.2.2",
     "@types/jest": "^27.5.1",
     "electron-devtools-installer": "^3.2.0",
+    "electron-fetch": "^1.7.4",
     "electron-is-dev": "^2.0.0",
     "electron-reload": "^2.0.0-alpha.1",
     "esm": "^3.2.25",
@@ -47,6 +48,7 @@
     "@typescript-eslint/parser": "^5.0.0",
     "concurrently": "^7.2.1",
     "cross-env": "^7.0.3",
+    "electron": "^19.0.1",
     "electron-builder": "^23.0.3",
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -56,8 +58,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "react-app-rewired": "^2.2.1",
-    "wait-on": "^6.0.1",
-    "electron": "^19.0.1"
+    "wait-on": "^6.0.1"
   },
   "scripts": {
     "start": "react-app-rewired start",
