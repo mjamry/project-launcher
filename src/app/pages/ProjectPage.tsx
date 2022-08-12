@@ -9,6 +9,7 @@ import projectsState from '../state/ProjectState';
 import ProjectScriptList from '../components/ProjectScriptList';
 import ProjectLinkList from '../components/ProjectLinkList';
 import { ProjectCard } from '../components/ProjectStyledComponents';
+import JiraUpdates from '../components/JiraUpdates';
 
 const Root = styled('div')({
   margin: '10px',
@@ -41,8 +42,15 @@ function ProjectPage() {
               </Typography>
             </ProjectCard>
           </Grid>
-          <ProjectLinkList links={project.links} />
-          <ProjectScriptList scripts={project.scripts} />
+          <Grid item xs={12} sm={6}>
+            <ProjectLinkList links={project.links} />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <ProjectScriptList scripts={project.scripts} />
+          </Grid>
+          <Grid item xs={12}>
+            <JiraUpdates projectKey={project.jiraId ? project.jiraId : ''} />
+          </Grid>
         </Grid>
       </Root>
     );
