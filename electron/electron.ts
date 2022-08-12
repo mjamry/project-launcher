@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable import/no-extraneous-dependencies */
 import {
   app, BrowserWindow, dialog, ipcMain,
@@ -8,6 +10,7 @@ import IpcChannelTypes from '../src/shared/dto/IpcChannelTypes';
 import useProjectFileConfigReader from './ConfigReader';
 import useAppSettingsService from './AppSettingsService';
 import useJiraClient from './JiraClient';
+import { JiraUpdate } from '../src/shared/dto/JiraTypes';
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -68,7 +71,7 @@ app.whenReady().then(() => {
     }
   });
 
-  win.webContents.on('did-finish-load', () => {
+  win.webContents.on('did-finish-load', async () => {
     const settingsPath = path.join('./', 'config');
     const appSettingsService = useAppSettingsService(settingsPath);
     const appSettings = appSettingsService.readAppSettings();
@@ -76,16 +79,21 @@ app.whenReady().then(() => {
 
     const configPath = path.join('./', 'config');
     const configReader = useProjectFileConfigReader(configPath);
-    const config = configReader.readAllFiles();
-    win.webContents.send(IpcChannelTypes.projectsConfigsLoaded, [...config]);
+    const projectsConfig = configReader.readAllFiles();
+    win.webContents.send(IpcChannelTypes.projectsConfigsLoaded, [...projectsConfig]);
 
     // eslint-disable-next-line no-console
     console.log('Jira Start:');
     const jiraClient = useJiraClient(appSettings);
-    const result = jiraClient.getUpdatesForProject('SMNSS');
-    win.webContents.send(IpcChannelTypes.jiraUpdate, [result]);
-    // eslint-disable-next-line no-console
-    console.log(result);
+    const projectUpdates: JiraUpdate[] = [];
+    for (const project of projectsConfig) {
+      if (project.jiraId) {
+        const updates = await jiraClient.getUpdatesForProject(project.jiraId);
+        projectUpdates.push(updates);
+      }
+    }
+
+    win.webContents.send(IpcChannelTypes.jiraUpdate, projectUpdates);
   });
 
   ipcMain.on('error', (event, data) => {
