@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable no-console */
 import { dialog } from 'electron/main';
 import useRestClient from '../src/shared/RestClient';
@@ -22,14 +23,16 @@ type JiraResponse = {
 
 type IJiraClient = {
   getUpdatesForProject: (project: string) => Promise<JiraUpdate>;
+  getHistoryForProject: (project: string) => Promise<JiraUpdate>;
 };
 
 const useJiraClient = (appSettings: AppSettings): IJiraClient => {
   const restClient = useRestClient({ token: appSettings.jiraToken });
 
-  const getJiraDataForProject = async (projectKey: string): Promise<JiraResponse> => {
+  const getJiraDataForProject = async (projectKey: string, timeout: number):
+  Promise<JiraResponse> => {
     const requestData = {
-      jql: `project=${projectKey} AND updated > -${appSettings.jiraRefreshTimeoutInMinutes}m`,
+      jql: `project=${projectKey} AND updated > -${timeout}m`,
       fields: Object.keys(JiraIssueFields),
       expand: ['changelog'],
     };
@@ -83,8 +86,9 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
     return comments;
   };
 
-  const getUpdatesForProject = async (projectKey: string): Promise<JiraUpdate> => {
-    const response = await getJiraDataForProject(projectKey);
+  const composeUpdatesForProject = async (projectKey: string, timeout: number):
+  Promise<JiraUpdate> => {
+    const response = await getJiraDataForProject(projectKey, timeout);
 
     const output: JiraIssue[] = [];
     try {
@@ -115,8 +119,17 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
     };
   };
 
+  const getUpdatesForProject = (projectKey: string) => {
+    return composeUpdatesForProject(projectKey, appSettings.jiraRefreshTimeoutInMinutes);
+  };
+
+  const getHistoryForProject = (projectKey: string) => {
+    return composeUpdatesForProject(projectKey, appSettings.jiraHistoryTimeInMinutes);
+  };
+
   return {
     getUpdatesForProject,
+    getHistoryForProject,
   };
 };
 

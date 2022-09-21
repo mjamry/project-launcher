@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable import/no-extraneous-dependencies */
@@ -72,28 +74,43 @@ app.whenReady().then(() => {
   });
 
   win.webContents.on('did-finish-load', async () => {
+    console.debug('Loading app settings...');
     const settingsPath = path.join('./', 'config');
     const appSettingsService = useAppSettingsService(settingsPath);
     const appSettings = appSettingsService.readAppSettings();
+    console.debug('App settings loaded', appSettings);
     win.webContents.send(IpcChannelTypes.appSettingsLoaded, appSettings);
 
+    console.debug('Loading projects configs...');
     const configPath = path.join('./', 'config');
     const configReader = useProjectFileConfigReader(configPath);
     const projectsConfig = configReader.readAllFiles();
+    console.debug(`Loaded ${projectsConfig.length} projects`);
     win.webContents.send(IpcChannelTypes.projectsConfigsLoaded, [...projectsConfig]);
 
-    // eslint-disable-next-line no-console
-    console.log('Jira Start:');
     const jiraClient = useJiraClient(appSettings);
-    const projectUpdates: JiraUpdate[] = [];
+
+    const projectHistory: JiraUpdate[] = [];
     for (const project of projectsConfig) {
       if (project.jiraId) {
-        const updates = await jiraClient.getUpdatesForProject(project.jiraId);
-        projectUpdates.push(updates);
+        const updates = await jiraClient.getHistoryForProject(project.jiraId);
+        projectHistory.push(updates);
       }
     }
 
-    win.webContents.send(IpcChannelTypes.jiraUpdate, projectUpdates);
+    win.webContents.send(IpcChannelTypes.jiraHistory, projectHistory);
+
+    setInterval(async () => {
+      const projectUpdates: JiraUpdate[] = [];
+      for (const project of projectsConfig) {
+        if (project.jiraId) {
+          const updates = await jiraClient.getUpdatesForProject(project.jiraId);
+          projectUpdates.push(updates);
+        }
+      }
+
+      win.webContents.send(IpcChannelTypes.jiraUpdate, projectUpdates);
+    }, 30000);
   });
 
   ipcMain.on('error', (event, data) => {

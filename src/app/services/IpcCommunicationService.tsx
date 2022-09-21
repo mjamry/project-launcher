@@ -8,12 +8,13 @@ import IpcChannelTypes from '../../shared/dto/IpcChannelTypes';
 import { AppSettings } from '../../shared/dto/AppSettings';
 import appSettingsState from '../state/AppState';
 import { JiraUpdate } from '../../shared/dto/JiraTypes';
-import JiraUpdatesState from '../state/JiraUpdatesState';
+import { jiraUpdatesState, jiraHistoryState } from '../state/JiraUpdatesState';
 
 function IpcCommunicationService() {
   const setProjects = useSetRecoilState(projectsState);
   const setAppSettings = useSetRecoilState(appSettingsState);
-  const setJiraUpdates = useSetRecoilState(JiraUpdatesState);
+  const setJiraUpdates = useSetRecoilState(jiraUpdatesState);
+  const setJiraHistory = useSetRecoilState(jiraHistoryState);
 
   useEffect(() => {
     ipcRenderer.on(IpcChannelTypes.appSettingsLoaded, (event: any, data: AppSettings) => {
@@ -27,7 +28,11 @@ function IpcCommunicationService() {
     ipcRenderer.on(IpcChannelTypes.jiraUpdate, (event: any, data: JiraUpdate[]) => {
       setJiraUpdates(data);
     });
-  }, [setProjects, setAppSettings, setJiraUpdates]);
+
+    ipcRenderer.on(IpcChannelTypes.jiraHistory, (event: any, data: JiraUpdate[]) => {
+      setJiraHistory(data);
+    });
+  }, [setProjects, setAppSettings, setJiraUpdates, setJiraHistory]);
 
   return (
     <></>

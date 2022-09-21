@@ -3,6 +3,7 @@ export type AppSettings = {
   jiraUrl: string;
   jiraToken: string;
   jiraRefreshTimeoutInMinutes: number;
+  jiraHistoryTimeInMinutes: number;
   jiraChangelogFields: string[];
 };
 
@@ -11,5 +12,6 @@ export const DefaultAppSettings: AppSettings = {
   jiraUrl: '',
   jiraToken: '',
   jiraRefreshTimeoutInMinutes: 1,
+  jiraHistoryTimeInMinutes: 600,
   jiraChangelogFields: ['assignee', 'status', 'priority', 'type'],
 };

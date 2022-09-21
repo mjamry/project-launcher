@@ -3,7 +3,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import jiraUpdatesState from '../state/JiraUpdatesState';
+import { jiraUpdatesState } from '../state/JiraUpdatesState';
 import JiraUpdateItem from './JiraUpdateItem';
 import { ProjectCard } from './ProjectStyledComponents';
 
@@ -15,9 +15,6 @@ function JiraUpdates(props: Props) {
   const { projectKey } = props;
   const issues = useRecoilValue(jiraUpdatesState)
     .find((u) => u.project === projectKey)?.issues;
-
-  // eslint-disable-next-line no-console
-  console.log(issues);
 
   return (
     <>

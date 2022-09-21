@@ -6,4 +6,9 @@ const jiraUpdatesState = atom<JiraUpdate[]>({
   default: [],
 });
 
-export default jiraUpdatesState;
+const jiraHistoryState = atom<JiraUpdate[]>({
+  key: 'jiraHistory',
+  default: [],
+});
+
+export { jiraUpdatesState, jiraHistoryState };
