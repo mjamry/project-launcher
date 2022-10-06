@@ -3,7 +3,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import { jiraUpdatesState } from '../state/JiraUpdatesState';
+import { jiraHistoryState } from '../state/JiraUpdatesState';
 import JiraUpdateItem from './JiraUpdateItem';
 import { ProjectCard } from './ProjectStyledComponents';
 
@@ -13,7 +13,7 @@ type Props = {
 
 function JiraUpdates(props: Props) {
   const { projectKey } = props;
-  const issues = useRecoilValue(jiraUpdatesState)
+  const issues = useRecoilValue(jiraHistoryState)
     .find((u) => u.project === projectKey)?.issues;
 
   return (
@@ -27,6 +27,7 @@ function JiraUpdates(props: Props) {
               <TableRow>
                 <TableCell />
                 <TableCell>Issue Id</TableCell>
+                <TableCell>Summary</TableCell>
                 <TableCell align="right">Status</TableCell>
                 <TableCell align="right">Priority</TableCell>
                 <TableCell align="right">Updated</TableCell>

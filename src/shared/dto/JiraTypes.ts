@@ -1,5 +1,6 @@
 type JiraIssue = {
   id: string,
+  summary: string,
   url: string,
   assignee: string,
   status: string,

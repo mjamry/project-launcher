@@ -1,5 +1,5 @@
 import {
-  Box, Collapse, IconButton, styled, Table, TableBody, TableCell, TableHead, TableRow, TextField,
+  Box, Collapse, IconButton, styled, Table, TableBody, TableCell, TableHead, TableRow,
 } from '@mui/material';
 import React, { useState } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -32,6 +32,7 @@ function JiraUpdateItem(props: Props) {
         <TableCell component="th" scope="item">
           {item.id}
         </TableCell>
+        <TableCell>{item.summary}</TableCell>
         <TableCell align="right">{item.status}</TableCell>
         <TableCell align="right">{item.priority}</TableCell>
         <TableCell align="right">{item.updated.toLocaleString()}</TableCell>
