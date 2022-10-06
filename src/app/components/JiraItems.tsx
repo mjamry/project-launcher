@@ -3,8 +3,8 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import { jiraHistoryState } from '../state/JiraUpdatesState';
-import JiraUpdateItem from './JiraUpdateItem';
+import { jiraHistoryState } from '../state/JiraState';
+import JiraUpdateItem from './JiraItemDetails';
 import { ProjectCard } from './ProjectStyledComponents';
 
 type Props = {
