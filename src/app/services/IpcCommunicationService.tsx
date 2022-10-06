@@ -8,7 +8,7 @@ import IpcChannelTypes from '../../shared/dto/IpcChannelTypes';
 import { AppSettings } from '../../shared/dto/AppSettings';
 import appSettingsState from '../state/AppState';
 import { JiraUpdate } from '../../shared/dto/JiraTypes';
-import { jiraUpdatesState, jiraHistoryState } from '../state/JiraUpdatesState';
+import { jiraUpdatesState, jiraHistoryState } from '../state/JiraState';
 
 function IpcCommunicationService() {
   const setProjects = useSetRecoilState(projectsState);

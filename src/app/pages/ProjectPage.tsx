@@ -9,7 +9,7 @@ import projectsState from '../state/ProjectState';
 import ProjectScriptList from '../components/ProjectScriptList';
 import ProjectLinkList from '../components/ProjectLinkList';
 import { ProjectCard } from '../components/ProjectStyledComponents';
-import JiraUpdates from '../components/JiraUpdates';
+import JiraUpdates from '../components/JiraItems';
 
 const Root = styled('div')({
   margin: '10px',
