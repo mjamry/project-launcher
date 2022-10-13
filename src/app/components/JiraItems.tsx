@@ -3,7 +3,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import { jiraHistoryState } from '../state/JiraState';
+import { jiraHistoryState, jiraUpdatesState } from '../state/JiraState';
 import JiraUpdateItem from './JiraItemDetails';
 import { ProjectCard } from './ProjectStyledComponents';
 
@@ -14,6 +14,8 @@ type Props = {
 function JiraUpdates(props: Props) {
   const { projectKey } = props;
   const issues = useRecoilValue(jiraHistoryState)
+    .find((u) => u.project === projectKey)?.issues;
+  const updatedIssues = useRecoilValue(jiraUpdatesState)
     .find((u) => u.project === projectKey)?.issues;
 
   return (
@@ -36,7 +38,11 @@ function JiraUpdates(props: Props) {
             </TableHead>
             <TableBody>
               {issues.map((issue) => (
-                <JiraUpdateItem item={issue} key={issue.id} />
+                <JiraUpdateItem
+                  item={issue}
+                  key={issue.id}
+                  updated={updatedIssues?.find((i) => i.id === issue.id) !== undefined}
+                />
               ))}
             </TableBody>
           </Table>

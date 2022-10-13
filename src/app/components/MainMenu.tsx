@@ -7,13 +7,16 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 
-import { Collapse, IconButton, ListItemButton } from '@mui/material';
+import {
+  Badge, Collapse, IconButton, ListItemButton,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MenuIcon from '@mui/icons-material/Menu';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import RouteTypes from '../common/dto/RouteTypes';
 import projectsState from '../state/ProjectState';
+import { jiraUpdatesState } from '../state/JiraState';
 
 // eslint-disable-next-line react/jsx-props-no-spreading
 const MenuItem = styled(ListItemButton)(({ theme }) => ({
@@ -70,6 +73,7 @@ type MenuItemDto = {
   title: string;
   icon: JSX.Element;
   position: MenuItemPosition;
+  badge?: number;
   action: () => void;
 };
 
@@ -78,14 +82,18 @@ function MainMenu() {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [selectedButtonTitle, setSelectedButtonTitle] = useState<string>('');
   const projects = useRecoilValue(projectsState);
+  const updates = useRecoilValue(jiraUpdatesState);
 
   const getProjects = (): MenuItemDto[] => {
     const output: MenuItemDto[] = [];
     projects.forEach((project) => {
+      const projectUpdatesCount = updates
+        .find((u) => u.project === project.jiraId)?.issues.length || 0;
       output.push({
         title: project.name,
         icon: project.avatarUrl ? <ProjectAvatar src={project.avatarUrl} /> : <DashboardIcon />,
         position: MenuItemPosition.top,
+        badge: projectUpdatesCount,
         action: () => navigate(generatePath(RouteTypes.project, { projectId: `${project.id}` })),
       });
     });
@@ -145,7 +153,11 @@ function MainMenu() {
                     setSelectedButtonTitle(menuItem.title);
                   }}
                 >
-                  <ListItemIcon>{menuItem.icon}</ListItemIcon>
+                  <ListItemIcon>
+                    <Badge color="secondary" badgeContent={menuItem.badge}>
+                      {menuItem.icon}
+                    </Badge>
+                  </ListItemIcon>
                   <ListItemText disableTypography primary={menuItem.title} />
                 </MenuItem>
               ))

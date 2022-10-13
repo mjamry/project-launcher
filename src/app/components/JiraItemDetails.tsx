@@ -11,10 +11,11 @@ const KeyboardArrowUpIcon = styled(KeyboardArrowDownIcon)({
 
 type Props = {
   item: JiraIssue;
+  updated: boolean;
 };
 
 function JiraUpdateItem(props: Props) {
-  const { item } = props;
+  const { item, updated } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -31,6 +32,7 @@ function JiraUpdateItem(props: Props) {
         </TableCell>
         <TableCell component="th" scope="item">
           {item.id}
+          {updated ? '*' : ''}
         </TableCell>
         <TableCell>{item.summary}</TableCell>
         <TableCell align="right">{item.status}</TableCell>
