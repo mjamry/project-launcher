@@ -96,8 +96,6 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
         const changes = getIssueChanges(issue);
         const comments = getIssueComments(issue);
 
-        console.log(issue);
-
         output.push({
           id: issue[JiraIssueFields.key],
           summary: issue.fields[JiraIssueFields.summary],
