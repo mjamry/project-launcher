@@ -7,6 +7,7 @@ import { JiraChangelogItem, JiraIssue, JiraUpdate } from '../src/shared/dto/Jira
 
 enum JiraIssueFields {
   key = 'key',
+  summary = 'summary',
   description = 'description',
   assignee = 'assignee',
   status = 'status',
@@ -89,15 +90,17 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
   const composeUpdatesForProject = async (projectKey: string, timeout: number):
   Promise<JiraUpdate> => {
     const response = await getJiraDataForProject(projectKey, timeout);
-
     const output: JiraIssue[] = [];
     try {
       response.issues.forEach((issue: any) => {
         const changes = getIssueChanges(issue);
         const comments = getIssueComments(issue);
 
+        console.log(issue);
+
         output.push({
           id: issue[JiraIssueFields.key],
+          summary: issue.fields[JiraIssueFields.summary],
           url: issue.self,
           assignee: issue.fields[JiraIssueFields.assignee] ? issue.fields[JiraIssueFields.assignee].name.split('@')[0] : '',
           status: issue.fields[JiraIssueFields.status].name,
