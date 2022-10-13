@@ -8,11 +8,12 @@ import {
 } from 'electron';
 import * as path from 'path';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
+import { faker } from '@faker-js/faker';
 import IpcChannelTypes from '../src/shared/dto/IpcChannelTypes';
 import useProjectFileConfigReader from './ConfigReader';
 import useAppSettingsService from './AppSettingsService';
 import useJiraClient from './JiraClient';
-import { JiraUpdate } from '../src/shared/dto/JiraTypes';
+import { JiraIssue, JiraUpdate } from '../src/shared/dto/JiraTypes';
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -100,11 +101,34 @@ app.whenReady().then(() => {
 
     win.webContents.send(IpcChannelTypes.jiraHistory, projectHistory);
 
+    function createIssue(): JiraIssue {
+      return {
+        id: faker.helpers.arrayElement(['SMDXG-15', 'SMDXG-27', 'SMDXG-28', 'SMDXG-29']),
+        summary: faker.hacker.phrase(),
+        url: faker.internet.url(),
+        assignee: faker.internet.email(),
+        status: faker.helpers.arrayElement(['Open', 'Closed', 'Resolved', 'Waiting For Release']),
+        description: faker.lorem.lines(2),
+        updated: faker.date.recent(1),
+        isNew: faker.datatype.boolean(),
+        priority: faker.helpers.arrayElement(['Low', 'Medium', 'High']),
+      };
+    }
+
+    // TODO for testing purposes Only
+    const jiraTestUpdates: JiraUpdate = {
+      project: 'SMDXG',
+      issues: [createIssue(), createIssue()],
+    };
+
     setInterval(async () => {
       const projectUpdates: JiraUpdate[] = [];
       for (const project of projectsConfig) {
         if (project.jiraId) {
           const updates = await jiraClient.getUpdatesForProject(project.jiraId);
+          if (jiraTestUpdates.project === updates.project) {
+            updates.issues.push(jiraTestUpdates.issues[0]);
+          }
           projectUpdates.push(updates);
         }
       }
