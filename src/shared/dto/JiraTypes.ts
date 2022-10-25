@@ -12,6 +12,7 @@ type JiraIssue = {
 };
 
 type JiraChangelogItem = {
+  id: string;
   author: string;
   created: Date;
   field: string;

@@ -40,6 +40,7 @@ function JiraUpdates(props: Props) {
               {issues.map((issue) => (
                 <JiraUpdateItem
                   item={issue}
+                  projectKey={projectKey}
                   key={issue.id}
                   updated={updatedIssues?.find((i) => i.id === issue.id) !== undefined}
                 />

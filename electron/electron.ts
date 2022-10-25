@@ -8,12 +8,11 @@ import {
 } from 'electron';
 import * as path from 'path';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
-import { faker } from '@faker-js/faker';
 import IpcChannelTypes from '../src/shared/dto/IpcChannelTypes';
 import useProjectFileConfigReader from './ConfigReader';
 import useAppSettingsService from './AppSettingsService';
-import useJiraClient from './JiraClient';
-import { JiraIssue, JiraUpdate } from '../src/shared/dto/JiraTypes';
+import { RestClientOptions, RestMethod } from '../src/shared/dto/RestClientTypes';
+import useRestClient from '../src/shared/RestClient';
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -62,6 +61,23 @@ app.whenReady().then(() => {
 
   const win = createWindow();
 
+  win.webContents.session.webRequest.onBeforeSendHeaders(
+    (details, callback) => {
+      callback({ requestHeaders: { Origin: '*', ...details.requestHeaders } });
+    },
+  );
+
+  win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        'Access-Control-Allow-Origin': ['*'],
+        'Access-Control-Allow-Headers': ['*'],
+        'Access-Control-Allow-Methods': ['*'],
+        ...details.responseHeaders,
+      },
+    });
+  });
+
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
@@ -88,56 +104,24 @@ app.whenReady().then(() => {
     const projectsConfig = configReader.readAllFiles();
     console.debug(`Loaded ${projectsConfig.length} projects`);
     win.webContents.send(IpcChannelTypes.projectsConfigsLoaded, [...projectsConfig]);
-
-    const jiraClient = useJiraClient(appSettings);
-
-    const projectHistory: JiraUpdate[] = [];
-    for (const project of projectsConfig) {
-      if (project.jiraId) {
-        const updates = await jiraClient.getHistoryForProject(project.jiraId);
-        projectHistory.push(updates);
-      }
-    }
-
-    win.webContents.send(IpcChannelTypes.jiraHistory, projectHistory);
-
-    function createIssue(): JiraIssue {
-      return {
-        id: faker.helpers.arrayElement(['SMDXG-15', 'SMDXG-27', 'SMDXG-28', 'SMDXG-29']),
-        summary: faker.hacker.phrase(),
-        url: faker.internet.url(),
-        assignee: faker.internet.email(),
-        status: faker.helpers.arrayElement(['Open', 'Closed', 'Resolved', 'Waiting For Release']),
-        description: faker.lorem.lines(2),
-        updated: faker.date.recent(1),
-        isNew: faker.datatype.boolean(),
-        priority: faker.helpers.arrayElement(['Low', 'Medium', 'High']),
-      };
-    }
-
-    // TODO for testing purposes Only
-    const jiraTestUpdates: JiraUpdate = {
-      project: 'SMDXG',
-      issues: [createIssue(), createIssue()],
-    };
-
-    setInterval(async () => {
-      const projectUpdates: JiraUpdate[] = [];
-      for (const project of projectsConfig) {
-        if (project.jiraId) {
-          const updates = await jiraClient.getUpdatesForProject(project.jiraId);
-          if (jiraTestUpdates.project === updates.project) {
-            updates.issues.push(jiraTestUpdates.issues[0]);
-          }
-          projectUpdates.push(updates);
-        }
-      }
-
-      win.webContents.send(IpcChannelTypes.jiraUpdate, projectUpdates);
-    }, 30000);
   });
 
   ipcMain.on('error', (event, data) => {
     dialog.showErrorBox(IpcChannelTypes.error, data);
+  });
+
+  ipcMain.handle(RestMethod.post, async (
+    event,
+    options: RestClientOptions,
+    url: string,
+    headers: HeadersInit,
+    body: object,
+  ) => {
+    const restClient = useRestClient(options);
+
+    const response = await restClient
+      .post<any>(url, body, headers)
+      .catch((reason) => console.log(reason));
+    return response;
   });
 });

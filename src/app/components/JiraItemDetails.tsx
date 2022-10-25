@@ -3,7 +3,9 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { JiraIssue } from '../../shared/dto/JiraTypes';
+import { jiraUpdatesState } from '../state/JiraState';
 
 const KeyboardArrowUpIcon = styled(KeyboardArrowDownIcon)({
   transform: 'rotate(180deg)',
@@ -11,12 +13,26 @@ const KeyboardArrowUpIcon = styled(KeyboardArrowDownIcon)({
 
 type Props = {
   item: JiraIssue;
+  projectKey: string;
   updated: boolean;
 };
 
 function JiraUpdateItem(props: Props) {
-  const { item, updated } = props;
+  const { item, updated, projectKey } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const projectUpdates = useRecoilValue(jiraUpdatesState)
+    .find((u) => u.project === projectKey);
+
+  const [updates, setUpdates] = useRecoilState(jiraUpdatesState);
+
+  const handleRowClick = () => {
+    setIsOpen(!isOpen);
+    const filteredIssues = projectUpdates!.issues.filter((i) => i.id !== item.id);
+    const filteredProjects = updates.filter((i) => i.project !== projectKey);
+
+    setUpdates([...filteredProjects, { project: projectKey, issues: filteredIssues }]);
+  };
 
   return (
     <>
@@ -25,7 +41,7 @@ function JiraUpdateItem(props: Props) {
           <IconButton
             aria-label="expand item"
             size="small"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => handleRowClick()}
           >
             {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
@@ -55,7 +71,7 @@ function JiraUpdateItem(props: Props) {
                 </TableHead>
                 <TableBody>
                   {item.changes?.map((change) => (
-                    <TableRow key={change.created.getTime()}>
+                    <TableRow key={change.id}>
                       <TableCell component="th" scope="item" width="10%">
                         {change.created.toLocaleString()}
                       </TableCell>

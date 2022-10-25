@@ -1,9 +1,9 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-console */
-import { dialog } from 'electron/main';
-import useRestClient from '../src/shared/RestClient';
-import { AppSettings } from '../src/shared/dto/AppSettings';
-import { JiraChangelogItem, JiraIssue, JiraUpdate } from '../src/shared/dto/JiraTypes';
+import { AppSettings } from '../../shared/dto/AppSettings';
+import { JiraChangelogItem, JiraIssue, JiraUpdate } from '../../shared/dto/JiraTypes';
+import useLoggerService from '../common/LoggerService';
+import useRestClientAdapter from './RestClientAdapter';
 
 enum JiraIssueFields {
   key = 'key',
@@ -28,7 +28,8 @@ type IJiraClient = {
 };
 
 const useJiraClient = (appSettings: AppSettings): IJiraClient => {
-  const restClient = useRestClient({ token: appSettings.jiraToken });
+  const restClient = useRestClientAdapter({ token: appSettings.jiraToken });
+  const logger = useLoggerService('JiraClient');
 
   const getJiraDataForProject = async (projectKey: string, timeout: number):
   Promise<JiraResponse> => {
@@ -42,7 +43,7 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
     try {
       response = await restClient.post<JiraResponse>(`${appSettings.jiraUrl}/rest/api/2/search`, requestData);
     } catch (ex: any) {
-      dialog.showErrorBox('JiraGettingUpdateError', ex);
+      logger.debug('JiraGettingUpdateError', ex);
     }
     return response;
   };
@@ -57,6 +58,7 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
           const changeTime = new Date(history.created);
 
           changes.push({
+            id: change.id,
             author: history.author.name.split('@')[0],
             created: changeTime,
             field: fieldName,
@@ -76,6 +78,7 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
       issue.fields.comment.comments.forEach((comment: any) => {
         const updated = new Date(comment.updated);
         comments.push({
+          id: issue.fields.comment.id,
           author: comment.author.name.split('@')[0],
           created: updated,
           field: 'comment',
@@ -111,7 +114,7 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
         });
       });
     } catch (ex:any) {
-      dialog.showErrorBox('JiraUpdateError', ex);
+      logger.debug('JiraUpdateError', ex);
     }
 
     return {
@@ -120,11 +123,11 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
     };
   };
 
-  const getUpdatesForProject = (projectKey: string) => {
+  const getUpdatesForProject = async (projectKey: string) => {
     return composeUpdatesForProject(projectKey, appSettings.jiraRefreshTimeoutInMinutes);
   };
 
-  const getHistoryForProject = (projectKey: string) => {
+  const getHistoryForProject = async (projectKey: string) => {
     return composeUpdatesForProject(projectKey, appSettings.jiraHistoryTimeInMinutes);
   };
 
