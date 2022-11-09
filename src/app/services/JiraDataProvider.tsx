@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { faker } from '@faker-js/faker';
 import projectsState from '../state/ProjectState';
 import appSettingsState from '../state/AppState';
 import useJiraClient from './JiraClient';
-import { JiraUpdate, JiraIssue } from '../../shared/dto/JiraTypes';
+import { JiraUpdate } from '../../shared/dto/JiraTypes';
 import { jiraUpdatesState, jiraHistoryState } from '../state/JiraState';
 
 function JiraDataProvider() {
@@ -15,20 +13,6 @@ function JiraDataProvider() {
   const setJiraHistory = useSetRecoilState(jiraHistoryState);
 
   const jiraClient = useJiraClient(appSettings);
-
-  function createIssue(): JiraIssue {
-    return {
-      id: faker.helpers.arrayElement(['SMDXG-15', 'SMDXG-27', 'SMDXG-28', 'SMDXG-29']),
-      summary: faker.hacker.phrase(),
-      url: faker.internet.url(),
-      assignee: faker.internet.email(),
-      status: faker.helpers.arrayElement(['Open', 'Closed', 'Resolved', 'Waiting For Release']),
-      description: faker.lorem.lines(2),
-      updated: faker.date.recent(1),
-      isNew: faker.datatype.boolean(),
-      priority: faker.helpers.arrayElement(['Low', 'Medium', 'High']),
-    };
-  }
 
   const getJiraHistory = useCallback(async () => {
     const projectHistory: JiraUpdate[] = [];
@@ -44,18 +28,10 @@ function JiraDataProvider() {
 
   const getJiraUpdates = useCallback(async () => {
     const incomingUpdates: JiraUpdate[] = [];
-    // TODO for testing purposes Only
-    const jiraTestUpdates: JiraUpdate = {
-      project: 'SMDXG',
-      issues: [createIssue()],
-    };
 
     await Promise.all(projects.map(async (project) => {
       if (project.jiraId) {
         const updates = await jiraClient.getUpdatesForProject(project.jiraId);
-        if (jiraTestUpdates.project === updates.project) {
-          updates.issues.push(jiraTestUpdates.issues[0]);
-        }
         incomingUpdates.push(updates);
       }
     }));
