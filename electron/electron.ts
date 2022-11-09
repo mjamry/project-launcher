@@ -1,3 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable no-console */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable import/no-extraneous-dependencies */
 import {
   app, BrowserWindow, dialog, ipcMain,
@@ -6,6 +10,8 @@ import * as path from 'path';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import IpcChannelTypes from '../src/shared/dto/IpcChannelTypes';
 import useProjectFileConfigReader from './ConfigReader';
+import useAppSettingsService from './AppSettingsService';
+import useRestRequestsHandler from './RestRequestsHandler';
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -53,6 +59,8 @@ app.whenReady().then(() => {
     .catch((err) => console.log('An error occurred: ', err));
 
   const win = createWindow();
+  const restRequestsHandler = useRestRequestsHandler();
+  restRequestsHandler.init();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -66,13 +74,20 @@ app.whenReady().then(() => {
     }
   });
 
-  win.webContents.on('did-finish-load', () => {
+  win.webContents.on('did-finish-load', async () => {
+    console.debug('Loading app settings...');
+    const settingsPath = path.join('./', 'config');
+    const appSettingsService = useAppSettingsService(settingsPath);
+    const appSettings = appSettingsService.readAppSettings();
+    console.debug('App settings loaded', appSettings);
+    win.webContents.send(IpcChannelTypes.appSettingsLoaded, appSettings);
+
+    console.debug('Loading projects configs...');
     const configPath = path.join('./', 'config');
-
     const configReader = useProjectFileConfigReader(configPath);
-    const config = configReader.readAllFiles();
-
-    win.webContents.send(IpcChannelTypes.appStarted, [...config]);
+    const projectsConfig = configReader.readAllFiles();
+    console.debug(`Loaded ${projectsConfig.length} projects`);
+    win.webContents.send(IpcChannelTypes.projectsConfigsLoaded, [...projectsConfig]);
   });
 
   ipcMain.on('error', (event, data) => {

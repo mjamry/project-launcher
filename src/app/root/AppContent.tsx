@@ -19,7 +19,9 @@ const Content = styled('div')({
 function AppContent() {
   return (
     <PageLayout>
-      <MainMenu />
+      <div>
+        <MainMenu />
+      </div>
       <Content>
         <Routes>
           <Route
