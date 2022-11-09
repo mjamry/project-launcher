@@ -78,15 +78,18 @@ function JiraDataProvider() {
   }, [jiraClient, projects, setJiraUpdates, updateStates]);
 
   useEffect(() => {
+    getJiraHistory();
+  }, [getJiraHistory]);
+
+  useEffect(() => {
     let interval: any = null;
     if (appSettings !== undefined) {
-      getJiraHistory();
       interval = setInterval(async () => {
         await getJiraUpdates();
       }, 30000);
     }
     return () => clearInterval(interval);
-  }, [appSettings, getJiraHistory, getJiraUpdates]);
+  }, [appSettings, getJiraUpdates]);
 
   return <></>;
 }

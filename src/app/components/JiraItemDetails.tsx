@@ -21,14 +21,14 @@ function JiraUpdateItem(props: Props) {
   const { item, updated, projectKey } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const projectUpdates = useRecoilValue(jiraUpdatesState)
+  const updatedProjectIssues = useRecoilValue(jiraUpdatesState)
     .find((u) => u.project === projectKey);
 
   const [updates, setUpdates] = useRecoilState(jiraUpdatesState);
 
   const handleRowClick = () => {
     setIsOpen(!isOpen);
-    const filteredIssues = projectUpdates!.issues.filter((i) => i.id !== item.id);
+    const filteredIssues = updatedProjectIssues!.issues.filter((i) => i.id !== item.id);
     const filteredProjects = updates.filter((i) => i.project !== projectKey);
 
     setUpdates([...filteredProjects, { project: projectKey, issues: filteredIssues }]);
