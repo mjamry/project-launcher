@@ -11,8 +11,7 @@ import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-insta
 import IpcChannelTypes from '../src/shared/dto/IpcChannelTypes';
 import useProjectFileConfigReader from './ConfigReader';
 import useAppSettingsService from './AppSettingsService';
-import { RestClientOptions, RestMethod } from '../src/shared/dto/RestClientTypes';
-import useRestClient from '../src/shared/RestClient';
+import useRestRequestsHandler from './RestRequestsHandler';
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -60,23 +59,8 @@ app.whenReady().then(() => {
     .catch((err) => console.log('An error occurred: ', err));
 
   const win = createWindow();
-
-  win.webContents.session.webRequest.onBeforeSendHeaders(
-    (details, callback) => {
-      callback({ requestHeaders: { Origin: '*', ...details.requestHeaders } });
-    },
-  );
-
-  win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        'Access-Control-Allow-Origin': ['*'],
-        'Access-Control-Allow-Headers': ['*'],
-        'Access-Control-Allow-Methods': ['*'],
-        ...details.responseHeaders,
-      },
-    });
-  });
+  const restRequestsHandler = useRestRequestsHandler();
+  restRequestsHandler.init();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -108,20 +92,5 @@ app.whenReady().then(() => {
 
   ipcMain.on('error', (event, data) => {
     dialog.showErrorBox(IpcChannelTypes.error, data);
-  });
-
-  ipcMain.handle(RestMethod.post, async (
-    event,
-    options: RestClientOptions,
-    url: string,
-    headers: HeadersInit,
-    body: object,
-  ) => {
-    const restClient = useRestClient(options);
-
-    const response = await restClient
-      .post<any>(url, body, headers)
-      .catch((reason) => console.log(reason));
-    return response;
   });
 });
