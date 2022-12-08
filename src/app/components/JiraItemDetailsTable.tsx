@@ -17,7 +17,7 @@ type Props = {
   updated: boolean;
 };
 
-function JiraUpdateItem(props: Props) {
+function JiraItemDetailsTable(props: Props) {
   const { item, updated, projectKey } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -90,4 +90,4 @@ function JiraUpdateItem(props: Props) {
   );
 }
 
-export default JiraUpdateItem;
+export default JiraItemDetailsTable;

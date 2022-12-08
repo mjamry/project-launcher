@@ -1,5 +1,5 @@
 import React from 'react';
-import JiraItemDetails from './JiraItemDetails';
+import JiraItemDetails from './JiraItemDetailsTable';
 
 type Props = {
   data?: any;
