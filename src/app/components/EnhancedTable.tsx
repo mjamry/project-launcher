@@ -10,7 +10,7 @@ import {
   TableSortLabel,
   TableBody,
 } from '@mui/material';
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { visuallyHidden } from '@mui/utils';
 
 // type JiraItemDataDTO = {
@@ -102,7 +102,7 @@ function EnhancedTableHead(props: EnhancedTableHeadProps) {
 
 type Props = {
   data: any[];
-  children?: ReactElement;
+  children: React.ReactElement;
   headCells: HeadCell[];
 };
 
@@ -144,11 +144,13 @@ function EnhancedTable(props: Props) {
             headCells={headCells}
           />
           <TableBody>
-            {React.cloneElement(
-              children as React.ReactElement,
-              data
-                .sort(getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+            {children && React.cloneElement(
+              children,
+              {
+                data: [...data]
+                  .sort(getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+              },
             )}
           </TableBody>
         </Table>
@@ -166,4 +168,5 @@ function EnhancedTable(props: Props) {
   );
 }
 
-export default EnhancedTable;
+export { EnhancedTable };
+export type { HeadCell };
