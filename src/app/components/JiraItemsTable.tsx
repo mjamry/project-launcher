@@ -13,6 +13,12 @@ const headCells: HeadCell[] = [
   {
     id: 'id',
     disablePadding: true,
+    disableSorting: true,
+    label: '',
+  },
+  {
+    id: 'id',
+    disablePadding: true,
     label: 'Id',
   },
   {

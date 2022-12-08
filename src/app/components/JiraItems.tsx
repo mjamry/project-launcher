@@ -1,5 +1,5 @@
 import React from 'react';
-import JiraItemDetails from './JiraItemDetailsTable';
+import JiraItemDetailsTable from './JiraItemDetailsTable';
 
 type Props = {
   data?: any;
@@ -12,7 +12,7 @@ function JiraItems(props: Props) {
   return (
     <>
       {data.map((item: any) => (
-        <JiraItemDetails item={item} projectKey={projectKey} updated={false} />
+        <JiraItemDetailsTable item={item} projectKey={projectKey} updated={false} />
       ))}
     </>
   );

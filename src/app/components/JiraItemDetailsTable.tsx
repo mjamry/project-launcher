@@ -1,15 +1,44 @@
 import {
-  Box, Collapse, IconButton, styled, Table, TableBody, TableCell, TableHead, TableRow,
+  Box, Collapse, IconButton, styled, TableCell, TableRow,
 } from '@mui/material';
 import React, { useState } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { JiraIssue } from '../../shared/dto/JiraTypes';
 import { jiraUpdatesState } from '../state/JiraState';
+import { EnhancedTable, HeadCell } from './EnhancedTable';
+import JiraItemDetails from './JiraItemDetails';
 
 const KeyboardArrowUpIcon = styled(KeyboardArrowDownIcon)({
   transform: 'rotate(180deg)',
 });
+
+const headCells: HeadCell[] = [
+  {
+    id: 'date',
+    disablePadding: false,
+    disableSorting: true,
+    label: 'Date',
+  },
+  {
+    id: 'author',
+    disablePadding: false,
+    disableSorting: true,
+    label: 'Author',
+  },
+  {
+    id: 'field',
+    disablePadding: false,
+    disableSorting: true,
+    label: 'Field',
+  },
+  {
+    id: 'content',
+    disablePadding: false,
+    disableSorting: true,
+    label: 'Content',
+  },
+];
 
 type Props = {
   item: JiraIssue;
@@ -28,7 +57,8 @@ function JiraItemDetailsTable(props: Props) {
 
   const handleRowClick = () => {
     setIsOpen(!isOpen);
-    const filteredIssues = updatedProjectIssues!.issues.filter((i) => i.id !== item.id);
+    const filteredIssues = updatedProjectIssues
+      ? updatedProjectIssues.issues.filter((i) => i.id !== item.id) : [];
     const filteredProjects = updates.filter((i) => i.project !== projectKey);
 
     setUpdates([...filteredProjects, { project: projectKey, issues: filteredIssues }]);
@@ -36,7 +66,7 @@ function JiraItemDetailsTable(props: Props) {
 
   return (
     <>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <TableRow>
         <TableCell>
           <IconButton
             aria-label="expand item"
@@ -60,28 +90,12 @@ function JiraItemDetailsTable(props: Props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={isOpen} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Author</TableCell>
-                    <TableCell>Field</TableCell>
-                    <TableCell>Content</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {item.changes?.map((change) => (
-                    <TableRow key={change.id}>
-                      <TableCell component="th" scope="item" width="10%">
-                        {change.created.toLocaleString()}
-                      </TableCell>
-                      <TableCell width="10%">{change.author}</TableCell>
-                      <TableCell width="10%">{change.field}</TableCell>
-                      <TableCell width="40%">{change.content}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <EnhancedTable
+                data={item.changes ? item.changes : []}
+                headCells={headCells}
+              >
+                <JiraItemDetails />
+              </EnhancedTable>
             </Box>
           </Collapse>
         </TableCell>
