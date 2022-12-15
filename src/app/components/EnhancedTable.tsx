@@ -9,18 +9,11 @@ import {
   TableRow,
   TableSortLabel,
   TableBody,
+  Grid,
 } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { visuallyHidden } from '@mui/utils';
-
-// type JiraItemDataDTO = {
-//   id: string,
-//   summary: string,
-//   assignee: string,
-//   status: string,
-//   updated: Date,
-//   priority: string,
-// };
+import Search from './Search';
 
 function descendingComparator(a: any, b: any, orderBy: keyof any) {
   if (b[orderBy] < a[orderBy]) {
@@ -105,16 +98,20 @@ function EnhancedTableHead(props: EnhancedTableHeadProps) {
 }
 
 type Props = {
+  title: string;
   data: any[];
   children: React.ReactElement;
   headCells: HeadCell[];
 };
 
 function EnhancedTable(props: Props) {
-  const { data, children, headCells } = props;
+  const {
+    data, children, headCells, title,
+  } = props;
 
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
+  const [searchValue, setSearchValue] = useState<string>('');
 
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<any>('id');
@@ -137,8 +134,29 @@ function EnhancedTable(props: Props) {
     setOrderBy(property);
   };
 
+  const handleFilter = (item: any) => {
+    const keys = Object.keys(item);
+    let hasItemValue = false;
+    keys.every((key) => {
+      if (typeof item[key] === 'string') {
+        hasItemValue = item[key].toLowerCase().includes(searchValue);
+      }
+      return !hasItemValue;
+    });
+
+    return hasItemValue;
+  };
+
   return (
     <>
+      <Grid container columnSpacing={50}>
+        <Grid item xs={12} sm={6}>
+          {title}
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Search handleSearch={setSearchValue} />
+        </Grid>
+      </Grid>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <EnhancedTableHead
@@ -152,6 +170,7 @@ function EnhancedTable(props: Props) {
               children,
               {
                 data: [...data]
+                  .filter((item) => handleFilter(item))
                   .sort(getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
               },

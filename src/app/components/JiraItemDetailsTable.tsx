@@ -91,6 +91,7 @@ function JiraItemDetailsTable(props: Props) {
           <Collapse in={isOpen} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <EnhancedTable
+                title={item.id}
                 data={item.changes ? item.changes : []}
                 headCells={headCells}
               >
