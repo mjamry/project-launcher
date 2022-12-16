@@ -9,11 +9,24 @@ import {
   TableRow,
   TableSortLabel,
   TableBody,
-  Grid,
+  styled,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { visuallyHidden } from '@mui/utils';
 import Search from './Search';
+
+const TableHeaderTools = styled('div')({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginBottom: '5px',
+});
+
+const TableTitle = styled('div')({
+  marginLeft: '20px',
+  fontWeight: 'bold',
+});
 
 function descendingComparator(a: any, b: any, orderBy: keyof any) {
   if (b[orderBy] < a[orderBy]) {
@@ -111,10 +124,14 @@ function EnhancedTable(props: Props) {
 
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [filteredData, setFilteredData] = useState<any[]>(data);
 
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<any>('id');
+
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -134,29 +151,33 @@ function EnhancedTable(props: Props) {
     setOrderBy(property);
   };
 
-  const handleFilter = (item: any) => {
-    const keys = Object.keys(item);
-    let hasItemValue = false;
-    keys.every((key) => {
-      if (typeof item[key] === 'string') {
-        hasItemValue = item[key].toLowerCase().includes(searchValue);
-      }
-      return !hasItemValue;
-    });
+  const handleSearchValueChanged = (searchValue: string) => {
+    const output = searchValue === ''
+      ? data
+      : data.filter((item) => {
+        const keys = Object.keys(item);
+        let hasItemValue = false;
+        keys.every((key) => {
+          if (typeof item[key] === 'string') {
+            hasItemValue = item[key].toLowerCase().includes(searchValue);
+          }
+          return !hasItemValue;
+        });
 
-    return hasItemValue;
+        return hasItemValue;
+      });
+
+    setFilteredData(output);
   };
 
   return (
     <>
-      <Grid container columnSpacing={50}>
-        <Grid item xs={12} sm={6}>
+      <TableHeaderTools>
+        <TableTitle>
           {title}
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Search handleSearch={setSearchValue} />
-        </Grid>
-      </Grid>
+        </TableTitle>
+        <Search handleSearch={handleSearchValueChanged} />
+      </TableHeaderTools>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <EnhancedTableHead
@@ -169,8 +190,7 @@ function EnhancedTable(props: Props) {
             {children && React.cloneElement(
               children,
               {
-                data: [...data]
-                  .filter((item) => handleFilter(item))
+                data: [...filteredData]
                   .sort(getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
               },
@@ -181,7 +201,7 @@ function EnhancedTable(props: Props) {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={data.length}
+        count={filteredData.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
