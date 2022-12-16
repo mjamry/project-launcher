@@ -2,7 +2,7 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { jiraHistoryState } from '../state/JiraState';
 import { ProjectCard } from './ProjectStyledComponents';
-import { EnhancedTable, HeadCell } from './EnhancedTable';
+import { EnhancedTable, HeadCell } from './EnhancedTable/EnhancedTable';
 import JiraItems from './JiraItems';
 
 type Props = {

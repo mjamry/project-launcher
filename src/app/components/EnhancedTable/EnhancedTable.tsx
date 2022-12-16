@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { visuallyHidden } from '@mui/utils';
-import Search from './Search';
+import Search from '../Search';
 
 const TableHeaderTools = styled('div')({
   display: 'flex',

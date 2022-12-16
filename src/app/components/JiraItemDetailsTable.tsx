@@ -6,7 +6,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { JiraIssue } from '../../shared/dto/JiraTypes';
 import { jiraUpdatesState } from '../state/JiraState';
-import { EnhancedTable, HeadCell } from './EnhancedTable';
+import { EnhancedTable, HeadCell } from './EnhancedTable/EnhancedTable';
 import JiraItemDetails from './JiraItemDetails';
 
 const KeyboardArrowUpIcon = styled(KeyboardArrowDownIcon)({
