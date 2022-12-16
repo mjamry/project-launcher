@@ -3,17 +3,13 @@ import {
   Paper,
   Table,
   TablePagination,
-  Box,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableSortLabel,
   TableBody,
   styled,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { visuallyHidden } from '@mui/utils';
 import Search from '../Search';
+import EnhancedTableHead from './EnhancedTableHead';
+import { HeadCell, Order, getComparator } from './EnhancedTableTypes';
 
 const TableHeaderTools = styled('div')({
   display: 'flex',
@@ -27,88 +23,6 @@ const TableTitle = styled('div')({
   marginLeft: '20px',
   fontWeight: 'bold',
 });
-
-function descendingComparator(a: any, b: any, orderBy: keyof any) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-type Order = 'asc' | 'desc';
-type Align = 'right' | 'left';
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key,
-): (
-    a: { [key in Key]: string | Date },
-    b: { [key in Key]: string | Date },
-  ) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-interface HeadCell {
-  disablePadding: boolean;
-  disableSorting?: boolean;
-  id: keyof any;
-  label: string;
-  align?: Align;
-}
-
-interface EnhancedTableHeadProps {
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof any) => void;
-  order: Order;
-  orderBy: string;
-  headCells: HeadCell[]
-}
-
-function EnhancedTableHead(props: EnhancedTableHeadProps) {
-  const {
-    order, orderBy, onRequestSort, headCells,
-  } = props;
-  // eslint-disable-next-line max-len
-  const createSortHandler = (property: keyof any) => (event: React.MouseEvent<unknown>) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id as string}
-            align={headCell.align ? headCell.align : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            {headCell.disableSorting
-              ? headCell.label
-              : (
-                <TableSortLabel
-                  active={orderBy === headCell.id}
-                  direction={orderBy === headCell.id ? order : 'asc'}
-                  onClick={createSortHandler(headCell.id)}
-                >
-                  {headCell.label}
-                  {orderBy === headCell.id ? (
-                    <Box component="span" sx={visuallyHidden}>
-                      {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                    </Box>
-                  ) : null}
-                </TableSortLabel>
-              )}
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
 
 type Props = {
   title: string;
@@ -211,5 +125,4 @@ function EnhancedTable(props: Props) {
   );
 }
 
-export { EnhancedTable };
-export type { HeadCell };
+export default EnhancedTable;
