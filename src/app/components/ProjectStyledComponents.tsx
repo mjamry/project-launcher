@@ -5,6 +5,7 @@ import {
 export const ProjectCard = styled(Card)(({ theme }) => ({
   padding: '8px',
   backgroundColor: theme.palette.secondary.main,
+  color: theme.palette.text.secondary,
 }));
 
 export const ProjectCardContent = styled(CardContent)({
