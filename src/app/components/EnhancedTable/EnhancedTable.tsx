@@ -7,7 +7,7 @@ import {
   styled,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import Search from '../Search';
+import Search from './Search';
 import EnhancedTableHead from './EnhancedTableHead';
 import { HeadCell, Order, getComparator } from './EnhancedTableTypes';
 

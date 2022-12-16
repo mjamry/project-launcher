@@ -178,6 +178,7 @@ export function getTheme(userTheme: AppTheme): Theme {
             border: '1px solid',
             borderColor: userTheme && userTheme.primaryBackgroundColor ? userTheme.primaryBackgroundColor : DefaultTheme.primaryBackgroundColor,
             borderBottom: 'none',
+            borderRadius: '0',
           },
         },
       },
