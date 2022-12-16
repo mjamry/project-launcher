@@ -21,16 +21,18 @@ import { jiraUpdatesState } from '../state/JiraState';
 // eslint-disable-next-line react/jsx-props-no-spreading
 const MenuItem = styled(ListItemButton)(({ theme }) => ({
   ...theme.typography.button,
-  color: theme.palette.primary.contrastText,
+  color: theme.palette.text.primary,
   '&.Mui-selected:hover': {
     backgroundColor: theme.palette.secondary.light,
+    color: theme.palette.text.secondary,
   },
   '&:hover': {
     backgroundColor: theme.palette.secondary.dark,
+    color: theme.palette.text.secondary,
   },
   '&.Mui-selected': {
     backgroundColor: theme.palette.secondary.main,
-    color: theme.palette.text.primary,
+    color: theme.palette.text.secondary,
   },
 }));
 
