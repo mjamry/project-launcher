@@ -12,7 +12,11 @@ function JiraItems(props: Props) {
   return (
     <>
       {data.map((item: any) => (
-        <JiraItemDetailsTable item={item} projectKey={projectKey} updated={false} />
+        <JiraItemDetailsTable
+          item={item}
+          projectKey={projectKey}
+          updated={false}
+        />
       ))}
     </>
   );
