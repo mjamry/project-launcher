@@ -66,6 +66,18 @@ const ProjectAvatar = styled('img')({
   width: '24px',
 });
 
+const MenuContainer = styled('div')({
+  position: 'fixed',
+});
+
+// it is used to put a div with height and width visible for other parts of DOM.
+// as the real menu has position=fixed.
+const FakeMenuContainer = styled('div')({
+  height: '100vh',
+  width: '10vw',
+  backgroundColor: 'red',
+});
+
 enum MenuItemPosition {
   top = 'top',
   bottom = 'bottom',
@@ -130,62 +142,74 @@ function MainMenu() {
   };
 
   return (
-    <Collapse
-      collapsedSize="3.5rem"
-      orientation="horizontal"
-      in={!isCollapsed}
-      timeout="auto"
-    >
-      <DrawerContainer>
-        <CollapsibleButtonContainer>
-          <IconButton onClick={toggleCollapse}>
-            { isCollapsed ? <MenuIcon /> : <CollapseIcon />}
-          </IconButton>
-        </CollapsibleButtonContainer>
-        <MenuTopItemsList>
-          {
-            getMenuItems()
-              .filter((item) => item.position === MenuItemPosition.top)
-              .map((menuItem) => (
-                <MenuItem
-                  selected={selectedButtonTitle === menuItem.title}
-                  key={menuItem.title}
-                  onClick={() => {
-                    menuItem.action();
-                    setSelectedButtonTitle(menuItem.title);
-                  }}
-                >
-                  <ListItemIcon>
-                    <Badge color="secondary" badgeContent={menuItem.badge}>
-                      {menuItem.icon}
-                    </Badge>
-                  </ListItemIcon>
-                  <ListItemText disableTypography primary={menuItem.title} />
-                </MenuItem>
-              ))
-          }
-        </MenuTopItemsList>
-        <MenuBottomItemsList>
-          {
-            getMenuItems()
-              .filter((item) => item.position === MenuItemPosition.bottom)
-              .map((menuItem) => (
-                <MenuItem
-                  selected={selectedButtonTitle === menuItem.title}
-                  key={menuItem.title}
-                  onClick={() => {
-                    menuItem.action();
-                    setSelectedButtonTitle(menuItem.title);
-                  }}
-                >
-                  <ListItemIcon>{menuItem.icon}</ListItemIcon>
-                  <ListItemText disableTypography primary={menuItem.title} />
-                </MenuItem>
-              ))
-          }
-        </MenuBottomItemsList>
-      </DrawerContainer>
-    </Collapse>
+    <>
+      <MenuContainer>
+        <Collapse
+          collapsedSize="3.5rem"
+          orientation="horizontal"
+          in={!isCollapsed}
+          timeout="auto"
+        >
+          <DrawerContainer>
+            <CollapsibleButtonContainer>
+              <IconButton onClick={toggleCollapse}>
+                { isCollapsed ? <MenuIcon /> : <CollapseIcon />}
+              </IconButton>
+            </CollapsibleButtonContainer>
+            <MenuTopItemsList>
+              {
+                getMenuItems()
+                  .filter((item) => item.position === MenuItemPosition.top)
+                  .map((menuItem) => (
+                    <MenuItem
+                      selected={selectedButtonTitle === menuItem.title}
+                      key={menuItem.title}
+                      onClick={() => {
+                        menuItem.action();
+                        setSelectedButtonTitle(menuItem.title);
+                      }}
+                    >
+                      <ListItemIcon>
+                        <Badge color="secondary" badgeContent={menuItem.badge}>
+                          {menuItem.icon}
+                        </Badge>
+                      </ListItemIcon>
+                      <ListItemText disableTypography primary={menuItem.title} />
+                    </MenuItem>
+                  ))
+              }
+            </MenuTopItemsList>
+            <MenuBottomItemsList>
+              {
+                getMenuItems()
+                  .filter((item) => item.position === MenuItemPosition.bottom)
+                  .map((menuItem) => (
+                    <MenuItem
+                      selected={selectedButtonTitle === menuItem.title}
+                      key={menuItem.title}
+                      onClick={() => {
+                        menuItem.action();
+                        setSelectedButtonTitle(menuItem.title);
+                      }}
+                    >
+                      <ListItemIcon>{menuItem.icon}</ListItemIcon>
+                      <ListItemText disableTypography primary={menuItem.title} />
+                    </MenuItem>
+                  ))
+              }
+            </MenuBottomItemsList>
+          </DrawerContainer>
+        </Collapse>
+      </MenuContainer>
+      <Collapse
+        collapsedSize="3.5rem"
+        orientation="horizontal"
+        in={!isCollapsed}
+        timeout="auto"
+      >
+        <FakeMenuContainer />
+      </Collapse>
+    </>
   );
 }
 
