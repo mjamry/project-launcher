@@ -1,5 +1,5 @@
 import { InputBase, IconButton, styled } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -25,6 +25,10 @@ type Props = {
 function Search(props: Props) {
   const { handleSearch } = props;
   const [inputValue, setInputValue] = useState<string>('');
+
+  useEffect(() => {
+    setInputValue('');
+  }, [handleSearch]);
 
   const handleInputChange = (value: string) => {
     setInputValue(value.toLowerCase());

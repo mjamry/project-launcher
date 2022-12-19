@@ -6,7 +6,7 @@ import {
   TableBody,
   styled,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Search from './Search';
 import EnhancedTableHead from './EnhancedTableHead';
 import { HeadCell, Order, getComparator } from './EnhancedTableTypes';
@@ -45,6 +45,7 @@ function EnhancedTable(props: Props) {
 
   useEffect(() => {
     setFilteredData(data);
+    setPage(0);
   }, [data]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -65,7 +66,7 @@ function EnhancedTable(props: Props) {
     setOrderBy(property);
   };
 
-  const handleSearchValueChanged = (searchValue: string) => {
+  const handleSearchValueChanged = useCallback((searchValue: string) => {
     const output = searchValue === ''
       ? data
       : data.filter((item) => {
@@ -82,7 +83,7 @@ function EnhancedTable(props: Props) {
       });
 
     setFilteredData(output);
-  };
+  }, [data]);
 
   return (
     <>

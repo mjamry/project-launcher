@@ -11,7 +11,6 @@ function JiraDataProvider() {
   const [appSettings] = useRecoilState(appSettingsState);
   const [updateStates, setJiraUpdates] = useRecoilState(jiraUpdatesState);
   const setJiraHistory = useSetRecoilState(jiraHistoryState);
-
   const jiraClient = useJiraClient(appSettings);
 
   const getJiraHistory = useCallback(async () => {
@@ -24,7 +23,8 @@ function JiraDataProvider() {
     }));
 
     setJiraHistory(projectHistory);
-  }, [jiraClient, projects, setJiraHistory]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projects]);
 
   const getJiraUpdates = useCallback(async () => {
     const incomingUpdates: JiraUpdate[] = [];
@@ -62,7 +62,7 @@ function JiraDataProvider() {
     if (appSettings !== undefined) {
       interval = setInterval(async () => {
         await getJiraUpdates();
-      }, 30000);
+      }, appSettings.jiraRefreshTimeoutInMinutes * 60 * 1000);
     }
     return () => clearInterval(interval);
   }, [appSettings, getJiraUpdates]);

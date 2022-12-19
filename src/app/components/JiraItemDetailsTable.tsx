@@ -1,7 +1,7 @@
 import {
   Box, Collapse, IconButton, styled, TableCell, TableRow,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { JiraIssue } from '../../shared/dto/JiraTypes';
@@ -55,6 +55,10 @@ function JiraItemDetailsTable(props: Props) {
     .find((u) => u.project === projectKey);
 
   const [updates, setUpdates] = useRecoilState(jiraUpdatesState);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [projectKey]);
 
   const handleRowClick = () => {
     setIsOpen(!isOpen);
