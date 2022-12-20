@@ -5,10 +5,8 @@ import React, { useState, useEffect } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useRecoilState } from 'recoil';
 import appSettingsState from '../state/AppState';
-import { projectsConfigFileNameState, projectsState } from '../state/ProjectState';
-import IpcChannelTypes from '../../shared/dto/IpcChannelTypes';
-
-const { ipcRenderer } = window.require('electron');
+import { projectsState } from '../state/ProjectState';
+import useSettingsFileWriterService from '../services/SettingsFileWriterService';
 
 const Root = styled('div')({
   margin: '10px',
@@ -46,46 +44,50 @@ type ProjectSettings = {
   settings: string;
 };
 
+const SpacesInJSONView = 2;
+
 function SettingsPage() {
   const [expanded, setExpanded] = React.useState<string | false>(false);
   const [appSettings] = useRecoilState(appSettingsState);
   const [projectSettings] = useRecoilState(projectsState);
-  const [projectsConfigFileName] = useRecoilState(projectsConfigFileNameState);
+  const settingsFileWriter = useSettingsFileWriterService();
 
-  const [editedSettings, setEditedSettings] = useState<string>(
-    JSON.stringify(appSettings, undefined, 4),
+  const [editedAppSettings, setEditedSettings] = useState<string>(
+    JSON.stringify(appSettings, undefined, SpacesInJSONView),
   );
 
-  const [projectsSettings, setProjectsSettings] = useState<any>([]);
+  const [editedProjectsSettings, setEditedProjectsSettings] = useState<any>([]);
 
   useEffect(() => {
     const output: ProjectSettings[] = [];
     projectSettings.forEach((project) => {
-      output.push({ id: project.id, settings: JSON.stringify(project, undefined, 4) });
+      output.push({
+        id: project.id,
+        settings: JSON.stringify(project, undefined, SpacesInJSONView),
+      });
     });
-    setProjectsSettings(output);
+    setEditedProjectsSettings(output);
   }, [projectSettings]);
 
   const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const handleAppSettingsSave = () => {
-    ipcRenderer.invoke(IpcChannelTypes.saveEditedConfigFile, 'appSettings.json', JSON.parse(editedSettings));
-  };
-
   const handleProjectSettingsEdit = (projectId: string, value: string) => {
-    setProjectsSettings([...projectSettings.filter((p) => p.id !== projectId), {
+    setEditedProjectsSettings([...projectSettings.filter((p) => p.id !== projectId), {
       id: projectId,
       settings: value,
     }]);
   };
 
+  const handleAppSettingsSave = () => {
+    settingsFileWriter.writeAppSettingsFile(editedAppSettings);
+  };
+
   const handleProjectSettingsSave = (projectId: string) => {
-    ipcRenderer.invoke(
-      IpcChannelTypes.saveEditedConfigFile,
-      projectsConfigFileName.find((p) => p.id === projectId)!.fileName,
-      JSON.parse(projectsSettings.find((p: any) => p.id === projectId)!.settings),
+    settingsFileWriter.writeProjectSettingsFile(
+      projectId,
+      editedProjectsSettings.find((p: any) => p.id === projectId)!.settings,
     );
   };
 
@@ -107,7 +109,7 @@ function SettingsPage() {
           <FileContent
             id="outlined-multiline-static"
             multiline
-            defaultValue={editedSettings}
+            defaultValue={editedAppSettings}
             onChange={(e) => setEditedSettings(e.target.value)}
           />
         </AccordionDetails>

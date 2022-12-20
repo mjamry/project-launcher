@@ -1,3 +1,5 @@
+export const SettingsFileName = 'appSettings.json';
+
 export type AppTheme = {
   primaryBackgroundColor: string;
   primaryColor: string,

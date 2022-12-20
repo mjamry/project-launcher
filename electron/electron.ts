@@ -30,8 +30,6 @@ function createWindow() {
   } else {
     win.loadURL('http://localhost:3000/index.html');
 
-    win.webContents.openDevTools({ mode: 'detach' });
-
     // Hot Reloading on 'node_modules/.bin/electronPath'
     // eslint-disable-next-line global-require
     require('electron-reload')(__dirname, {
@@ -61,7 +59,7 @@ app.whenReady().then(() => {
 
   const win = createWindow();
   const restRequestsHandler = useRestRequestsHandler();
-  const fileEditHandler = useFileEditHandler();
+  const fileEditHandler = useFileEditHandler(win);
   restRequestsHandler.init();
   fileEditHandler.init();
 
@@ -84,6 +82,10 @@ app.whenReady().then(() => {
     const appSettings = appSettingsService.readAppSettings();
     console.debug('App settings loaded', appSettings);
     win.webContents.send(IpcChannelTypes.appSettingsLoaded, appSettings);
+
+    if (appSettings.isDevelopment) {
+      win.webContents.openDevTools({ mode: 'detach' });
+    }
 
     console.debug('Loading projects configs...');
     const configPath = path.join('./', 'config');
