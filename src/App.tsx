@@ -5,7 +5,7 @@ import './App.css';
 import { useRecoilState } from 'recoil';
 import IpcCommunicationService from './app/services/IpcCommunicationService';
 import AppContent from './app/root/AppContent';
-// import DebugStateObserver from './app/state/DebugStateObserver';
+import DebugStateObserver from './app/state/DebugStateObserver';
 import { getTheme } from './app/theme/mainTheme';
 import JiraDataProvider from './app/services/JiraDataProvider';
 import appSettingsState from './app/state/AppState';
@@ -35,7 +35,9 @@ function App() {
           <>
             <IpcCommunicationService />
             <JiraDataProvider />
-            {/* <DebugStateObserver /> */}
+            {appSettings && appSettings.isDevelopment
+              ? <DebugStateObserver />
+              : <></>}
             <StyledEngineProvider injectFirst>
               <ThemeProvider theme={getTheme(appSettings.theme)}>
                 <AppContainer>
