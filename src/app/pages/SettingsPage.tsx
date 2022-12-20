@@ -1,11 +1,14 @@
 import {
   Accordion, AccordionSummary, Typography, AccordionDetails, styled, TextField, Button,
 } from '@mui/material';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useRecoilState } from 'recoil';
 import appSettingsState from '../state/AppState';
-import projectsState from '../state/ProjectState';
+import { projectsConfigFileNameState, projectsState } from '../state/ProjectState';
+import IpcChannelTypes from '../../shared/dto/IpcChannelTypes';
+
+const { ipcRenderer } = window.require('electron');
 
 const Root = styled('div')({
   margin: '10px',
@@ -38,13 +41,52 @@ const Title = styled(Typography)({
   fontWeight: 'bold',
 });
 
+type ProjectSettings = {
+  id: string;
+  settings: string;
+};
+
 function SettingsPage() {
   const [expanded, setExpanded] = React.useState<string | false>(false);
   const [appSettings] = useRecoilState(appSettingsState);
   const [projectSettings] = useRecoilState(projectsState);
+  const [projectsConfigFileName] = useRecoilState(projectsConfigFileNameState);
+
+  const [editedSettings, setEditedSettings] = useState<string>(
+    JSON.stringify(appSettings, undefined, 4),
+  );
+
+  const [projectsSettings, setProjectsSettings] = useState<any>([]);
+
+  useEffect(() => {
+    const output: ProjectSettings[] = [];
+    projectSettings.forEach((project) => {
+      output.push({ id: project.id, settings: JSON.stringify(project, undefined, 4) });
+    });
+    setProjectsSettings(output);
+  }, [projectSettings]);
 
   const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
+  };
+
+  const handleAppSettingsSave = () => {
+    ipcRenderer.invoke(IpcChannelTypes.saveEditedConfigFile, 'appSettings.json', JSON.parse(editedSettings));
+  };
+
+  const handleProjectSettingsEdit = (projectId: string, value: string) => {
+    setProjectsSettings([...projectSettings.filter((p) => p.id !== projectId), {
+      id: projectId,
+      settings: value,
+    }]);
+  };
+
+  const handleProjectSettingsSave = (projectId: string) => {
+    ipcRenderer.invoke(
+      IpcChannelTypes.saveEditedConfigFile,
+      projectsConfigFileName.find((p) => p.id === projectId)!.fileName,
+      JSON.parse(projectsSettings.find((p: any) => p.id === projectId)!.settings),
+    );
   };
 
   return (
@@ -65,11 +107,17 @@ function SettingsPage() {
           <FileContent
             id="outlined-multiline-static"
             multiline
-            defaultValue={JSON.stringify(appSettings, undefined, 4)}
+            defaultValue={editedSettings}
+            onChange={(e) => setEditedSettings(e.target.value)}
           />
         </AccordionDetails>
         <ButtonContainer>
-          <Button variant="contained">Save</Button>
+          <Button
+            variant="contained"
+            onClick={() => handleAppSettingsSave()}
+          >
+            Save
+          </Button>
         </ButtonContainer>
       </StyledAccordion>
       {projectSettings && projectSettings.map((project) => (
@@ -90,11 +138,17 @@ function SettingsPage() {
               id="outlined-multiline-static"
               multiline
               defaultValue={JSON.stringify(project, undefined, 4)}
+              onChange={(e) => handleProjectSettingsEdit(project.id, e.target.value)}
             />
             <Button value="Save" />
           </AccordionDetails>
           <ButtonContainer>
-            <Button variant="contained">Save</Button>
+            <Button
+              variant="contained"
+              onClick={() => handleProjectSettingsSave(project.id)}
+            >
+              Save
+            </Button>
           </ButtonContainer>
         </StyledAccordion>
       ))}

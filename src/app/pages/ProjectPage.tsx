@@ -5,11 +5,11 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useRecoilValue } from 'recoil';
 import RouteTypes from '../common/dto/RouteTypes';
-import projectsState from '../state/ProjectState';
 import ProjectScriptList from '../components/ProjectScriptList';
 import ProjectLinkList from '../components/ProjectLinkList';
 import { ProjectCard } from '../components/ProjectStyledComponents';
 import JiraItemsTable from '../components/JiraItemsTable';
+import { projectsState } from '../state/ProjectState';
 
 const Root = styled('div')({
   margin: '10px',

@@ -15,8 +15,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import RouteTypes from '../common/dto/RouteTypes';
-import projectsState from '../state/ProjectState';
 import { jiraUpdatesState } from '../state/JiraState';
+import { projectsState } from '../state/ProjectState';
 
 // eslint-disable-next-line react/jsx-props-no-spreading
 const MenuItem = styled(ListItemButton)(({ theme }) => ({

@@ -1,9 +1,14 @@
 import { atom } from 'recoil';
-import { Project } from '../../shared/dto/ProjectDto';
+import { Project, ProjectFileName } from '../../shared/dto/ProjectDto';
 
 const projectsState = atom<Project[]>({
   key: 'projectsState',
   default: [],
 });
 
-export default projectsState;
+const projectsConfigFileNameState = atom<ProjectFileName[]>({
+  key: 'projectsConfigFileNameState',
+  default: [],
+});
+
+export { projectsState, projectsConfigFileNameState };

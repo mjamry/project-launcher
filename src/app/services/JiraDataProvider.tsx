@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import projectsState from '../state/ProjectState';
 import appSettingsState from '../state/AppState';
 import useJiraClient from './JiraClient';
 import { JiraUpdate } from '../../shared/dto/JiraTypes';
 import { jiraUpdatesState, jiraHistoryState } from '../state/JiraState';
+import { projectsState } from '../state/ProjectState';
 
 function JiraDataProvider() {
   const [projects] = useRecoilState(projectsState);
