@@ -12,6 +12,7 @@ import IpcChannelTypes from '../src/shared/dto/IpcChannelTypes';
 import useProjectFileConfigReader from './ConfigReader';
 import useAppSettingsService from './AppSettingsService';
 import useRestRequestsHandler from './RestRequestsHandler';
+import useFileEditHandler from './file/FileEditHandler';
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -28,8 +29,6 @@ function createWindow() {
     win.loadURL(`file://${__dirname}/../index.html`);
   } else {
     win.loadURL('http://localhost:3000/index.html');
-
-    win.webContents.openDevTools({ mode: 'detach' });
 
     // Hot Reloading on 'node_modules/.bin/electronPath'
     // eslint-disable-next-line global-require
@@ -60,7 +59,9 @@ app.whenReady().then(() => {
 
   const win = createWindow();
   const restRequestsHandler = useRestRequestsHandler();
+  const fileEditHandler = useFileEditHandler(win);
   restRequestsHandler.init();
+  fileEditHandler.init();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -82,12 +83,24 @@ app.whenReady().then(() => {
     console.debug('App settings loaded', appSettings);
     win.webContents.send(IpcChannelTypes.appSettingsLoaded, appSettings);
 
+    if (appSettings.isDevelopment) {
+      win.webContents.openDevTools({ mode: 'detach' });
+    }
+
     console.debug('Loading projects configs...');
     const configPath = path.join('./', 'config');
     const configReader = useProjectFileConfigReader(configPath);
     const projectsConfig = configReader.readAllFiles();
     console.debug(`Loaded ${projectsConfig.length} projects`);
-    win.webContents.send(IpcChannelTypes.projectsConfigsLoaded, [...projectsConfig]);
+    win.webContents.send(
+      IpcChannelTypes.projectsConfigsLoaded,
+      projectsConfig.map((p) => p.config),
+    );
+
+    win.webContents.send(
+      IpcChannelTypes.projectsFileNameLoaded,
+      projectsConfig.map((p) => p.fileName),
+    );
   });
 
   ipcMain.on('error', (event, data) => {

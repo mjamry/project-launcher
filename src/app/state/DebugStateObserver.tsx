@@ -96,7 +96,7 @@ function DebugStateObserver() {
 
   const renderCollapsed = () => (
     <IconButton
-      color="primary"
+      color="secondary"
       aria-label="debug view"
       component="span"
       onClick={() => setIsCollapsed(false)}

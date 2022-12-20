@@ -23,3 +23,8 @@ export type Project = {
   links: ProjectLink[];
   scripts: ProjectScript[];
 };
+
+export type ProjectFileName = {
+  id: string;
+  fileName: string;
+};
