@@ -18,7 +18,6 @@ import RouteTypes from '../common/dto/RouteTypes';
 import { jiraUpdatesState } from '../state/JiraState';
 import { projectsState } from '../state/ProjectState';
 
-// eslint-disable-next-line react/jsx-props-no-spreading
 const MenuItem = styled(ListItemButton)(({ theme }) => ({
   ...theme.typography.button,
   color: theme.palette.text.primary,
@@ -74,8 +73,7 @@ const MenuContainer = styled('div')({
 // as the real menu has position=fixed.
 const FakeMenuContainer = styled('div')({
   height: '100vh',
-  width: '10vw',
-  backgroundColor: 'red',
+  width: '170px',
 });
 
 enum MenuItemPosition {
