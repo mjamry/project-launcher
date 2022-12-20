@@ -5,6 +5,7 @@ import RouteTypes from '../common/dto/RouteTypes';
 import MainMenu from '../components/MainMenu';
 import DashboardPage from '../pages/DashboardPage';
 import ProjectPage from '../pages/ProjectPage';
+import SettingsPage from '../pages/SettingsPage';
 
 const PageLayout = styled('div')({
   display: 'flex',
@@ -31,6 +32,10 @@ function AppContent() {
           <Route
             path={RouteTypes.project}
             element={<ProjectPage />}
+          />
+          <Route
+            path={RouteTypes.settings}
+            element={<SettingsPage />}
           />
         </Routes>
       </Content>
