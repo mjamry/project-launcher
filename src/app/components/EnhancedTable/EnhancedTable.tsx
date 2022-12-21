@@ -40,8 +40,8 @@ function EnhancedTable(props: Props) {
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [filteredData, setFilteredData] = useState<any[]>(data);
 
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<any>('id');
+  const [order, setOrder] = React.useState<Order>('desc');
+  const [orderBy, setOrderBy] = React.useState<any>('updated');
 
   useEffect(() => {
     setFilteredData(data);
