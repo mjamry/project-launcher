@@ -1,54 +1,79 @@
 {
   "name": "project-launcher",
+  "author": "mjamry",
+  "description": "project launcher and dashboard",
   "version": "0.1.0",
   "private": true,
-  "main": "public/electron.js",
+  "main": "build/electron/electron.js",
   "homepage": "./",
+  "build": {
+    "extends": null,
+    "files": [
+      "build/**/*"
+    ],
+    "extraFiles": [
+      "config"
+    ]
+  },
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@material-ui/core": "^4.12.4",
+    "@mui/icons-material": "^5.8.0",
     "@mui/material": "^5.8.1",
+    "@mui/utils": "^5.10.9",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/electron-devtools-installer": "^2.2.2",
     "@types/jest": "^27.5.1",
-    "@types/node": "^16.11.36",
-    "@types/react": "^18.0.9",
-    "@types/react-dom": "^18.0.5",
+    "electron-devtools-installer": "^3.2.0",
+    "electron-fetch": "^1.7.4",
+    "electron-is-dev": "^2.0.0",
+    "electron-reload": "^2.0.0-alpha.1",
+    "esm": "^3.2.25",
+    "material-table": "^2.0.3",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "recoil": "^0.7.6",
     "typescript": "^4.6.4",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "concurrently": "^7.2.1",
-    "cross-env": "^7.0.3",
-    "wait-on": "^6.0.1",
-    "electron": "^19.0.0",
-    "electron-is-dev": "^2.0.0",
-
+    "@faker-js/faker": "^7.6.0",
     "@mui/types": "^7.1.0",
+    "@types/node": "^17.0.35",
+    "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.5",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.0.0",
-
+    "concurrently": "^7.2.1",
+    "cross-env": "^7.0.3",
+    "electron": "^19.0.1",
+    "electron-builder": "^23.0.3",
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
-    "eslint-plugin-react-hooks": "^4.3.0"
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "react-app-rewired": "^2.2.1",
+    "wait-on": "^6.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext .tsx",
     "lint-fix": "eslint . --ext .tsx --fix",
-    "dev": "concurrently -k \"cross-env BROWSER=none npm run start\" \"npm:electron\"",
-    "electron": "wait-on tcp:3000 && electron ."
+    "postinstall": "electron-builder install-app-deps",
+    "electron:dev": "concurrently \"cross-env BROWSER=none npm run start\" \"wait-on http://localhost:3000 && tsc -p electron -w\" \"wait-on http://localhost:3000 && tsc -p electron && electron .\"",
+    "electron:build": "npm run build && tsc -p electron && electron-builder"
   },
   "eslintConfig": {
     "extends": [

@@ -1,29 +1,53 @@
+import { ThemeProvider } from '@emotion/react';
+import { styled, StyledEngineProvider } from '@mui/material';
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { useRecoilState } from 'recoil';
+import IpcCommunicationService from './app/services/IpcCommunicationService';
+import AppContent from './app/root/AppContent';
+import DebugStateObserver from './app/state/DebugStateObserver';
+import { getTheme } from './app/theme/mainTheme';
+import JiraDataProvider from './app/services/JiraDataProvider';
+import appSettingsState from './app/state/AppState';
+import { projectsState } from './app/state/ProjectState';
+
+const AppContainer = styled('div')(({ theme }) => ({
+  textAlign: 'center',
+  backgroundColor: theme.palette.background.default,
+}));
 
 function App() {
+  const [appSettings] = useRecoilState(appSettingsState);
+  const [projectsConfig] = useRecoilState(projectsState);
+
+  const canLoad = (): boolean => {
+    if (appSettings !== undefined && projectsConfig !== undefined) {
+      return true;
+    }
+    return false;
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit
-          {' '}
-          <code>src/App.tsx</code>
-          {' '}
-          and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {!canLoad()
+        ? 'loading'
+        : (
+          <>
+            <IpcCommunicationService />
+            <JiraDataProvider />
+            {appSettings && appSettings.isDevelopment
+              ? <DebugStateObserver />
+              : <></>}
+            <StyledEngineProvider injectFirst>
+              <ThemeProvider theme={getTheme(appSettings.theme)}>
+                <AppContainer>
+                  <AppContent />
+                </AppContainer>
+              </ThemeProvider>
+            </StyledEngineProvider>
+          </>
+        )}
+    </>
   );
 }
 
