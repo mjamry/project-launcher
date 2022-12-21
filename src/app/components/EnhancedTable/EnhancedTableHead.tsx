@@ -1,9 +1,19 @@
 import React from 'react';
 import {
-  TableHead, TableRow, TableCell, TableSortLabel, Box,
+  TableHead, TableRow, TableCell, TableSortLabel, Box, styled,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { HeadCell, Order } from './EnhancedTableTypes';
+
+const TableSortContainer = styled(TableSortLabel)(({ theme }) => ({
+  color: theme.palette.text.primary,
+  '&:hover': {
+    color: theme.palette.text.primary,
+  },
+  '& .MuiTableSortLabel-icon': {
+    color: `${theme.palette.text.primary} !important`,
+  },
+}));
 
 interface EnhancedTableHeadProps {
   onRequestSort: (event: React.MouseEvent<unknown>, property: keyof any) => void;
@@ -34,7 +44,7 @@ function EnhancedTableHead(props: EnhancedTableHeadProps) {
             {headCell.disableSorting
               ? headCell.label
               : (
-                <TableSortLabel
+                <TableSortContainer
                   active={orderBy === headCell.id}
                   direction={orderBy === headCell.id ? order : 'asc'}
                   onClick={createSortHandler(headCell.id)}
@@ -45,7 +55,7 @@ function EnhancedTableHead(props: EnhancedTableHeadProps) {
                       {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                     </Box>
                   ) : null}
-                </TableSortLabel>
+                </TableSortContainer>
               )}
           </TableCell>
         ))}
