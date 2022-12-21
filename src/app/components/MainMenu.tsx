@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -18,7 +18,6 @@ import RouteTypes from '../common/dto/RouteTypes';
 import { jiraUpdatesState } from '../state/JiraState';
 import { projectsState } from '../state/ProjectState';
 
-// eslint-disable-next-line react/jsx-props-no-spreading
 const MenuItem = styled(ListItemButton)(({ theme }) => ({
   ...theme.typography.button,
   color: theme.palette.text.primary,
@@ -74,8 +73,7 @@ const MenuContainer = styled('div')({
 // as the real menu has position=fixed.
 const FakeMenuContainer = styled('div')({
   height: '100vh',
-  width: '10vw',
-  backgroundColor: 'red',
+  width: '170px',
 });
 
 enum MenuItemPosition {
@@ -116,12 +114,6 @@ function MainMenu() {
   };
 
   const getMenuItems = (): MenuItemDto[] => [
-    {
-      title: 'Dashboard',
-      icon: <DashboardIcon />,
-      position: MenuItemPosition.top,
-      action: () => navigate(RouteTypes.root),
-    },
     ...getProjects(),
     {
       title: 'Settings',
@@ -140,6 +132,13 @@ function MainMenu() {
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
+
+  useEffect(() => {
+    const firstMenuItem = getMenuItems()[0];
+    firstMenuItem.action();
+    setSelectedButtonTitle(firstMenuItem.title);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projects]);
 
   return (
     <>
