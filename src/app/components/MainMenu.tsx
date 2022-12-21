@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -114,12 +114,6 @@ function MainMenu() {
   };
 
   const getMenuItems = (): MenuItemDto[] => [
-    {
-      title: 'Dashboard',
-      icon: <DashboardIcon />,
-      position: MenuItemPosition.top,
-      action: () => navigate(RouteTypes.root),
-    },
     ...getProjects(),
     {
       title: 'Settings',
@@ -138,6 +132,13 @@ function MainMenu() {
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
+
+  useEffect(() => {
+    const firstMenuItem = getMenuItems()[0];
+    firstMenuItem.action();
+    setSelectedButtonTitle(firstMenuItem.title);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projects]);
 
   return (
     <>

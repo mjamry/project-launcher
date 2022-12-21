@@ -3,7 +3,6 @@ import React from 'react';
 import { Routes, Route } from 'react-router';
 import RouteTypes from '../common/dto/RouteTypes';
 import MainMenu from '../components/MainMenu';
-import DashboardPage from '../pages/DashboardPage';
 import ProjectPage from '../pages/ProjectPage';
 import SettingsPage from '../pages/SettingsPage';
 
@@ -25,10 +24,6 @@ function AppContent() {
       </div>
       <Content>
         <Routes>
-          <Route
-            path={RouteTypes.root}
-            element={<DashboardPage />}
-          />
           <Route
             path={RouteTypes.project}
             element={<ProjectPage />}
