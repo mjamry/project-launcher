@@ -15,6 +15,10 @@
       "config"
     ]
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mjamry/project-launcher.git"
+  },
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
@@ -67,9 +71,8 @@
     "test": "react-app-rewired test",
     "lint": "eslint . --ext .tsx",
     "lint-fix": "eslint . --ext .tsx --fix",
-    "postinstall": "electron-builder install-app-deps",
     "electron:dev": "concurrently \"cross-env BROWSER=none npm run start\" \"wait-on http://localhost:3000 && tsc -p electron -w\" \"wait-on http://localhost:3000 && tsc -p electron && electron .\"",
-    "electron:build": "npm run build && electron-builder",
+    "postinstall": "electron-builder install-app-deps",
 		"build:win": "electron-builder --windows",
 		"release:win": "electron-builder --windows --publish always"
   },
