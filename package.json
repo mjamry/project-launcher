@@ -1,8 +1,8 @@
 {
   "name": "project-launcher",
-  "author": "mjamry",
+  "author": "michal.jamry@gmail.com",
   "description": "project launcher and dashboard",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "main": "build/electron/electron.js",
   "homepage": "./",
@@ -63,13 +63,13 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "build": "react-app-rewired build && tsc -p electron",
     "test": "react-app-rewired test",
     "lint": "eslint . --ext .tsx",
     "lint-fix": "eslint . --ext .tsx --fix",
     "postinstall": "electron-builder install-app-deps",
     "electron:dev": "concurrently \"cross-env BROWSER=none npm run start\" \"wait-on http://localhost:3000 && tsc -p electron -w\" \"wait-on http://localhost:3000 && tsc -p electron && electron .\"",
-    "electron:build": "npm run build && tsc -p electron && electron-builder",
+    "electron:build": "npm run build && electron-builder",
 		"build:win": "electron-builder --windows",
 		"release:win": "electron-builder --windows --publish always"
   },
