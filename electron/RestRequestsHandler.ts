@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ipcMain } from 'electron';
+import { HeadersInit } from 'electron-fetch';
 import { RestClientOptions, RestMethod } from '../src/shared/dto/RestClientTypes';
 import useRestClient from '../src/shared/RestClient';
 

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/comma-dangle */
+import { HeadersInit } from 'electron-fetch';
 import {
   RestClientOptions, IRestClient, RestMethod
 } from '../../shared/dto/RestClientTypes';

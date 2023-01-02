@@ -1,3 +1,5 @@
+import { HeadersInit } from 'electron-fetch';
+
 enum RestMethod {
   get = 'GET',
   put = 'PUT',
