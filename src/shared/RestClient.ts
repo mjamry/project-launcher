@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/comma-dangle */
-import fetch from 'electron-fetch';
+import fetch, { HeadersInit } from 'electron-fetch';
 import useLoggerService from '../app/common/LoggerService';
 import {
   RestClientOptions, IRestClient, RestMethod, Request
