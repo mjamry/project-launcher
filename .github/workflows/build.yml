@@ -19,14 +19,14 @@ jobs:
         with:
           node-version: 16
 
-    - name: install dependencies
+      - name: install dependencies
         run: npm install
 
-    - name: postinstall
+      - name: postinstall
         run: npm run postinstall
 
-    - name: build
+      - name: build
         run: npm run build
 
-    - name: build electron win
+      - name: build electron win
         run: npm run build:win

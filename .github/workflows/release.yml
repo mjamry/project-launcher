@@ -7,7 +7,7 @@ on:
     workflow_dispatch:
 
 jobs:
-  build:
+  release:
     runs-on: windows-latest
 
     steps:
@@ -19,14 +19,14 @@ jobs:
         with:
           node-version: 16
 
-    - name: install dependencies
+      - name: install dependencies
         run: npm install
 
-    - name: postinstall
+      - name: postinstall
         run: npm run postinstall
 
-    - name: build
+      - name: build
         run: npm run build
 
-    - name: release electron win
+      - name: release electron win
         run: npm run release:win
