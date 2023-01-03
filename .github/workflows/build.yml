@@ -1,17 +1,14 @@
-name: Release
+name: Build
 
 on:
     push:
       branches:
-        - master
+        - develop
     workflow_dispatch:
 
 jobs:
-  release:
+  build:
     runs-on: windows-latest
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Check out Git repository
@@ -31,5 +28,5 @@ jobs:
       - name: build
         run: npm run build
 
-      - name: release electron win
-        run: npm run release:win
+      - name: build electron win
+        run: npm run build:win
