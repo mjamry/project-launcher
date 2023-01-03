@@ -73,7 +73,7 @@
     "lint-fix": "eslint . --ext .tsx --fix",
     "electron:dev": "concurrently \"cross-env BROWSER=none npm run start\" \"wait-on http://localhost:3000 && tsc -p electron -w\" \"wait-on http://localhost:3000 && tsc -p electron && electron .\"",
     "postinstall": "electron-builder install-app-deps",
-		"build:win": "electron-builder --windows",
+		"build:win": "electron-builder --windows --publish=never",
 		"release:win": "electron-builder --windows --publish always"
   },
   "eslintConfig": {
