@@ -1,46 +1,100 @@
-# Getting Started with Create React App
+# Project Launcher
+![release-badge](https://img.shields.io/github/v/release/mjamry/project-launcher?style=for-the-badge)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Contents
 
-## Available Scripts
+* [Why?](#why)
+* [Technologies](#technologies)
+* [Installation](#installation)
+* [Configuration](#usage)
+  * [App settings](#app-settings)
+  * [Project configuration](#project-settings)
+  * [Themes](#themes)
 
-In the project directory, you can run:
+#### Why?
 
-### `npm start`
+I'm usually working with multiple projects simultaneously. I used to switch between them on daily basics. This tool should be some kind of aggregator allowing to  trace all Jira updates and give a one place to store all links and scripts related witch each project.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+#### Technologies
+![Electron](https://img.shields.io/badge/-Electron-gray?style=for-the-badge&logo=electron)
+![React](https://img.shields.io/badge/-React-gray?style=for-the-badge&logo=react)
+#### Installation
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+This is an electron app, so installation is as simple as downloading and running installer.
+You can find the latest version [Here](https://github.com/mjamry/project-launcher/releases)
+#### Configuration
 
-### `npm test`
+This app has its main configuration file, along with separate config files for each project. Below you can find detailed description for each config entry.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+###### App settings
 
-### `npm run build`
+```json
+{
+  "isDevelopment": , <- Boolean. To enable dev tools for the app.
+  "jiraUrl": "", <- String. Url to the Jira server from which you want to get updates.
+  "jiraToken": "", <- String. Jira Token to identify your user on Jira.
+  "jiraRefreshTimeoutInMinutes": , <- Number. Defines how often check Jira for updates.
+  "jiraHistoryTimeInMinutes": , <- Number. Defines time range for Jira items fetched on the startup.
+  "jiraChangelogFields": [], <- Strings. Defines which fields to show for each jira ticket.
+  "theme": { <- Colors in hex code format
+    "primaryBackgroundColor": ,
+    "primaryColor": ,
+    "secondaryBackgroundColor": ,
+    "secondaryColor": ,
+    "background":
+  }
+}
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+###### Project settings
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```json
+{
+  "id": , <- String. Defined project ID.
+  "name": , <- String. Project name displayed on the project page.
+  "avatarUrl": , <- String. Not yet supported.
+  "jiraId": , <- String. Jira ID for project.
+  "description": , <- String. Description.
+  "links":
+    [
+      {
+        "name": , <- String. Displayed name.
+        "url": <- String. Url to open in a browser.
+      }
+    ],
+  "scripts":
+    [
+      {
+        "name": , <- String. Displayed name.
+        "path": <- String. Path to local the application/script.
+      }
+    ]
+}
+```
+###### Themes
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Here you can find some example themes.
 
-### `npm run eject`
+Dark green:
+![](https://img.shields.io/static/v1?label=&message=%20&color=2f3e46)![](https://img.shields.io/static/v1?label=&message=%20&color=cad2c5)![](https://img.shields.io/static/v1?label=&message=%20&color=84a98c)![](https://img.shields.io/static/v1?label=&message=%20&color=2f3e46)![](https://img.shields.io/static/v1?label=&message=%20&color=52796f)
+```json
+  "theme": { 
+    "primaryBackgroundColor": "#2f3e46", 
+    "primaryColor": "#cad2c5",
+    "secondaryBackgroundColor": "#84a98c",
+    "secondaryColor": "#2f3e46",
+    "background": "#52796f"
+  }
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Light brown:
+![](https://img.shields.io/static/v1?label=&message=%20&color=b08968)![](https://img.shields.io/static/v1?label=&message=%20&color=7f5539)![](https://img.shields.io/static/v1?label=&message=%20&color=e6ccb2)![](https://img.shields.io/static/v1?label=&message=%20&color=9c6644)![](https://img.shields.io/static/v1?label=&message=%20&color=ede0d4)
+```json
+  "theme": { 
+    "primaryBackgroundColor": "#b08968", 
+    "primaryColor": "#7f5539",
+    "secondaryBackgroundColor": "#e6ccb2",
+    "secondaryColor": "#9c6644",
+    "background": "#ede0d4"
+  }
+```
