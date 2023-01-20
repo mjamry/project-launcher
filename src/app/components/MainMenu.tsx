@@ -169,7 +169,7 @@ function MainMenu() {
                       }}
                     >
                       <ListItemIcon>
-                        <Badge color="secondary" badgeContent={menuItem.badge}>
+                        <Badge badgeContent={menuItem.badge}>
                           {menuItem.icon}
                         </Badge>
                       </ListItemIcon>
