@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { faker } from '@faker-js/faker';
 import { appSettingsState } from '../state/AppState';
 import useJiraClient from './JiraClient';
 import { JiraIssue, JiraUpdate } from '../../shared/dto/JiraTypes';
@@ -14,20 +12,6 @@ function JiraDataProvider() {
   const [updateStates, setJiraUpdates] = useRecoilState(jiraUpdatesState);
   const [historyState, setJiraHistory] = useRecoilState(jiraHistoryState);
   const jiraClient = useJiraClient(appSettings);
-
-  function createIssue(): JiraIssue {
-    return {
-      id: faker.helpers.arrayElement(['SMDEM-613', 'SMDEM-612', 'SMDEM-610', 'SMDEM-609']),
-      summary: faker.hacker.phrase(),
-      url: faker.internet.url(),
-      assignee: faker.internet.email(),
-      status: faker.helpers.arrayElement(['Open', 'Closed', 'Resolved', 'Waiting For Release']),
-      description: faker.lorem.lines(2),
-      updated: faker.date.recent(1),
-      isNew: faker.datatype.boolean(),
-      priority: faker.helpers.arrayElement(['Low', 'Medium', 'High']),
-    };
-  }
 
   const getJiraHistory = useCallback(async () => {
     const projectHistory: JiraUpdate[] = [];
@@ -44,19 +28,11 @@ function JiraDataProvider() {
 
   const getJiraUpdates = useCallback(async () => {
     const incomingUpdates: JiraUpdate[] = [];
-    // TODO for testing purposes Only
-    const jiraTestUpdates: JiraUpdate = {
-      project: 'SMDEM',
-      issues: [createIssue()],
-    };
 
     await Promise.all(projects.map(async (project) => {
       if (project.jiraId) {
         const updates = await jiraClient.getUpdatesForProject(project.jiraId);
 
-        if (jiraTestUpdates.project === updates.project) {
-          updates.issues.push(jiraTestUpdates.issues[0]);
-        }
         incomingUpdates.push(updates);
       }
     }));
