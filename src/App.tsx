@@ -8,7 +8,7 @@ import AppContent from './app/root/AppContent';
 import DebugStateObserver from './app/state/DebugStateObserver';
 import { getTheme } from './app/theme/mainTheme';
 import JiraDataProvider from './app/services/JiraDataProvider';
-import appSettingsState from './app/state/AppState';
+import { appSettingsState } from './app/state/AppState';
 import { projectsState } from './app/state/ProjectState';
 
 const AppContainer = styled('div')(({ theme }) => ({

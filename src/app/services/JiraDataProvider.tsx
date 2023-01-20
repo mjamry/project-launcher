@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { faker } from '@faker-js/faker';
-import appSettingsState from '../state/AppState';
+import { appSettingsState } from '../state/AppState';
 import useJiraClient from './JiraClient';
 import { JiraIssue, JiraUpdate } from '../../shared/dto/JiraTypes';
 import { jiraUpdatesState, jiraHistoryState } from '../state/JiraState';

@@ -19,7 +19,7 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import useLoggerService from '../common/LoggerService';
-import appSettingsState from './AppState';
+import { appThemeState } from './AppState';
 
 const Content = styled('div')({
   maxHeight: '95vh',
@@ -63,7 +63,7 @@ function DebugStateObserver() {
   const logger = useLoggerService('AppStateViewer');
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
   const [showStateChanges, setShowStateChanges] = useState<boolean>(false);
-  const appSettings = useRecoilValue(appSettingsState);
+  const appTheme = useRecoilValue(appThemeState);
 
   useEffect(() => {
     const atoms: State[] = [];
@@ -102,7 +102,7 @@ function DebugStateObserver() {
       component="span"
       onClick={() => setIsCollapsed(false)}
       sx={{
-        color: appSettings && appSettings.theme.highlightBackgroundColor ? appSettings.theme.highlightBackgroundColor : 'red',
+        color: appTheme && appTheme.highlightBackgroundColor ? appTheme.highlightBackgroundColor : 'red',
       }}
     >
       <BugReportIcon />

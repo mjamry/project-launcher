@@ -9,7 +9,7 @@ import { jiraUpdatesState } from '../state/JiraState';
 import JiraItemDetails from './JiraItemDetails';
 import EnhancedTable from './EnhancedTable/EnhancedTable';
 import { HeadCell } from './EnhancedTable/EnhancedTableTypes';
-import appSettingsState from '../state/AppState';
+import { appThemeState } from '../state/AppState';
 
 const KeyboardArrowUpIcon = styled(KeyboardArrowDownIcon)({
   transform: 'rotate(180deg)',
@@ -51,7 +51,7 @@ function JiraItemDetailsTable(props: Props) {
   const { item, projectKey } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isUpdated, setIsUpdated] = useState<boolean>(false);
-  const appSettings = useRecoilValue(appSettingsState);
+  const appTheme = useRecoilValue(appThemeState);
 
   const updatedProjectIssues = useRecoilValue(jiraUpdatesState)
     .find((u) => u.project === projectKey)?.issues;
@@ -88,17 +88,17 @@ function JiraItemDetailsTable(props: Props) {
         sx={{
           color:
             isUpdated
-              ? appSettings.theme.highlightColor
-              : appSettings.theme.secondaryColor,
+              ? appTheme.highlightColor
+              : appTheme.secondaryColor,
           backgroundColor:
             isUpdated
-              ? appSettings.theme.highlightBackgroundColor
-              : appSettings.theme.secondaryBackgroundColor,
+              ? appTheme.highlightBackgroundColor
+              : appTheme.secondaryBackgroundColor,
           '.MuiTableCell-root': {
             color:
               isUpdated
-                ? appSettings.theme.highlightColor
-                : appSettings.theme.secondaryColor,
+                ? appTheme.highlightColor
+                : appTheme.secondaryColor,
           },
         }}
       >
