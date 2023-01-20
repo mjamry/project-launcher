@@ -6,6 +6,8 @@ export type AppTheme = {
   secondaryBackgroundColor: string;
   secondaryColor: string;
   background: string;
+  highlightBackgroundColor: string;
+  highlightColor: string;
 };
 
 export const DefaultTheme = {
@@ -14,6 +16,8 @@ export const DefaultTheme = {
   secondaryBackgroundColor: '#333',
   secondaryColor: '#777',
   background: '#444',
+  highlightBackgroundColor: '#222',
+  highlightColor: '#ddd',
 };
 
 export type AppSettings = {

@@ -5,7 +5,7 @@ import { ipcRenderer } from 'electron';
 import { Project, ProjectFileName } from '../../shared/dto/ProjectDto';
 import IpcChannelTypes from '../../shared/dto/IpcChannelTypes';
 import { AppSettings } from '../../shared/dto/AppSettings';
-import appSettingsState from '../state/AppState';
+import { appSettingsState, appThemeState } from '../state/AppState';
 import { JiraUpdate } from '../../shared/dto/JiraTypes';
 import { jiraUpdatesState, jiraHistoryState } from '../state/JiraState';
 import { projectsConfigFileNameState, projectsState } from '../state/ProjectState';
@@ -16,10 +16,12 @@ function IpcCommunicationService() {
   const setAppSettings = useSetRecoilState(appSettingsState);
   const setJiraUpdates = useSetRecoilState(jiraUpdatesState);
   const setJiraHistory = useSetRecoilState(jiraHistoryState);
+  const setAppTheme = useSetRecoilState(appThemeState);
 
   useEffect(() => {
     ipcRenderer.on(IpcChannelTypes.appSettingsLoaded, (event: any, data: AppSettings) => {
       setAppSettings(data);
+      setAppTheme(data.theme);
     });
 
     ipcRenderer.on(IpcChannelTypes.projectsConfigsLoaded, (event: any, data: Project[]) => {
@@ -40,7 +42,14 @@ function IpcCommunicationService() {
     ipcRenderer.on(IpcChannelTypes.jiraHistory, (event: any, data: JiraUpdate[]) => {
       setJiraHistory(data);
     });
-  }, [setProjects, setAppSettings, setJiraUpdates, setJiraHistory, setProjectsFileName]);
+  }, [
+    setProjects,
+    setAppSettings,
+    setJiraUpdates,
+    setJiraHistory,
+    setProjectsFileName,
+    setAppTheme,
+  ]);
 
   return (
     <></>

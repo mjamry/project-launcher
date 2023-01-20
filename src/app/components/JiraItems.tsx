@@ -15,7 +15,6 @@ function JiraItems(props: Props) {
         <JiraItemDetailsTable
           item={item}
           projectKey={projectKey}
-          updated={false}
         />
       ))}
     </>

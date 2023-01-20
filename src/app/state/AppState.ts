@@ -1,9 +1,16 @@
 import { atom } from 'recoil';
-import { AppSettings, DefaultAppSettings } from '../../shared/dto/AppSettings';
+import {
+  AppSettings, AppTheme, DefaultAppSettings, DefaultTheme,
+} from '../../shared/dto/AppSettings';
 
 const appSettingsState = atom<AppSettings>({
   key: 'appSettings',
   default: DefaultAppSettings,
 });
 
-export default appSettingsState;
+const appThemeState = atom<AppTheme>({
+  key: 'appTheme',
+  default: DefaultTheme,
+});
+
+export { appSettingsState, appThemeState };

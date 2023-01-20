@@ -154,13 +154,21 @@ export function getTheme(userTheme: AppTheme): Theme {
       },
     },
     components: {
+      MuiBadge: {
+        styleOverrides: {
+          root: {
+            '.MuiBadge-badge': {
+              color: userTheme && userTheme.highlightColor ? userTheme.highlightColor : DefaultTheme.highlightColor,
+              backgroundColor: userTheme && userTheme.highlightBackgroundColor ? userTheme.highlightBackgroundColor : DefaultTheme.highlightBackgroundColor,
+            },
+          },
+        },
+      },
       // Table
       MuiTableCell: {
         styleOverrides: {
           root: {
             borderBottom: 'none',
-            color: userTheme && userTheme.secondaryColor ? userTheme.secondaryColor : DefaultTheme.secondaryColor,
-            backgroundColor: userTheme && userTheme.secondaryBackgroundColor ? userTheme.secondaryBackgroundColor : DefaultTheme.secondaryBackgroundColor,
           },
         },
       },
