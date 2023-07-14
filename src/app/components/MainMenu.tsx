@@ -99,8 +99,8 @@ function MainMenu() {
   const getProjects = (): MenuItemDto[] => {
     const output: MenuItemDto[] = [];
     projects.forEach((project) => {
-      const projectUpdatesCount = updates
-        .find((u) => u.project === project.jiraId)?.issues.length || 0;
+      const projectUpdatesCount = [...new Set(updates
+        .find((u) => u.project === project.jiraId)?.issues)].length || 0;
       output.push({
         title: project.name,
         icon: project.avatarUrl ? <ProjectAvatar src={project.avatarUrl} /> : <DashboardIcon />,
