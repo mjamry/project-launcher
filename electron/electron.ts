@@ -12,7 +12,7 @@ import IpcChannelTypes from '../src/shared/dto/IpcChannelTypes';
 import useProjectFileConfigReader from './ConfigReader';
 import useAppSettingsService from './AppSettingsService';
 import useRestRequestsHandler from './RestRequestsHandler';
-import useFileEditHandler from './file/FileEditHandler';
+import useFileSaveHandler from './file/FileSaveHandler';
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -60,7 +60,7 @@ app.whenReady().then(() => {
 
   const win = createWindow();
   const restRequestsHandler = useRestRequestsHandler();
-  const fileEditHandler = useFileEditHandler(win);
+  const fileEditHandler = useFileSaveHandler(win, app.getPath('userData'));
   restRequestsHandler.init();
   fileEditHandler.init();
 
@@ -78,7 +78,8 @@ app.whenReady().then(() => {
 
   win.webContents.on('did-finish-load', async () => {
     console.debug('Loading app settings...');
-    const settingsPath = path.join('./', 'config');
+    const settingsPath = app.getPath('userData');
+    console.log(settingsPath);
     const appSettingsService = useAppSettingsService(settingsPath);
     const appSettings = appSettingsService.readAppSettings();
     console.debug('App settings loaded', appSettings);
@@ -89,7 +90,7 @@ app.whenReady().then(() => {
     }
 
     console.debug('Loading projects configs...');
-    const configPath = path.join('./', 'config');
+    const configPath = app.getPath('userData');
     const configReader = useProjectFileConfigReader(configPath);
     const projectsConfig = configReader.readAllFiles();
     console.debug(`Loaded ${projectsConfig.length} projects`);
