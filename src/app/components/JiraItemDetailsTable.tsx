@@ -1,5 +1,5 @@
 import {
-  Box, Collapse, IconButton, styled, TableCell, TableRow,
+  Box, Button, Collapse, IconButton, styled, TableCell, TableRow,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -10,9 +10,14 @@ import JiraItemDetails from './JiraItemDetails';
 import EnhancedTable from './EnhancedTable/EnhancedTable';
 import { HeadCell } from './EnhancedTable/EnhancedTableTypes';
 import { appThemeState } from '../state/AppState';
+import { useLinkLaunchService } from '../services/IpcLaunchServices';
 
 const KeyboardArrowUpIcon = styled(KeyboardArrowDownIcon)({
   transform: 'rotate(180deg)',
+});
+
+const ItemLink = styled(Button)({
+  fontWeight: 'bold',
 });
 
 const headCells: HeadCell[] = [
@@ -52,6 +57,7 @@ function JiraItemDetailsTable(props: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isUpdated, setIsUpdated] = useState<boolean>(false);
   const appTheme = useRecoilValue(appThemeState);
+  const linkLauncher = useLinkLaunchService();
 
   const updatedProjectIssues = useRecoilValue(jiraUpdatesState)
     .find((u) => u.project === projectKey)?.issues;
@@ -82,37 +88,48 @@ function JiraItemDetailsTable(props: Props) {
     }
   };
 
+  const getThemeColors = () => ({
+    color:
+        isUpdated
+          ? appTheme.highlightColor
+          : appTheme.secondaryColor,
+    backgroundColor:
+        isUpdated
+          ? appTheme.highlightBackgroundColor
+          : appTheme.secondaryBackgroundColor,
+    '.MuiTableCell-root': {
+      color:
+          isUpdated
+            ? appTheme.highlightColor
+            : appTheme.secondaryColor,
+    },
+  });
+
+  const hasChanges = (): boolean => item.changes !== undefined && item.changes.length > 0;
+
   return (
     <>
-      <TableRow
-        sx={{
-          color:
-            isUpdated
-              ? appTheme.highlightColor
-              : appTheme.secondaryColor,
-          backgroundColor:
-            isUpdated
-              ? appTheme.highlightBackgroundColor
-              : appTheme.secondaryBackgroundColor,
-          '.MuiTableCell-root': {
-            color:
-              isUpdated
-                ? appTheme.highlightColor
-                : appTheme.secondaryColor,
-          },
-        }}
-      >
+      <TableRow sx={getThemeColors()}>
         <TableCell>
-          <IconButton
-            aria-label="expand item"
-            size="small"
-            onClick={() => handleRowClick()}
-          >
-            {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
+          {hasChanges()
+            ? (
+              <IconButton
+                aria-label="expand item"
+                size="small"
+                onClick={() => handleRowClick()}
+              >
+                {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+            )
+            : <></>}
         </TableCell>
         <TableCell component="th" scope="item">
-          {item.id}
+          <ItemLink
+            sx={getThemeColors()}
+            onClick={() => linkLauncher.launch(item.url)}
+          >
+            {item.id}
+          </ItemLink>
         </TableCell>
         <TableCell>{item.summary}</TableCell>
         <TableCell align="right">{item.status}</TableCell>
@@ -120,21 +137,25 @@ function JiraItemDetailsTable(props: Props) {
         <TableCell align="right">{item.updated.toLocaleString()}</TableCell>
         <TableCell align="right">{item.assignee}</TableCell>
       </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={isOpen} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <EnhancedTable
-                title={item.id}
-                data={item.changes ? item.changes : []}
-                headCells={headCells}
-              >
-                <JiraItemDetails />
-              </EnhancedTable>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
+      {hasChanges()
+        ? (
+          <TableRow sx={getThemeColors()}>
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+              <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                <Box sx={{ margin: 1 }}>
+                  <EnhancedTable
+                    title={item.id}
+                    data={item.changes ? item.changes : []}
+                    headCells={headCells}
+                  >
+                    <JiraItemDetails />
+                  </EnhancedTable>
+                </Box>
+              </Collapse>
+            </TableCell>
+          </TableRow>
+        )
+        : <></>}
     </>
   );
 }

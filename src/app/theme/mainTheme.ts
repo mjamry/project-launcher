@@ -177,6 +177,11 @@ export function getTheme(userTheme: AppTheme): Theme {
           root: {
             borderBottom: '1px solid',
             borderBottomColor: userTheme && userTheme.primaryBackgroundColor ? userTheme.primaryBackgroundColor : DefaultTheme.primaryBackgroundColor,
+            color: userTheme && userTheme.secondaryColor ? userTheme.secondaryColor : DefaultTheme.secondaryColor,
+            backgroundColor: userTheme && userTheme.secondaryBackgroundColor ? userTheme.secondaryBackgroundColor : DefaultTheme.secondaryBackgroundColor,
+            '.MuiTableCell-root': {
+              color: userTheme && userTheme.secondaryColor ? userTheme.secondaryColor : DefaultTheme.secondaryColor,
+            },
           },
         },
       },
