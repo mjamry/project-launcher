@@ -7,6 +7,7 @@ import { useRecoilState } from 'recoil';
 import { appSettingsState } from '../state/AppState';
 import { projectsState } from '../state/ProjectState';
 import useSettingsFileWriterService from '../services/SettingsFileWriterService';
+import CreateProjectConfig from '../components/CreateProjectConfig';
 
 const Root = styled('div')({
   margin: '10px',
@@ -154,6 +155,7 @@ function SettingsPage() {
           </ButtonContainer>
         </StyledAccordion>
       ))}
+      <CreateProjectConfig />
     </Root>
   );
 }
