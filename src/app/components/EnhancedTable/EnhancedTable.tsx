@@ -14,7 +14,7 @@ import { HeadCell, Order, getComparator } from './EnhancedTableTypes';
 const TableHeaderTools = styled('div')({
   display: 'flex',
   flexDirection: 'row',
-  alignItems: 'center',
+  alignItems: 'flex-end',
   justifyContent: 'space-between',
   marginBottom: '5px',
 });
@@ -24,8 +24,13 @@ const TableTitle = styled('div')({
   fontWeight: 'bold',
 });
 
+const SearchContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+});
+
 type Props = {
-  title: string;
+  title?: string | React.ReactElement;
   data: any[];
   children: React.ReactElement;
   headCells: HeadCell[];
@@ -91,7 +96,9 @@ function EnhancedTable(props: Props) {
         <TableTitle>
           {title}
         </TableTitle>
-        <Search handleSearch={handleSearchValueChanged} />
+        <SearchContainer>
+          <Search handleSearch={handleSearchValueChanged} />
+        </SearchContainer>
       </TableHeaderTools>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
