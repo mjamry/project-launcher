@@ -7,7 +7,8 @@ const { ipcRenderer } = window.require('electron');
 
 type ISettingsFileWriterService = {
   writeAppSettingsFile: (fileContent: string) => void;
-  writeProjectSettingsFile:(projectId: string, fileContent: string) => void;
+  writeProjectSettingsFile: (projectId: string, fileContent: string) => void;
+  createProjectSettingsFile: (fileName: string, fileContent: string) => void;
 };
 
 const useSettingsFileWriterService = (): ISettingsFileWriterService => {
@@ -15,7 +16,7 @@ const useSettingsFileWriterService = (): ISettingsFileWriterService => {
 
   const writeAppSettingsFile = (fileContent: string) => {
     ipcRenderer.invoke(
-      IpcChannelTypes.saveEditedConfigFile,
+      IpcChannelTypes.saveConfigFile,
       SettingsFileName,
       JSON.parse(fileContent),
     );
@@ -23,8 +24,16 @@ const useSettingsFileWriterService = (): ISettingsFileWriterService => {
 
   const writeProjectSettingsFile = (projectId: string, fileContent: string) => {
     ipcRenderer.invoke(
-      IpcChannelTypes.saveEditedConfigFile,
+      IpcChannelTypes.saveConfigFile,
       projectsFileName.find((p) => p.id === projectId)!.fileName,
+      JSON.parse(fileContent),
+    );
+  };
+
+  const createProjectSettingsFile = (fileName: string, fileContent: string) => {
+    ipcRenderer.invoke(
+      IpcChannelTypes.createConfigFile,
+      fileName,
       JSON.parse(fileContent),
     );
   };
@@ -32,6 +41,7 @@ const useSettingsFileWriterService = (): ISettingsFileWriterService => {
   return {
     writeAppSettingsFile,
     writeProjectSettingsFile,
+    createProjectSettingsFile,
   };
 };
 

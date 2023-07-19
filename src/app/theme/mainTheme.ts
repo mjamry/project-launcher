@@ -142,7 +142,7 @@ export function getTheme(userTheme: AppTheme): Theme {
       },
     },
     shape: {
-      borderRadius: 8,
+      borderRadius: 0,
     },
     breakpoints: {
       values: {
@@ -324,7 +324,9 @@ export function getTheme(userTheme: AppTheme): Theme {
       MuiOutlinedInput: {
         styleOverrides: {
           notchedOutline: {
-            borderColor: '#E6E8F0',
+            borderColor: userTheme && userTheme.primaryBackgroundColor ? userTheme.primaryBackgroundColor : '#fff',
+            color: 'red',
+            padding: '3px',
           },
         },
       },

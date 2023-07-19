@@ -1,29 +1,41 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { BrowserWindow, ipcMain } from 'electron';
-import * as path from 'path';
 import IpcChannelTypes from '../../src/shared/dto/IpcChannelTypes';
 import useDialogService from '../DialogService';
 import useFileWriter from './FileWriter';
 
-type IFileEditorHandler = {
+type IFileSaverHandler = {
   init: () => void;
 };
 
-const useFileEditHandler = (win: BrowserWindow): IFileEditorHandler => {
+const useFileSaveHandler = (win: BrowserWindow, filePath: string): IFileSaverHandler => {
   const fileWriter = useFileWriter();
   const dialogService = useDialogService(win);
 
   const init = () => {
-    ipcMain.handle(IpcChannelTypes.saveEditedConfigFile, (
+    ipcMain.handle(IpcChannelTypes.saveConfigFile, (
       event,
       fileName: string,
-      fileContent: any,
+      fileContent: string,
     ) => {
       fileWriter.writeFile(
-        `${path.join('./', 'config')}\\${fileName}`,
+        `${filePath}\\${fileName}`,
         fileContent,
         () => {},
         () => dialogService.fileSavedRestartAppQuestion(fileName),
+      );
+    });
+
+    ipcMain.handle(IpcChannelTypes.createConfigFile, (
+      event,
+      fileName: string,
+      fileContent: string,
+    ) => {
+      fileWriter.writeFile(
+        `${filePath}\\${fileName}.prjson`,
+        fileContent,
+        () => {},
+        () => dialogService.fileSavedRestartAppQuestion(`${fileName}.prjson`),
       );
     });
   };
@@ -33,4 +45,4 @@ const useFileEditHandler = (win: BrowserWindow): IFileEditorHandler => {
   };
 };
 
-export default useFileEditHandler;
+export default useFileSaveHandler;
