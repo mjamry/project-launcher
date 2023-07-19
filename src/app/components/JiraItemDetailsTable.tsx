@@ -105,17 +105,23 @@ function JiraItemDetailsTable(props: Props) {
     },
   });
 
+  const hasChanges = (): boolean => item.changes !== undefined && item.changes.length > 0;
+
   return (
     <>
       <TableRow sx={getThemeColors()}>
         <TableCell>
-          <IconButton
-            aria-label="expand item"
-            size="small"
-            onClick={() => handleRowClick()}
-          >
-            {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
+          {hasChanges()
+            ? (
+              <IconButton
+                aria-label="expand item"
+                size="small"
+                onClick={() => handleRowClick()}
+              >
+                {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+            )
+            : <></>}
         </TableCell>
         <TableCell component="th" scope="item">
           <ItemLink
@@ -131,21 +137,25 @@ function JiraItemDetailsTable(props: Props) {
         <TableCell align="right">{item.updated.toLocaleString()}</TableCell>
         <TableCell align="right">{item.assignee}</TableCell>
       </TableRow>
-      <TableRow sx={getThemeColors()}>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={isOpen} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <EnhancedTable
-                title={item.id}
-                data={item.changes ? item.changes : []}
-                headCells={headCells}
-              >
-                <JiraItemDetails />
-              </EnhancedTable>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
+      {hasChanges()
+        ? (
+          <TableRow sx={getThemeColors()}>
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+              <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                <Box sx={{ margin: 1 }}>
+                  <EnhancedTable
+                    title={item.id}
+                    data={item.changes ? item.changes : []}
+                    headCells={headCells}
+                  >
+                    <JiraItemDetails />
+                  </EnhancedTable>
+                </Box>
+              </Collapse>
+            </TableCell>
+          </TableRow>
+        )
+        : <></>}
     </>
   );
 }
