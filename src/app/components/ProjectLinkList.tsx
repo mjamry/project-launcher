@@ -11,7 +11,7 @@ type Props = {
 };
 
 function ProjectLinkList({ links: scripts }: Props) {
-  const scriptLauncher = useLinkLaunchService();
+  const linkLauncher = useLinkLaunchService();
 
   const render = () => {
     if (scripts && scripts.length > 0) {
@@ -26,7 +26,7 @@ function ProjectLinkList({ links: scripts }: Props) {
               <ProjectListItem
                 variant="contained"
                 key={l.name}
-                onClick={() => scriptLauncher.launch(l.url)}
+                onClick={() => linkLauncher.launch(l.url)}
                 title={l.description}
               >
                 {l.name}

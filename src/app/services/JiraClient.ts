@@ -102,7 +102,7 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
         output.push({
           id: issue[JiraIssueFields.key],
           summary: issue.fields[JiraIssueFields.summary],
-          url: issue.self,
+          url: `${appSettings.jiraUrl}\\browse\\${issue[JiraIssueFields.key]}`,
           assignee: issue.fields[JiraIssueFields.assignee] ? issue.fields[JiraIssueFields.assignee].name.split('@')[0] : '',
           status: issue.fields[JiraIssueFields.status].name,
           description: issue.fields[JiraIssueFields.description],
