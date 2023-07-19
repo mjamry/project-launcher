@@ -13,6 +13,7 @@ import { projectsState } from '../state/ProjectState';
 
 const Root = styled('div')({
   margin: '10px',
+  marginRight: '30px',
 });
 
 type RouteParams = {

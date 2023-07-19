@@ -1,8 +1,7 @@
 import {
-  Box, Button, Collapse, IconButton, styled, TableCell, TableRow,
+  Box, Button, Collapse, styled, TableCell, TableRow,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { JiraIssue } from '../../shared/dto/JiraTypes';
 import { jiraUpdatesState } from '../state/JiraState';
@@ -11,10 +10,8 @@ import EnhancedTable from './EnhancedTable/EnhancedTable';
 import { HeadCell } from './EnhancedTable/EnhancedTableTypes';
 import { appThemeState } from '../state/AppState';
 import { useLinkLaunchService } from '../services/IpcLaunchServices';
-
-const KeyboardArrowUpIcon = styled(KeyboardArrowDownIcon)({
-  transform: 'rotate(180deg)',
-});
+import CollapseButton from './CollapseButton';
+import CollapsibleContent from './CollapsibleContent';
 
 const ItemLink = styled(Button)({
   fontWeight: 'bold',
@@ -54,7 +51,7 @@ type Props = {
 
 function JiraItemDetailsTable(props: Props) {
   const { item, projectKey } = props;
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [canShowDetails, setCanShowDetails] = useState<boolean>(false);
   const [isUpdated, setIsUpdated] = useState<boolean>(false);
   const appTheme = useRecoilValue(appThemeState);
   const linkLauncher = useLinkLaunchService();
@@ -65,7 +62,7 @@ function JiraItemDetailsTable(props: Props) {
   const [allUpdates, setUpdates] = useRecoilState(jiraUpdatesState);
 
   useEffect(() => {
-    setIsOpen(false);
+    setCanShowDetails(false);
   }, [projectKey]);
 
   useEffect(() => {
@@ -77,7 +74,7 @@ function JiraItemDetailsTable(props: Props) {
   }, [item.id, updatedProjectIssues]);
 
   const handleRowClick = () => {
-    setIsOpen(!isOpen);
+    setCanShowDetails(!canShowDetails);
 
     if (isUpdated) {
       const filteredIssues = updatedProjectIssues
@@ -112,15 +109,7 @@ function JiraItemDetailsTable(props: Props) {
       <TableRow sx={getThemeColors()}>
         <TableCell>
           {hasChanges()
-            ? (
-              <IconButton
-                aria-label="expand item"
-                size="small"
-                onClick={() => handleRowClick()}
-              >
-                {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-              </IconButton>
-            )
+            ? <CollapseButton onClick={handleRowClick} />
             : <></>}
         </TableCell>
         <TableCell component="th" scope="item">
@@ -141,10 +130,10 @@ function JiraItemDetailsTable(props: Props) {
         ? (
           <TableRow sx={getThemeColors()}>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-              <Collapse in={isOpen} timeout="auto" unmountOnExit>
+              <Collapse in={canShowDetails} timeout="auto" unmountOnExit>
                 <Box sx={{ margin: 1 }}>
                   <EnhancedTable
-                    title={item.id}
+                    title={<CollapsibleContent content={item.description} />}
                     data={item.changes ? item.changes : []}
                     headCells={headCells}
                   >

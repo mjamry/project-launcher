@@ -8,6 +8,7 @@ const Root = styled('div')(({ theme }) => ({
   borderRadius: '25px',
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.text.primary,
+  width: '300px',
 }));
 
 const Icon = styled(IconButton)(({ theme }) => ({
