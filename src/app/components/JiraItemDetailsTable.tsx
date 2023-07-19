@@ -131,7 +131,7 @@ function JiraItemDetailsTable(props: Props) {
         <TableCell align="right">{item.updated.toLocaleString()}</TableCell>
         <TableCell align="right">{item.assignee}</TableCell>
       </TableRow>
-      <TableRow>
+      <TableRow sx={getThemeColors()}>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={isOpen} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
