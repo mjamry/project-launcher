@@ -77,32 +77,44 @@ app.whenReady().then(() => {
   });
 
   win.webContents.on('did-finish-load', async () => {
-    console.debug('Loading app settings...');
-    const settingsPath = app.getPath('userData');
-    console.log(settingsPath);
-    const appSettingsService = useAppSettingsService(settingsPath);
-    const appSettings = appSettingsService.readAppSettings();
-    console.debug('App settings loaded', appSettings);
-    win.webContents.send(IpcChannelTypes.appSettingsLoaded, appSettings);
+    console.log('did-finish-load');
 
-    if (appSettings.isDevelopment) {
-      win.webContents.openDevTools({ mode: 'detach' });
-    }
+    ipcMain.on(IpcChannelTypes.appInitialized, () => {
+      console.debug('Loading app settings...');
+      const settingsPath = app.getPath('userData');
+      console.log(settingsPath);
+      const appSettingsService = useAppSettingsService(settingsPath);
 
-    console.debug('Loading projects configs...');
-    const configPath = app.getPath('userData');
-    const configReader = useProjectFileConfigReader(configPath);
-    const projectsConfig = configReader.readAllFiles();
-    console.debug(`Loaded ${projectsConfig.length} projects`);
-    win.webContents.send(
-      IpcChannelTypes.projectsConfigsLoaded,
-      projectsConfig.map((p) => p.config),
-    );
+      appSettingsService
+        .readAppSettings()
+        .then((appSettings) => {
+          if (appSettings.isDevelopment) {
+            win.webContents.openDevTools({ mode: 'detach' });
+          }
+          console.debug('App settings loaded', appSettings);
+          win.webContents.send(IpcChannelTypes.appSettingsLoaded, appSettings);
+        })
+        .then(() => {
+          console.debug('Loading projects configs...');
+          const configPath = app.getPath('userData');
+          const configReader = useProjectFileConfigReader(configPath);
+          configReader
+            .readAllFiles()
+            .then((projectsConfig) => {
+              console.debug(`Loaded ${projectsConfig.length} projects`);
 
-    win.webContents.send(
-      IpcChannelTypes.projectsFileNameLoaded,
-      projectsConfig.map((p) => p.fileName),
-    );
+              win.webContents.send(
+                IpcChannelTypes.projectsConfigsLoaded,
+                projectsConfig.map((p) => p.config),
+              );
+
+              win.webContents.send(
+                IpcChannelTypes.projectsFileNameLoaded,
+                projectsConfig.map((p) => p.fileName),
+              );
+            });
+        });
+    });
   });
 
   ipcMain.on('error', (event, data) => {
