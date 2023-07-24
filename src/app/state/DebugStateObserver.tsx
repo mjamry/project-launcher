@@ -19,7 +19,7 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import useLoggerService from '../common/LoggerService';
-import { appThemeState } from './AppState';
+import { appThemeState } from './AppSettingsState';
 
 const Content = styled('div')({
   maxHeight: '95vh',
