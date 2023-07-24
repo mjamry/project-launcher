@@ -4,7 +4,7 @@ import {
 import React, { useState, useEffect } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useRecoilState } from 'recoil';
-import { appSettingsState } from '../state/AppState';
+import { appSettingsState } from '../state/AppSettingsState';
 import { projectsState } from '../state/ProjectState';
 import useSettingsFileWriterService from '../services/SettingsFileWriterService';
 import CreateProjectConfig from '../components/CreateProjectConfig';

@@ -20,8 +20,8 @@ export type Project = {
   jiraUrl?: string;
   repositoryUrl?: string;
   documentationUrl?: string;
-  links: ProjectLink[];
-  scripts: ProjectScript[];
+  links?: ProjectLink[];
+  scripts?: ProjectScript[];
 };
 
 export type ProjectFileName = {
