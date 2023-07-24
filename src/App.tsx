@@ -2,14 +2,16 @@ import { ThemeProvider } from '@emotion/react';
 import { styled, StyledEngineProvider } from '@mui/material';
 import React from 'react';
 import './App.css';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import IpcCommunicationService from './app/services/IpcCommunicationService';
 import AppContent from './app/root/AppContent';
 import DebugStateObserver from './app/state/DebugStateObserver';
 import { getTheme } from './app/theme/mainTheme';
 import JiraDataProvider from './app/services/JiraDataProvider';
-import { appSettingsState } from './app/state/AppState';
-import { projectsState } from './app/state/ProjectState';
+import AppLoadingPage from './app/pages/AppLoadingPage';
+import appLoadingState from './app/state/AppLoadingState';
+import { appSettingsState } from './app/state/AppSettingsState';
+import AppState from './shared/dto/AppState';
 
 const AppContainer = styled('div')(({ theme }) => ({
   textAlign: 'center',
@@ -17,24 +19,17 @@ const AppContainer = styled('div')(({ theme }) => ({
 }));
 
 function App() {
-  const [appSettings] = useRecoilState(appSettingsState);
-  const [projectsConfig] = useRecoilState(projectsState);
-
-  const canLoad = (): boolean => {
-    if (appSettings !== undefined && projectsConfig !== undefined) {
-      return true;
-    }
-    return false;
-  };
+  const appState = useRecoilValue(appLoadingState);
+  const appSettings = useRecoilValue(appSettingsState);
 
   return (
     <>
-      {!canLoad()
-        ? 'loading'
+      <IpcCommunicationService />
+      <JiraDataProvider />
+      {appState !== AppState.ready
+        ? <AppLoadingPage />
         : (
           <>
-            <IpcCommunicationService />
-            <JiraDataProvider />
             {appSettings && appSettings.isDevelopment
               ? <DebugStateObserver />
               : <></>}
