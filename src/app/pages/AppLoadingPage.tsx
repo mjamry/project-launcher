@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ipcRenderer } from 'electron';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import styled from '@emotion/styled';
 import IpcChannelTypes from '../../shared/dto/IpcChannelTypes';
 import LoaderComponent from '../components/LoaderComponent';
 import appLoadingState from '../state/AppLoadingState';
@@ -9,6 +11,27 @@ import AppState from '../../shared/dto/AppState';
 import { appSettingsState } from '../state/AppSettingsState';
 import { jiraHistoryState } from '../state/JiraState';
 import { projectsState } from '../state/ProjectState';
+
+const Logo = styled('div')({
+  textAlign: 'center',
+  border: '3px solid darkgrey',
+  borderRadius: '10px',
+  height: '45px',
+  width: '60px',
+  color: 'lightgray',
+  marginBottom: '50px',
+  paddingTop: '10px',
+});
+
+const Root = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  width: '100vw',
+  height: '100vh',
+  backgroundColor: 'black',
+});
 
 function AppLoadingPage() {
   const appSettings = useRecoilValue(appSettingsState);
@@ -89,7 +112,12 @@ function AppLoadingPage() {
   }, [appState, counter, jiraHistory.length, setAppLoadingState]);
 
   return (
-    <LoaderComponent title="Loading" description={description} progress={progress} />
+    <Root>
+      <Logo>
+        <RocketLaunchIcon fontSize="large" />
+      </Logo>
+      <LoaderComponent title="Loading" description={description} progress={progress} />
+    </Root>
   );
 }
 

@@ -4,9 +4,6 @@ import { LinearProgress, Typography, styled } from '@mui/material';
 const Root = styled('div')({
   display: 'flex',
   flexDirection: 'column',
-  height: '100vh',
-  width: '100vw',
-  backgroundColor: 'black',
   color: 'lightgray',
   justifyContent: 'center',
   alignItems: 'center',
