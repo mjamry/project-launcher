@@ -86,8 +86,7 @@ function AppLoadingPage() {
       console.log(counter);
       // eslint-disable-next-line no-console
       console.debug('loading configs state');
-      if (appSettings !== undefined
-      && (projectsConfig !== undefined && projectsConfig.length > 0)) {
+      if (appSettings !== undefined && projectsConfig !== undefined) {
       // eslint-disable-next-line no-console
         console.debug('App can load: ', counter);
         setAppLoadingState(AppState.readingHistory);
@@ -105,11 +104,11 @@ function AppLoadingPage() {
       console.log(counter);
       // eslint-disable-next-line no-console
       console.debug('read history state');
-      if (jiraHistory.length > 0) {
+      if (jiraHistory !== undefined) {
         setAppLoadingState(AppState.ready);
       }
     }
-  }, [appState, counter, jiraHistory.length, setAppLoadingState]);
+  }, [appState, counter, jiraHistory, setAppLoadingState]);
 
   return (
     <Root>

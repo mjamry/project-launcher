@@ -3,7 +3,7 @@ import { Project, ProjectFileName } from '../../shared/dto/ProjectDto';
 
 const projectsState = atom<Project[]>({
   key: 'projectsState',
-  default: [],
+  default: undefined,
 });
 
 const projectsConfigFileNameState = atom<ProjectFileName[]>({
