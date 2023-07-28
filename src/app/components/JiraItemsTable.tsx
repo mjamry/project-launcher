@@ -66,7 +66,6 @@ function JiraItemsTable(props: Props) {
         <EnhancedTable
           data={issues}
           headCells={headCells}
-          title={projectKey}
         >
           <JiraItems projectKey={projectKey} />
         </EnhancedTable>

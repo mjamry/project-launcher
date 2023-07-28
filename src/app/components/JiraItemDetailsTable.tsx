@@ -1,17 +1,20 @@
 import {
-  Box, Collapse, IconButton, styled, TableCell, TableRow,
+  Box, Button, Collapse, styled, TableCell, TableRow,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { JiraIssue } from '../../shared/dto/JiraTypes';
 import { jiraUpdatesState } from '../state/JiraState';
 import JiraItemDetails from './JiraItemDetails';
 import EnhancedTable from './EnhancedTable/EnhancedTable';
 import { HeadCell } from './EnhancedTable/EnhancedTableTypes';
+import { appThemeState } from '../state/AppSettingsState';
+import { useLinkLaunchService } from '../services/IpcLaunchServices';
+import CollapseButton from './CollapseButton';
+import CollapsibleContent from './CollapsibleContent';
 
-const KeyboardArrowUpIcon = styled(KeyboardArrowDownIcon)({
-  transform: 'rotate(180deg)',
+const ItemLink = styled(Button)({
+  fontWeight: 'bold',
 });
 
 const headCells: HeadCell[] = [
@@ -44,46 +47,78 @@ const headCells: HeadCell[] = [
 type Props = {
   item: JiraIssue;
   projectKey: string;
-  updated: boolean;
 };
 
 function JiraItemDetailsTable(props: Props) {
-  const { item, updated, projectKey } = props;
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { item, projectKey } = props;
+  const [canShowDetails, setCanShowDetails] = useState<boolean>(false);
+  const [isUpdated, setIsUpdated] = useState<boolean>(false);
+  const appTheme = useRecoilValue(appThemeState);
+  const linkLauncher = useLinkLaunchService();
 
   const updatedProjectIssues = useRecoilValue(jiraUpdatesState)
-    .find((u) => u.project === projectKey);
+    .find((u) => u.project === projectKey)?.issues;
 
-  const [updates, setUpdates] = useRecoilState(jiraUpdatesState);
+  const [allUpdates, setUpdates] = useRecoilState(jiraUpdatesState);
 
   useEffect(() => {
-    setIsOpen(false);
+    setCanShowDetails(false);
   }, [projectKey]);
 
-  const handleRowClick = () => {
-    setIsOpen(!isOpen);
-    const filteredIssues = updatedProjectIssues
-      ? updatedProjectIssues.issues.filter((i) => i.id !== item.id) : [];
-    const filteredProjects = updates.filter((i) => i.project !== projectKey);
+  useEffect(() => {
+    if (updatedProjectIssues && updatedProjectIssues.find((upi) => upi.id === item.id)) {
+      setIsUpdated(true);
+    } else {
+      setIsUpdated(false);
+    }
+  }, [item.id, updatedProjectIssues]);
 
-    setUpdates([...filteredProjects, { project: projectKey, issues: filteredIssues }]);
+  const handleRowClick = () => {
+    setCanShowDetails(!canShowDetails);
+
+    if (isUpdated) {
+      const filteredIssues = updatedProjectIssues
+        ? updatedProjectIssues.filter((i) => i.id !== item.id) : [];
+      const filteredProjects = allUpdates.filter((i) => i.project !== projectKey);
+
+      setUpdates([...filteredProjects, { project: projectKey, issues: filteredIssues }]);
+    }
   };
+
+  const getThemeColors = () => ({
+    color:
+        isUpdated
+          ? appTheme.highlightColor
+          : appTheme.secondaryColor,
+    backgroundColor:
+        isUpdated
+          ? appTheme.highlightBackgroundColor
+          : appTheme.secondaryBackgroundColor,
+    '.MuiTableCell-root': {
+      color:
+          isUpdated
+            ? appTheme.highlightColor
+            : appTheme.secondaryColor,
+    },
+  });
+
+  const hasChanges = (): boolean => item.changes !== undefined && item.changes.length > 0;
 
   return (
     <>
-      <TableRow>
+      <TableRow sx={getThemeColors()}>
         <TableCell>
-          <IconButton
-            aria-label="expand item"
-            size="small"
-            onClick={() => handleRowClick()}
-          >
-            {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
+          {hasChanges()
+            ? <CollapseButton onClick={handleRowClick} />
+            : <></>}
         </TableCell>
         <TableCell component="th" scope="item">
-          {item.id}
-          {updated ? '*' : ''}
+          <ItemLink
+            sx={getThemeColors()}
+            onClick={() => linkLauncher.launch(item.url)}
+          >
+            {item.id}
+          </ItemLink>
         </TableCell>
         <TableCell>{item.summary}</TableCell>
         <TableCell align="right">{item.status}</TableCell>
@@ -91,21 +126,25 @@ function JiraItemDetailsTable(props: Props) {
         <TableCell align="right">{item.updated.toLocaleString()}</TableCell>
         <TableCell align="right">{item.assignee}</TableCell>
       </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={isOpen} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <EnhancedTable
-                title={item.id}
-                data={item.changes ? item.changes : []}
-                headCells={headCells}
-              >
-                <JiraItemDetails />
-              </EnhancedTable>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
+      {hasChanges()
+        ? (
+          <TableRow sx={getThemeColors()}>
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+              <Collapse in={canShowDetails} timeout="auto" unmountOnExit>
+                <Box sx={{ margin: 1 }}>
+                  <EnhancedTable
+                    title={<CollapsibleContent content={item.description} />}
+                    data={item.changes ? item.changes : []}
+                    headCells={headCells}
+                  >
+                    <JiraItemDetails />
+                  </EnhancedTable>
+                </Box>
+              </Collapse>
+            </TableCell>
+          </TableRow>
+        )
+        : <></>}
     </>
   );
 }

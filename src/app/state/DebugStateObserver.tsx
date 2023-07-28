@@ -7,7 +7,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import Collapse from '@mui/material/Collapse/Collapse';
 import React, { useEffect, useState } from 'react';
-import { useRecoilSnapshot } from 'recoil';
+import { useRecoilSnapshot, useRecoilValue } from 'recoil';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import IconButton from '@mui/material/IconButton';
 import {
@@ -19,6 +19,7 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import useLoggerService from '../common/LoggerService';
+import { appThemeState } from './AppSettingsState';
 
 const Content = styled('div')({
   maxHeight: '95vh',
@@ -62,6 +63,7 @@ function DebugStateObserver() {
   const logger = useLoggerService('AppStateViewer');
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
   const [showStateChanges, setShowStateChanges] = useState<boolean>(false);
+  const appTheme = useRecoilValue(appThemeState);
 
   useEffect(() => {
     const atoms: State[] = [];
@@ -96,10 +98,12 @@ function DebugStateObserver() {
 
   const renderCollapsed = () => (
     <IconButton
-      color="secondary"
       aria-label="debug view"
       component="span"
       onClick={() => setIsCollapsed(false)}
+      sx={{
+        color: appTheme && appTheme.highlightBackgroundColor ? appTheme.highlightBackgroundColor : 'red',
+      }}
     >
       <BugReportIcon />
     </IconButton>

@@ -142,7 +142,7 @@ export function getTheme(userTheme: AppTheme): Theme {
       },
     },
     shape: {
-      borderRadius: 8,
+      borderRadius: 0,
     },
     breakpoints: {
       values: {
@@ -154,13 +154,21 @@ export function getTheme(userTheme: AppTheme): Theme {
       },
     },
     components: {
+      MuiBadge: {
+        styleOverrides: {
+          root: {
+            '.MuiBadge-badge': {
+              color: userTheme && userTheme.highlightColor ? userTheme.highlightColor : DefaultTheme.highlightColor,
+              backgroundColor: userTheme && userTheme.highlightBackgroundColor ? userTheme.highlightBackgroundColor : DefaultTheme.highlightBackgroundColor,
+            },
+          },
+        },
+      },
       // Table
       MuiTableCell: {
         styleOverrides: {
           root: {
             borderBottom: 'none',
-            color: userTheme && userTheme.secondaryColor ? userTheme.secondaryColor : DefaultTheme.secondaryColor,
-            backgroundColor: userTheme && userTheme.secondaryBackgroundColor ? userTheme.secondaryBackgroundColor : DefaultTheme.secondaryBackgroundColor,
           },
         },
       },
@@ -169,6 +177,11 @@ export function getTheme(userTheme: AppTheme): Theme {
           root: {
             borderBottom: '1px solid',
             borderBottomColor: userTheme && userTheme.primaryBackgroundColor ? userTheme.primaryBackgroundColor : DefaultTheme.primaryBackgroundColor,
+            color: userTheme && userTheme.secondaryColor ? userTheme.secondaryColor : DefaultTheme.secondaryColor,
+            backgroundColor: userTheme && userTheme.secondaryBackgroundColor ? userTheme.secondaryBackgroundColor : DefaultTheme.secondaryBackgroundColor,
+            '.MuiTableCell-root': {
+              color: userTheme && userTheme.secondaryColor ? userTheme.secondaryColor : DefaultTheme.secondaryColor,
+            },
           },
         },
       },
@@ -316,7 +329,9 @@ export function getTheme(userTheme: AppTheme): Theme {
       MuiOutlinedInput: {
         styleOverrides: {
           notchedOutline: {
-            borderColor: '#E6E8F0',
+            borderColor: userTheme && userTheme.primaryBackgroundColor ? userTheme.primaryBackgroundColor : '#fff',
+            color: 'red',
+            padding: '3px',
           },
         },
       },

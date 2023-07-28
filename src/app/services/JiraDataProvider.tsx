@@ -1,16 +1,19 @@
 import React, { useCallback, useEffect } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import appSettingsState from '../state/AppState';
+import { useRecoilState } from 'recoil';
+import { appSettingsState } from '../state/AppSettingsState';
 import useJiraClient from './JiraClient';
-import { JiraUpdate } from '../../shared/dto/JiraTypes';
+import { JiraIssue, JiraUpdate } from '../../shared/dto/JiraTypes';
 import { jiraUpdatesState, jiraHistoryState } from '../state/JiraState';
 import { projectsState } from '../state/ProjectState';
+import appLoadingState from '../state/AppLoadingState';
+import AppState from '../../shared/dto/AppState';
 
 function JiraDataProvider() {
   const [projects] = useRecoilState(projectsState);
   const [appSettings] = useRecoilState(appSettingsState);
+  const [appState] = useRecoilState(appLoadingState);
   const [updateStates, setJiraUpdates] = useRecoilState(jiraUpdatesState);
-  const setJiraHistory = useSetRecoilState(jiraHistoryState);
+  const [historyState, setJiraHistory] = useRecoilState(jiraHistoryState);
   const jiraClient = useJiraClient(appSettings);
 
   const getJiraHistory = useCallback(async () => {
@@ -32,6 +35,7 @@ function JiraDataProvider() {
     await Promise.all(projects.map(async (project) => {
       if (project.jiraId) {
         const updates = await jiraClient.getUpdatesForProject(project.jiraId);
+
         incomingUpdates.push(updates);
       }
     }));
@@ -53,19 +57,51 @@ function JiraDataProvider() {
     setJiraUpdates(finalUpdates);
   }, [jiraClient, projects, setJiraUpdates, updateStates]);
 
-  useEffect(() => {
-    getJiraHistory();
-  }, [getJiraHistory]);
+  const refreshHistory = useCallback(() => {
+    const refreshedHistory: JiraUpdate[] = [];
+    if (historyState && historyState.length > 0) {
+      historyState.forEach((project) => {
+        const updateStateIssues = updateStates.find((us) => us.project === project.project)?.issues;
+        const newItems = (updateStateIssues && updateStateIssues
+          .filter((usi) => project.issues
+            .findIndex((hi) => usi.id === hi.id) === -1)) || [];
+
+        const withUpdates = project.issues
+          .map((hi) => updateStateIssues && (updateStateIssues
+            .find((usi) => usi.id === hi.id) || hi));
+
+        refreshedHistory.push({
+          project: project.project,
+          issues: [...newItems, ...withUpdates] as JiraIssue[],
+        });
+      });
+
+      setJiraHistory(refreshedHistory);
+    }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateStates]);
 
   useEffect(() => {
-    let interval: any = null;
-    if (appSettings !== undefined) {
-      interval = setInterval(async () => {
-        await getJiraUpdates();
-      }, appSettings.jiraRefreshTimeoutInMinutes * 60 * 1000);
+    if (appState === AppState.readingHistory) {
+      getJiraHistory();
     }
-    return () => clearInterval(interval);
-  }, [appSettings, getJiraUpdates]);
+  }, [appState, getJiraHistory]);
+
+  useEffect(() => {
+    if (appState === AppState.ready) {
+      let interval: any = null;
+      if (appSettings !== undefined) {
+        interval = setInterval(async () => {
+          await getJiraUpdates();
+          refreshHistory();
+        }, appSettings.jiraRefreshTimeoutInMinutes * 60 * 1000);
+      }
+      return () => clearInterval(interval);
+    }
+
+    return () => {};
+  }, [appSettings, appState, getJiraUpdates, refreshHistory]);
 
   return <></>;
 }
