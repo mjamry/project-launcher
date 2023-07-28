@@ -2,7 +2,7 @@
   "name": "project-launcher",
   "author": "michal.jamry@gmail.com",
   "description": "project launcher and dashboard",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "main": "build/electron/electron.js",
   "homepage": "./",
