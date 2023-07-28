@@ -3,7 +3,7 @@ import { JiraUpdate } from '../../shared/dto/JiraTypes';
 
 const jiraUpdatesState = atom<JiraUpdate[]>({
   key: 'jiraUpdate',
-  default: undefined,
+  default: [],
 });
 
 const jiraHistoryState = atom<JiraUpdate[]>({
