@@ -1,5 +1,5 @@
 import { dialog } from 'electron/main';
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import * as path from 'path';
 import { Project, ProjectFileName } from '../src/shared/dto/ProjectDto';
 import useFileReader from './file/FileReader';
@@ -12,15 +12,15 @@ type ProjectConfigData = {
 };
 
 type IProjectFileConfigReader = {
-  readAllFiles: () => ProjectConfigData[];
+  readAllFiles: () => Promise<ProjectConfigData[]>;
 };
 
 const useProjectFileConfigReader = (configPath: string): IProjectFileConfigReader => {
   const fileReader = useFileReader();
-  const getAllConfigFiles = () => fs.readdirSync(configPath, { withFileTypes: true });
+  const getAllConfigFiles = () => fs.readdir(configPath, { withFileTypes: true });
 
-  const readAllFiles = (): ProjectConfigData[] => {
-    const files = getAllConfigFiles();
+  const readAllFiles = async (): Promise<ProjectConfigData[]> => {
+    const files = await getAllConfigFiles();
 
     const output: ProjectConfigData[] = [];
     files.filter((f) => path.extname(f.name) === ConfigFileExtension).forEach((file) => {

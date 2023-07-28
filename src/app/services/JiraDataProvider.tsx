@@ -1,14 +1,17 @@
 import React, { useCallback, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { appSettingsState } from '../state/AppState';
+import { appSettingsState } from '../state/AppSettingsState';
 import useJiraClient from './JiraClient';
 import { JiraIssue, JiraUpdate } from '../../shared/dto/JiraTypes';
 import { jiraUpdatesState, jiraHistoryState } from '../state/JiraState';
 import { projectsState } from '../state/ProjectState';
+import appLoadingState from '../state/AppLoadingState';
+import AppState from '../../shared/dto/AppState';
 
 function JiraDataProvider() {
   const [projects] = useRecoilState(projectsState);
   const [appSettings] = useRecoilState(appSettingsState);
+  const [appState] = useRecoilState(appLoadingState);
   const [updateStates, setJiraUpdates] = useRecoilState(jiraUpdatesState);
   const [historyState, setJiraHistory] = useRecoilState(jiraHistoryState);
   const jiraClient = useJiraClient(appSettings);
@@ -80,19 +83,25 @@ function JiraDataProvider() {
   }, [updateStates]);
 
   useEffect(() => {
-    getJiraHistory();
-  }, [getJiraHistory]);
+    if (appState === AppState.readingHistory) {
+      getJiraHistory();
+    }
+  }, [appState, getJiraHistory]);
 
   useEffect(() => {
-    let interval: any = null;
-    if (appSettings !== undefined) {
-      interval = setInterval(async () => {
-        await getJiraUpdates();
-        refreshHistory();
-      }, appSettings.jiraRefreshTimeoutInMinutes * 60 * 1000);
+    if (appState === AppState.ready) {
+      let interval: any = null;
+      if (appSettings !== undefined) {
+        interval = setInterval(async () => {
+          await getJiraUpdates();
+          refreshHistory();
+        }, appSettings.jiraRefreshTimeoutInMinutes * 60 * 1000);
+      }
+      return () => clearInterval(interval);
     }
-    return () => clearInterval(interval);
-  }, [appSettings, getJiraUpdates, refreshHistory]);
+
+    return () => {};
+  }, [appSettings, appState, getJiraUpdates, refreshHistory]);
 
   return <></>;
 }
