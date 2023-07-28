@@ -79,41 +79,48 @@ app.whenReady().then(() => {
   win.webContents.on('did-finish-load', async () => {
     console.log('did-finish-load');
 
+    // this is required because <App /> is rendered twice,
+    // so to avoid double file load and history fetch a simple flag was used
+    let isAlreadyHandled = false;
+
     ipcMain.on(IpcChannelTypes.appInitialized, () => {
-      console.debug('Loading app settings...');
-      const settingsPath = app.getPath('userData');
-      console.log(settingsPath);
-      const appSettingsService = useAppSettingsService(settingsPath);
+      if (!isAlreadyHandled) {
+        isAlreadyHandled = true;
+        console.debug('Loading app settings...');
+        const settingsPath = app.getPath('userData');
+        console.log(settingsPath);
+        const appSettingsService = useAppSettingsService(settingsPath);
 
-      appSettingsService
-        .readAppSettings()
-        .then((appSettings) => {
-          if (appSettings.isDevelopment) {
-            win.webContents.openDevTools({ mode: 'detach' });
-          }
-          console.debug('App settings loaded', appSettings);
-          win.webContents.send(IpcChannelTypes.appSettingsLoaded, appSettings);
-        })
-        .then(() => {
-          console.debug('Loading projects configs...');
-          const configPath = app.getPath('userData');
-          const configReader = useProjectFileConfigReader(configPath);
-          configReader
-            .readAllFiles()
-            .then((projectsConfig) => {
-              console.debug(`Loaded ${projectsConfig.length} projects`);
+        appSettingsService
+          .readAppSettings()
+          .then((appSettings) => {
+            if (appSettings.isDevelopment) {
+              win.webContents.openDevTools({ mode: 'detach' });
+            }
+            console.debug('App settings loaded', appSettings);
+            win.webContents.send(IpcChannelTypes.appSettingsLoaded, appSettings);
+          })
+          .then(() => {
+            console.debug('Loading projects configs...');
+            const configPath = app.getPath('userData');
+            const configReader = useProjectFileConfigReader(configPath);
+            configReader
+              .readAllFiles()
+              .then((projectsConfig) => {
+                console.debug(`Loaded ${projectsConfig.length} projects`);
 
-              win.webContents.send(
-                IpcChannelTypes.projectsConfigsLoaded,
-                projectsConfig.map((p) => p.config),
-              );
+                win.webContents.send(
+                  IpcChannelTypes.projectsConfigsLoaded,
+                  projectsConfig.map((p) => p.config),
+                );
 
-              win.webContents.send(
-                IpcChannelTypes.projectsFileNameLoaded,
-                projectsConfig.map((p) => p.fileName),
-              );
-            });
-        });
+                win.webContents.send(
+                  IpcChannelTypes.projectsFileNameLoaded,
+                  projectsConfig.map((p) => p.fileName),
+                );
+              });
+          });
+      }
     });
   });
 
