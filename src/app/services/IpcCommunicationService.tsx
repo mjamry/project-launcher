@@ -5,7 +5,7 @@ import { ipcRenderer } from 'electron';
 import { Project, ProjectFileName } from '../../shared/dto/ProjectDto';
 import IpcChannelTypes from '../../shared/dto/IpcChannelTypes';
 import { AppSettings } from '../../shared/dto/AppSettings';
-import { appSettingsState, appThemeState } from '../state/AppState';
+import { appSettingsState, appThemeState } from '../state/AppSettingsState';
 import { JiraUpdate } from '../../shared/dto/JiraTypes';
 import { jiraUpdatesState, jiraHistoryState } from '../state/JiraState';
 import { projectsConfigFileNameState, projectsState } from '../state/ProjectState';

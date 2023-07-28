@@ -77,32 +77,51 @@ app.whenReady().then(() => {
   });
 
   win.webContents.on('did-finish-load', async () => {
-    console.debug('Loading app settings...');
-    const settingsPath = app.getPath('userData');
-    console.log(settingsPath);
-    const appSettingsService = useAppSettingsService(settingsPath);
-    const appSettings = appSettingsService.readAppSettings();
-    console.debug('App settings loaded', appSettings);
-    win.webContents.send(IpcChannelTypes.appSettingsLoaded, appSettings);
+    console.log('did-finish-load');
 
-    if (appSettings.isDevelopment) {
-      win.webContents.openDevTools({ mode: 'detach' });
-    }
+    // this is required because <App /> is rendered twice,
+    // so to avoid double file load and history fetch a simple flag was used
+    let isAlreadyHandled = false;
 
-    console.debug('Loading projects configs...');
-    const configPath = app.getPath('userData');
-    const configReader = useProjectFileConfigReader(configPath);
-    const projectsConfig = configReader.readAllFiles();
-    console.debug(`Loaded ${projectsConfig.length} projects`);
-    win.webContents.send(
-      IpcChannelTypes.projectsConfigsLoaded,
-      projectsConfig.map((p) => p.config),
-    );
+    ipcMain.on(IpcChannelTypes.appInitialized, () => {
+      if (!isAlreadyHandled) {
+        isAlreadyHandled = true;
+        console.debug('Loading app settings...');
+        const settingsPath = app.getPath('userData');
+        console.log(settingsPath);
+        const appSettingsService = useAppSettingsService(settingsPath);
 
-    win.webContents.send(
-      IpcChannelTypes.projectsFileNameLoaded,
-      projectsConfig.map((p) => p.fileName),
-    );
+        appSettingsService
+          .readAppSettings()
+          .then((appSettings) => {
+            if (appSettings.isDevelopment) {
+              win.webContents.openDevTools({ mode: 'detach' });
+            }
+            console.debug('App settings loaded', appSettings);
+            win.webContents.send(IpcChannelTypes.appSettingsLoaded, appSettings);
+          })
+          .then(() => {
+            console.debug('Loading projects configs...');
+            const configPath = app.getPath('userData');
+            const configReader = useProjectFileConfigReader(configPath);
+            configReader
+              .readAllFiles()
+              .then((projectsConfig) => {
+                console.debug(`Loaded ${projectsConfig.length} projects`);
+
+                win.webContents.send(
+                  IpcChannelTypes.projectsConfigsLoaded,
+                  projectsConfig.map((p) => p.config),
+                );
+
+                win.webContents.send(
+                  IpcChannelTypes.projectsFileNameLoaded,
+                  projectsConfig.map((p) => p.fileName),
+                );
+              });
+          });
+      }
+    });
   });
 
   ipcMain.on('error', (event, data) => {

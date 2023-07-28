@@ -8,7 +8,7 @@ import { jiraUpdatesState } from '../state/JiraState';
 import JiraItemDetails from './JiraItemDetails';
 import EnhancedTable from './EnhancedTable/EnhancedTable';
 import { HeadCell } from './EnhancedTable/EnhancedTableTypes';
-import { appThemeState } from '../state/AppState';
+import { appThemeState } from '../state/AppSettingsState';
 import { useLinkLaunchService } from '../services/IpcLaunchServices';
 import CollapseButton from './CollapseButton';
 import CollapsibleContent from './CollapsibleContent';

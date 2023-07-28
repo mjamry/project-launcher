@@ -1,17 +1,17 @@
 import { dialog } from 'electron/main';
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import { AppSettings, DefaultAppSettings, SettingsFileName } from '../src/shared/dto/AppSettings';
 import useFileReader from './file/FileReader';
 
 type IAppSettingsService = {
-  readAppSettings: () => AppSettings;
+  readAppSettings: () => Promise<AppSettings>;
 };
 
 const useAppSettingsService = (settingsFilePath: string): IAppSettingsService => {
   const fileReader = useFileReader();
-  const readAppSettings = (): AppSettings => {
+  const readAppSettings = async (): Promise<AppSettings> => {
     let output: AppSettings = DefaultAppSettings;
-    const files = fs.readdirSync(settingsFilePath, { withFileTypes: true });
+    const files = await fs.readdir(settingsFilePath, { withFileTypes: true });
     files.forEach((file) => {
       if (file.name === SettingsFileName) {
         try {
