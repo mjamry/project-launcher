@@ -11,6 +11,7 @@ import AppState from '../../shared/dto/AppState';
 import { appSettingsState } from '../state/AppSettingsState';
 import { jiraHistoryState } from '../state/JiraState';
 import { projectsState } from '../state/ProjectState';
+import useLoggerService from '../common/LoggerService';
 
 const Logo = styled('div')({
   textAlign: 'center',
@@ -40,9 +41,9 @@ function AppLoadingPage() {
   const jiraHistory = useRecoilValue(jiraHistoryState);
 
   const [description, setDescription] = useState<string>('');
-  const [counter, setCounter] = useState<number>(0);
   const [canSendRequest, setCanSendRequest] = useState<boolean>(true);
   const [progress, setProgress] = useState<number>(0);
+  const logger = useLoggerService('ALP');
 
   useEffect(() => {
     switch (appState) {
@@ -64,51 +65,36 @@ function AppLoadingPage() {
   }, [appState]);
 
   useEffect(() => {
-    setCounter(Math.floor(Math.random() * 100));
-  }, []);
-
-  useEffect(() => {
     if (appState === AppState.init) {
-      // eslint-disable-next-line no-console
-      console.debug('Init state');
+      logger.debug('Init state');
       setAppLoadingState(AppState.loadingConfigs);
       if (canSendRequest) {
         ipcRenderer.send(IpcChannelTypes.appInitialized);
         setCanSendRequest(false);
       }
+      logger.debug('Reading configuration');
       setDescription('Reading configuration');
     }
-  }, [appState, canSendRequest, setAppLoadingState]);
+  }, [appState, canSendRequest, logger, setAppLoadingState]);
 
   useEffect(() => {
     if (appState === AppState.loadingConfigs) {
-      // eslint-disable-next-line no-console
-      console.log(counter);
-      // eslint-disable-next-line no-console
-      console.debug('loading configs state');
       if (appSettings !== undefined && projectsConfig !== undefined) {
-      // eslint-disable-next-line no-console
-        console.debug('App can load: ', counter);
         setAppLoadingState(AppState.readingHistory);
+        logger.debug('Reading Jira history');
         setDescription('Reading Jira history');
-      } else {
-      // eslint-disable-next-line no-console
-        console.debug('App can NOT load: ');
       }
     }
-  }, [appSettings, appState, counter, projectsConfig, setAppLoadingState]);
+  }, [appSettings, appState, logger, projectsConfig, setAppLoadingState]);
 
   useEffect(() => {
     if (appState === AppState.readingHistory) {
-      // eslint-disable-next-line no-console
-      console.log(counter);
-      // eslint-disable-next-line no-console
-      console.debug('read history state');
       if (jiraHistory !== undefined) {
         setAppLoadingState(AppState.ready);
+        logger.debug('App fully loaded');
       }
     }
-  }, [appState, counter, jiraHistory, setAppLoadingState]);
+  }, [appState, jiraHistory, logger, setAppLoadingState]);
 
   return (
     <Root>
