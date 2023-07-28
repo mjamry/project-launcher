@@ -25,7 +25,7 @@ function IpcCommunicationService() {
     });
 
     ipcRenderer.on(IpcChannelTypes.projectsConfigsLoaded, (event: any, data: Project[]) => {
-      setProjects(data);
+      setProjects(data.filter((p) => p.id !== undefined && p.name !== undefined));
     });
 
     ipcRenderer.on(

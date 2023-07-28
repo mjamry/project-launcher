@@ -41,7 +41,9 @@ This app has its main configuration file, along with separate config files for e
     "primaryColor": ,
     "secondaryBackgroundColor": ,
     "secondaryColor": ,
-    "background":
+    "background":,
+    "highlightBackgroundColor": ,
+    "highlightColor": ,
   }
 }
 
@@ -50,11 +52,10 @@ This app has its main configuration file, along with separate config files for e
 
 ```json
 {
-  "id": , <- String. Defined project ID.
-  "name": , <- String. Project name displayed on the project page.
-  "avatarUrl": , <- String. Not yet supported.
+  "id": , <- String. Project ID displayed on menu. :exclamation: Required.
+  "name": , <- String. Project name displayed on the project page. :exclamation: Required.
+  "iconUrl": , <- String. Project icon displayed on the menu. :warning: Not yet supported.
   "jiraId": , <- String. Jira ID for project.
-  "description": , <- String. Description.
   "links":
     [
       {
@@ -66,7 +67,7 @@ This app has its main configuration file, along with separate config files for e
     [
       {
         "name": , <- String. Displayed name.
-        "path": <- String. Path to local the application/script.
+        "path": <- String. Path to a local application/script.
       }
     ]
 }
@@ -78,8 +79,8 @@ Here you can find some example themes.
 Dark green:
 ![](https://img.shields.io/static/v1?label=&message=%20&color=2f3e46)![](https://img.shields.io/static/v1?label=&message=%20&color=cad2c5)![](https://img.shields.io/static/v1?label=&message=%20&color=84a98c)![](https://img.shields.io/static/v1?label=&message=%20&color=2f3e46)![](https://img.shields.io/static/v1?label=&message=%20&color=52796f)
 ```json
-  "theme": { 
-    "primaryBackgroundColor": "#2f3e46", 
+  "theme": {
+    "primaryBackgroundColor": "#2f3e46",
     "primaryColor": "#cad2c5",
     "secondaryBackgroundColor": "#84a98c",
     "secondaryColor": "#2f3e46",
@@ -90,8 +91,8 @@ Dark green:
 Light brown:
 ![](https://img.shields.io/static/v1?label=&message=%20&color=b08968)![](https://img.shields.io/static/v1?label=&message=%20&color=7f5539)![](https://img.shields.io/static/v1?label=&message=%20&color=e6ccb2)![](https://img.shields.io/static/v1?label=&message=%20&color=9c6644)![](https://img.shields.io/static/v1?label=&message=%20&color=ede0d4)
 ```json
-  "theme": { 
-    "primaryBackgroundColor": "#b08968", 
+  "theme": {
+    "primaryBackgroundColor": "#b08968",
     "primaryColor": "#7f5539",
     "secondaryBackgroundColor": "#e6ccb2",
     "secondaryColor": "#9c6644",

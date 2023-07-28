@@ -60,7 +60,7 @@ const CollapseIcon = styled(ExpandMoreIcon)({
   transform: 'rotate(90deg)',
 });
 
-const ProjectAvatar = styled('img')({
+const ProjectIcon = styled('img')({
   height: '24px',
   width: '24px',
 });
@@ -103,7 +103,7 @@ function MainMenu() {
         .find((u) => u.project === project.jiraId)?.issues)].length || 0;
       output.push({
         title: project.name,
-        icon: project.avatarUrl ? <ProjectAvatar src={project.avatarUrl} /> : <DashboardIcon />,
+        icon: project.iconUrl ? <ProjectIcon src={project.iconUrl} /> : <DashboardIcon />,
         position: MenuItemPosition.top,
         badge: projectUpdatesCount,
         action: () => navigate(generatePath(RouteTypes.project, { projectId: `${project.id}` })),

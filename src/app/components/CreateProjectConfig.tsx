@@ -36,7 +36,7 @@ function CreateProjectConfig() {
   };
 
   const createNewConfigFile = () => {
-    const projectData: string = `{"id": "${fileName}","name": "${fileName}","avatarUrl": "","jiraId": "","description": "","links": [],"scripts": []}`;
+    const projectData: string = `{"id": "${fileName}","name": "${fileName}","iconUrl": "","jiraId": "",,"links": [],"scripts": []}`;
     settingsFileWriter.createProjectSettingsFile(
       fileName,
       projectData,
