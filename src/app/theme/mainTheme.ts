@@ -154,6 +154,46 @@ export function getTheme(userTheme: AppTheme): Theme {
       },
     },
     components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          '*': {
+            boxSizing: 'border-box',
+            margin: 0,
+            padding: 0,
+          },
+          html: {
+            MozOsxFontSmoothing: 'grayscale',
+            WebkitFontSmoothing: 'antialiased',
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100%',
+            width: '100%',
+          },
+          body: {
+            display: 'flex',
+            flex: '1 1 auto',
+            flexDirection: 'column',
+            minHeight: '100%',
+            width: '100%',
+            '&::-webkit-scrollbar': {
+              width: '10px',
+            },
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: userTheme && userTheme.primaryColor ? userTheme.primaryColor : DefaultTheme.primaryColor,
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: userTheme && userTheme.secondaryColor ? userTheme.secondaryColor : DefaultTheme.secondaryColor,
+            },
+          },
+          '#__next': {
+            display: 'flex',
+            flex: '1 1 auto',
+            flexDirection: 'column',
+            height: '100%',
+            width: '100%',
+          },
+        },
+      },
       MuiBadge: {
         styleOverrides: {
           root: {
@@ -292,37 +332,6 @@ export function getTheme(userTheme: AppTheme): Theme {
         styleOverrides: {
           root: {
             padding: '32px 24px',
-          },
-        },
-      },
-      MuiCssBaseline: {
-        styleOverrides: {
-          '*': {
-            boxSizing: 'border-box',
-            margin: 0,
-            padding: 0,
-          },
-          html: {
-            MozOsxFontSmoothing: 'grayscale',
-            WebkitFontSmoothing: 'antialiased',
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: '100%',
-            width: '100%',
-          },
-          body: {
-            display: 'flex',
-            flex: '1 1 auto',
-            flexDirection: 'column',
-            minHeight: '100%',
-            width: '100%',
-          },
-          '#__next': {
-            display: 'flex',
-            flex: '1 1 auto',
-            flexDirection: 'column',
-            height: '100%',
-            width: '100%',
           },
         },
       },

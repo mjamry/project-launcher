@@ -39,7 +39,7 @@ const DrawerContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: theme.palette.primary.main,
-  height: '100vh',
+  height: 'calc(100vh - 3.5rem)',
   boxSizing: 'border-box',
 }));
 
