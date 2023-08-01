@@ -66,9 +66,17 @@ function AboutPage() {
           title="About"
         />
         <Details>
-          <DetailsItemTitle>Project Launcher</DetailsItemTitle>
-          <DetailsItem>version 1.0</DetailsItem>
-          <DetailsItem>Copyrights 2022 Michal Jamry</DetailsItem>
+          <DetailsItemTitle>{process.env.REACT_APP_NAME}</DetailsItemTitle>
+          <DetailsItem>
+            version
+            {' '}
+            {process.env.REACT_APP_VERSION}
+          </DetailsItem>
+          <DetailsItem>
+            Copyrights 2023
+            {' '}
+            {process.env.REACT_APP_AUTHOR}
+          </DetailsItem>
           <DetailsItemLink
             onClick={() => scriptLauncher.launch('https://github.com/mjamry/project-launcher/')}
           >
