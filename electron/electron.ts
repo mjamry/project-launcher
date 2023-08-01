@@ -23,6 +23,7 @@ function createWindow() {
       contextIsolation: false,
       webSecurity: false,
     },
+    titleBarStyle: 'hidden',
   });
 
   if (app.isPackaged) {
@@ -126,5 +127,21 @@ app.whenReady().then(() => {
 
   ipcMain.on('error', (event, data) => {
     dialog.showErrorBox(IpcChannelTypes.error, data);
+  });
+
+  ipcMain.on(IpcChannelTypes.appMinimize, () => {
+    win.minimize();
+  });
+
+  ipcMain.on(IpcChannelTypes.appClose, () => {
+    win.close();
+  });
+
+  ipcMain.on(IpcChannelTypes.appMaximize, () => {
+    win.maximize();
+  });
+
+  ipcMain.on(IpcChannelTypes.appUnMaximize, () => {
+    win.unmaximize();
   });
 });
