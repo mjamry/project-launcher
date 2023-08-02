@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -138,6 +138,18 @@ function MainMenu() {
     }
   };
 
+  const handleWindowResize = useCallback(() => {
+    if (window.innerWidth < CollapseMinWidth) {
+      setCanCollapse(false);
+      setIsCollapsed(true);
+    } else {
+      if (!canCollapse) {
+        setIsCollapsed(false);
+      }
+      setCanCollapse(true);
+    }
+  }, [canCollapse]);
+
   useEffect(() => {
     const firstMenuItem = getMenuItems()[0];
     firstMenuItem.action();
@@ -146,21 +158,12 @@ function MainMenu() {
   }, [projects]);
 
   useEffect(() => {
-    const handleWindowResize = () => {
-      if (window.innerWidth < CollapseMinWidth) {
-        setCanCollapse(false);
-        setIsCollapsed(true);
-      } else {
-        setCanCollapse(true);
-      }
-    };
-
     window.addEventListener('resize', handleWindowResize);
 
     return () => {
       window.removeEventListener('resize', handleWindowResize);
     };
-  }, []);
+  }, [handleWindowResize]);
 
   return (
     <>
