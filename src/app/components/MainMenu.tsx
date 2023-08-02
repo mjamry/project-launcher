@@ -89,10 +89,13 @@ type MenuItemDto = {
   action: () => void;
 };
 
+const CollapseMinWidth = 1300;
+
 function MainMenu() {
   const navigate = useNavigate();
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  const [selectedButtonTitle, setSelectedButtonTitle] = useState<string>('');
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [canCollapse, setCanCollapse] = useState(true);
+  const [selectedButtonTitle, setSelectedButtonTitle] = useState('');
   const projects = useRecoilValue(projectsState);
   const updates = useRecoilValue(jiraUpdatesState);
 
@@ -130,7 +133,9 @@ function MainMenu() {
   ];
 
   const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
+    if (canCollapse) {
+      setIsCollapsed(!isCollapsed);
+    }
   };
 
   useEffect(() => {
@@ -139,6 +144,23 @@ function MainMenu() {
     setSelectedButtonTitle(firstMenuItem.title);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projects]);
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      if (window.innerWidth < CollapseMinWidth) {
+        setCanCollapse(false);
+        setIsCollapsed(true);
+      } else {
+        setCanCollapse(true);
+      }
+    };
+
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
 
   return (
     <>
