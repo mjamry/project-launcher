@@ -209,6 +209,8 @@ export function getTheme(userTheme: AppTheme): Theme {
         styleOverrides: {
           root: {
             borderBottom: 'none',
+            paddingTop: '8px',
+            paddingBottom: '8px',
           },
         },
       },
@@ -341,6 +343,27 @@ export function getTheme(userTheme: AppTheme): Theme {
             borderColor: userTheme && userTheme.primaryBackgroundColor ? userTheme.primaryBackgroundColor : '#fff',
             color: 'red',
             padding: '3px',
+          },
+        },
+      },
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: '1em',
+            padding: '10px 15px 10px 15px',
+            textJustify: 'inter-word',
+            textAlign: 'justify',
+            color: userTheme && userTheme.primaryColor ? userTheme.primaryColor : DefaultTheme.primaryColor,
+            backgroundColor: userTheme && userTheme.primaryBackgroundColor ? userTheme.primaryBackgroundColor : DefaultTheme.primaryBackgroundColor,
+            border: 'solid 1px',
+            borderColor: userTheme && userTheme.primaryColor ? userTheme.primaryColor : DefaultTheme.primaryColor,
+          },
+          arrow: {
+            color: userTheme && userTheme.primaryBackgroundColor ? userTheme.primaryBackgroundColor : DefaultTheme.primaryBackgroundColor,
+            '&:before': {
+              border: 'solid 1px',
+              borderColor: userTheme && userTheme.primaryColor ? userTheme.primaryColor : DefaultTheme.primaryColor,
+            },
           },
         },
       },
