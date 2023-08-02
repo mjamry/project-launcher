@@ -11,7 +11,7 @@ import { HeadCell } from './EnhancedTable/EnhancedTableTypes';
 import { appThemeState } from '../state/AppSettingsState';
 import { useLinkLaunchService } from '../services/IpcLaunchServices';
 import CollapseButton from './CollapseButton';
-import CollapsibleContent from './CollapsibleContent';
+import ReducedContent from './ReducedContent';
 
 const ItemLink = styled(Button)({
   fontWeight: 'bold',
@@ -133,7 +133,7 @@ function JiraItemDetailsTable(props: Props) {
               <Collapse in={canShowDetails} timeout="auto" unmountOnExit>
                 <Box sx={{ margin: 1 }}>
                   <EnhancedTable
-                    title={<CollapsibleContent content={item.description} />}
+                    title={<ReducedContent content={item.description} />}
                     data={item.changes ? item.changes : []}
                     headCells={headCells}
                   >
