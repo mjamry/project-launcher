@@ -12,8 +12,7 @@ import JiraItemsTable from '../components/JiraItemsTable';
 import { projectsState } from '../state/ProjectState';
 
 const Root = styled('div')({
-  margin: '10px',
-  marginRight: '30px',
+  margin: '20px',
 });
 
 type RouteParams = {
@@ -43,12 +42,20 @@ function ProjectPage() {
               </Typography>
             </ProjectCard>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <ProjectLinkList links={project.links} />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <ProjectScriptList scripts={project.scripts} />
-          </Grid>
+          {project.links && project.links.length > 0
+            ? (
+              <Grid item xs={12} sm={6}>
+                <ProjectLinkList links={project.links} />
+              </Grid>
+            )
+            : <></>}
+          {project.scripts && project.scripts.length > 0
+            ? (
+              <Grid item xs={12} sm={6}>
+                <ProjectScriptList scripts={project.scripts} />
+              </Grid>
+            )
+            : <></>}
           <Grid item xs={12}>
             <JiraItemsTable projectKey={project.jiraId ? project.jiraId : ''} />
           </Grid>

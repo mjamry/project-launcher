@@ -7,37 +7,32 @@ import {
 import { ProjectLink } from '../../shared/dto/ProjectDto';
 
 type Props = {
-  links?: ProjectLink[];
+  links: ProjectLink[];
 };
 
-function ProjectLinkList({ links: scripts }: Props) {
+function ProjectLinkList({ links }: Props) {
   const linkLauncher = useLinkLaunchService();
 
-  const render = () => {
-    if (scripts && scripts.length > 0) {
-      return (
-        <ProjectCard>
-          <ProjectCardHeader
-            avatar={<LinkIcon />}
-            title="Links"
-          />
-          <ProjectCardContent>
-            {scripts.map((l) => (
-              <ProjectListItem
-                variant="contained"
-                key={l.name}
-                onClick={() => linkLauncher.launch(l.url)}
-                title={l.description}
-              >
-                {l.name}
-              </ProjectListItem>
-            ))}
-          </ProjectCardContent>
-        </ProjectCard>
-      );
-    }
-    return <></>;
-  };
+  const render = () => (
+    <ProjectCard>
+      <ProjectCardHeader
+        avatar={<LinkIcon />}
+        title="Links"
+      />
+      <ProjectCardContent>
+        {links.map((l) => (
+          <ProjectListItem
+            variant="contained"
+            key={l.name}
+            onClick={() => linkLauncher.launch(l.url)}
+            title={l.description}
+          >
+            {l.name}
+          </ProjectListItem>
+        ))}
+      </ProjectCardContent>
+    </ProjectCard>
+  );
 
   return (
     <>{ render() }</>

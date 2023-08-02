@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -39,7 +39,7 @@ const DrawerContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: theme.palette.primary.main,
-  height: '100vh',
+  height: 'calc(100vh - 3.5rem)',
   boxSizing: 'border-box',
 }));
 
@@ -73,7 +73,7 @@ const MenuContainer = styled('div')({
 // as the real menu has position=fixed.
 const FakeMenuContainer = styled('div')({
   height: '100vh',
-  width: '170px',
+  width: '155px',
 });
 
 enum MenuItemPosition {
@@ -89,10 +89,13 @@ type MenuItemDto = {
   action: () => void;
 };
 
+const CollapseMinWidth = 1500;
+
 function MainMenu() {
   const navigate = useNavigate();
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  const [selectedButtonTitle, setSelectedButtonTitle] = useState<string>('');
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [canCollapse, setCanCollapse] = useState(true);
+  const [selectedButtonTitle, setSelectedButtonTitle] = useState('');
   const projects = useRecoilValue(projectsState);
   const updates = useRecoilValue(jiraUpdatesState);
 
@@ -130,8 +133,22 @@ function MainMenu() {
   ];
 
   const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
+    if (canCollapse) {
+      setIsCollapsed(!isCollapsed);
+    }
   };
+
+  const handleWindowResize = useCallback(() => {
+    if (window.innerWidth < CollapseMinWidth) {
+      setCanCollapse(false);
+      setIsCollapsed(true);
+    } else {
+      if (!canCollapse) {
+        setIsCollapsed(false);
+      }
+      setCanCollapse(true);
+    }
+  }, [canCollapse]);
 
   useEffect(() => {
     const firstMenuItem = getMenuItems()[0];
@@ -139,6 +156,14 @@ function MainMenu() {
     setSelectedButtonTitle(firstMenuItem.title);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projects]);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, [handleWindowResize]);
 
   return (
     <>

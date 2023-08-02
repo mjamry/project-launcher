@@ -1,22 +1,10 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-console */
 import { AppSettings } from '../../shared/dto/AppSettings';
+import JiraIssueFields from '../../shared/dto/JiraIssueFields';
 import { JiraChangelogItem, JiraIssue, JiraUpdate } from '../../shared/dto/JiraTypes';
 import useLoggerService from '../common/LoggerService';
 import useRestClientAdapter from './RestClientAdapter';
-
-enum JiraIssueFields {
-  key = 'key',
-  summary = 'summary',
-  description = 'description',
-  assignee = 'assignee',
-  status = 'status',
-  issueType = 'issuetype',
-  updated = 'updated',
-  created = 'created',
-  priority = 'priority',
-  comment = 'comment',
-}
 
 type JiraResponse = {
   issues: JiraIssue[],
