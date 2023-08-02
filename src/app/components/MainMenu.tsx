@@ -73,7 +73,7 @@ const MenuContainer = styled('div')({
 // as the real menu has position=fixed.
 const FakeMenuContainer = styled('div')({
   height: '100vh',
-  width: '150px',
+  width: '155px',
 });
 
 enum MenuItemPosition {
@@ -89,7 +89,7 @@ type MenuItemDto = {
   action: () => void;
 };
 
-const CollapseMinWidth = 1300;
+const CollapseMinWidth = 1500;
 
 function MainMenu() {
   const navigate = useNavigate();
