@@ -19,7 +19,7 @@ const headCells: HeadCell[] = [
   },
   {
     id: 'id',
-    disablePadding: true,
+    disablePadding: false,
     label: 'Id',
   },
   {
