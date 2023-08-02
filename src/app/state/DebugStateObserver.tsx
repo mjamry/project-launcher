@@ -45,7 +45,7 @@ const Settings = styled(Paper)({
 const Root = styled('div')({
   display: 'flex',
   position: 'absolute',
-  top: '65px',
+  top: '75px',
   right: '35px',
   zIndex: 9999,
   fontSize: '10pt',

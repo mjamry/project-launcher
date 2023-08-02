@@ -7,37 +7,32 @@ import {
 } from './ProjectStyledComponents';
 
 type Props = {
-  scripts?: ProjectScript[];
+  scripts: ProjectScript[];
 };
 
 function ProjectScriptList({ scripts }: Props) {
   const scriptLauncher = useScriptLaunchService();
 
-  const render = () => {
-    if (scripts && scripts.length > 0) {
-      return (
-        <ProjectCard>
-          <ProjectCardHeader
-            avatar={<TerminalIcon />}
-            title="Scripts"
-          />
-          <ProjectCardContent>
-            {scripts.map((l) => (
-              <ProjectListItem
-                variant="contained"
-                key={l.name}
-                onClick={() => scriptLauncher.launch(l.path)}
-                title={l.description}
-              >
-                {l.name}
-              </ProjectListItem>
-            ))}
-          </ProjectCardContent>
-        </ProjectCard>
-      );
-    }
-    return <></>;
-  };
+  const render = () => (
+    <ProjectCard>
+      <ProjectCardHeader
+        avatar={<TerminalIcon />}
+        title="Scripts"
+      />
+      <ProjectCardContent>
+        {scripts.map((l) => (
+          <ProjectListItem
+            variant="contained"
+            key={l.name}
+            onClick={() => scriptLauncher.launch(l.path)}
+            title={l.description}
+          >
+            {l.name}
+          </ProjectListItem>
+        ))}
+      </ProjectCardContent>
+    </ProjectCard>
+  );
 
   return (
     <>{ render() }</>

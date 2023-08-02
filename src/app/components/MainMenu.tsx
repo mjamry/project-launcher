@@ -73,7 +73,7 @@ const MenuContainer = styled('div')({
 // as the real menu has position=fixed.
 const FakeMenuContainer = styled('div')({
   height: '100vh',
-  width: '170px',
+  width: '150px',
 });
 
 enum MenuItemPosition {
