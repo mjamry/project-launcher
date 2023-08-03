@@ -89,7 +89,7 @@ type MenuItemDto = {
   action: () => void;
 };
 
-const CollapseMinWidth = 1500;
+const CollapseMinWidth = 1300;
 
 function MainMenu() {
   const navigate = useNavigate();
