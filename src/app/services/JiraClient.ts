@@ -15,6 +15,8 @@ type IJiraClient = {
   getHistoryForProject: (project: string) => Promise<JiraUpdate>;
 };
 
+const oneMinuteInMS = 60000;
+
 const useJiraClient = (appSettings: AppSettings): IJiraClient => {
   const restClient = useRestClientAdapter({ token: appSettings.jiraToken });
   const logger = useLoggerService('JiraClient');
@@ -36,22 +38,33 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
     return response;
   };
 
-  const getIssueChanges = (issue: any): JiraChangelogItem[] => {
+  const isHistoryAnUpdate = (history: any, timeout: number) => {
+    const now = Date.now();
+    const created = Date.parse(history.created);
+
+    const passedMinutes = (now - created) / oneMinuteInMS;
+
+    return passedMinutes <= timeout;
+  };
+
+  const getIssueChanges = (issue: any, timeout: number): JiraChangelogItem[] => {
     const changes: JiraChangelogItem[] = [];
 
     issue.changelog.histories.forEach((history: any) => {
       history.items.forEach((change: any) => {
-        const fieldName = change.field;
-        if (appSettings.jiraChangelogFields.some((field) => field === fieldName)) {
-          const changeTime = new Date(history.created);
+        if (isHistoryAnUpdate(history, timeout)) {
+          const fieldName = change.field;
+          if (appSettings.jiraChangelogFields.some((field) => field === fieldName)) {
+            const changeTime = new Date(history.created);
 
-          changes.push({
-            id: change.id,
-            author: history.author.name.split('@')[0],
-            created: changeTime,
-            field: fieldName,
-            content: `${change.fromString} -> ${change.toString}`,
-          });
+            changes.push({
+              id: change.id,
+              author: history.author.name.split('@')[0],
+              created: changeTime,
+              field: fieldName,
+              content: `${change.fromString} -> ${change.toString}`,
+            });
+          }
         }
       });
     });
@@ -62,7 +75,7 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
   const getIssueComments = (issue: any): JiraChangelogItem[] => {
     const comments: JiraChangelogItem[] = [];
 
-    if (issue.fields.comment) {
+    if (issue.fields.comment && appSettings.jiraChangelogFields.includes(JiraIssueFields.comment)) {
       issue.fields.comment.comments.forEach((comment: any) => {
         const updated = new Date(comment.updated);
         comments.push({
@@ -84,7 +97,7 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
     const output: JiraIssue[] = [];
     try {
       response.issues.forEach((issue: any) => {
-        const changes = getIssueChanges(issue);
+        const changes = getIssueChanges(issue, timeout);
         const comments = getIssueComments(issue);
 
         output.push({

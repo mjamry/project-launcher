@@ -8,7 +8,7 @@ type JiraIssue = {
   updated: Date,
   isNew: boolean,
   priority: string,
-  changes?: JiraChangelogItem[]
+  changes: JiraChangelogItem[]
 };
 
 type JiraChangelogItem = {

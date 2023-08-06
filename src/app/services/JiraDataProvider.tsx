@@ -20,8 +20,8 @@ function JiraDataProvider() {
     const projectHistory: JiraUpdate[] = [];
     await Promise.all(projects.map(async (project) => {
       if (project.jiraId) {
-        const updates = await jiraClient.getHistoryForProject(project.jiraId);
-        projectHistory.push(updates);
+        const history = await jiraClient.getHistoryForProject(project.jiraId);
+        projectHistory.push(history);
       }
     }));
 
@@ -35,7 +35,6 @@ function JiraDataProvider() {
     await Promise.all(projects.map(async (project) => {
       if (project.jiraId) {
         const updates = await jiraClient.getUpdatesForProject(project.jiraId);
-
         incomingUpdates.push(updates);
       }
     }));
@@ -46,6 +45,7 @@ function JiraDataProvider() {
 
       const onlyNewUpdates = incomingUpdates
         .find((p) => p.project === project.jiraId)?.issues
+        .filter((nu) => nu.changes.length > 0)
         .filter((nu) => currentUpdates.findIndex((cu) => cu.id === nu.id) === -1) || [];
 
       finalUpdates.push({
@@ -94,15 +94,17 @@ function JiraDataProvider() {
       if (appSettings !== undefined) {
         interval = setInterval(async () => {
           await getJiraUpdates();
-          refreshHistory();
         }, appSettings.jiraRefreshTimeoutInMinutes * 60 * 1000);
       }
       return () => clearInterval(interval);
     }
 
     return () => {};
-  }, [appSettings, appState, getJiraUpdates, refreshHistory]);
+  }, [appSettings, appState, getJiraUpdates]);
 
+  useEffect(() => {
+    refreshHistory();
+  }, [refreshHistory, updateStates]);
   return <></>;
 }
 
