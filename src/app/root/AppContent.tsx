@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 import { Routes, Route } from 'react-router';
 import RouteTypes from '../common/dto/RouteTypes';
