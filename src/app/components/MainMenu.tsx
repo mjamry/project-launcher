@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -17,6 +17,8 @@ import { useRecoilValue } from 'recoil';
 import RouteTypes from '../common/dto/RouteTypes';
 import { jiraUpdatesState } from '../state/JiraState';
 import { projectsState } from '../state/ProjectState';
+import windowSizeState from '../state/WindowSizeState';
+import WindowSize from '../../shared/dto/WindowSize';
 
 const MenuItem = styled(ListItemButton)(({ theme }) => ({
   ...theme.typography.button,
@@ -89,8 +91,6 @@ type MenuItemDto = {
   action: () => void;
 };
 
-const CollapseMinWidth = 1300;
-
 function MainMenu() {
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -98,6 +98,7 @@ function MainMenu() {
   const [selectedButtonTitle, setSelectedButtonTitle] = useState('');
   const projects = useRecoilValue(projectsState);
   const updates = useRecoilValue(jiraUpdatesState);
+  const windowSize = useRecoilValue(windowSizeState);
 
   const getProjects = (): MenuItemDto[] => {
     const output: MenuItemDto[] = [];
@@ -138,18 +139,6 @@ function MainMenu() {
     }
   };
 
-  const handleWindowResize = useCallback(() => {
-    if (window.innerWidth < CollapseMinWidth) {
-      setCanCollapse(false);
-      setIsCollapsed(true);
-    } else {
-      if (!canCollapse) {
-        setIsCollapsed(false);
-      }
-      setCanCollapse(true);
-    }
-  }, [canCollapse]);
-
   useEffect(() => {
     const firstMenuItem = getMenuItems()[0];
     firstMenuItem.action();
@@ -158,12 +147,16 @@ function MainMenu() {
   }, [projects]);
 
   useEffect(() => {
-    window.addEventListener('resize', handleWindowResize);
-
-    return () => {
-      window.removeEventListener('resize', handleWindowResize);
-    };
-  }, [handleWindowResize]);
+    if (windowSize < WindowSize.medium) {
+      setCanCollapse(false);
+      setIsCollapsed(true);
+    } else {
+      if (!canCollapse) {
+        setIsCollapsed(false);
+      }
+      setCanCollapse(true);
+    }
+  }, [canCollapse, windowSize]);
 
   return (
     <>
