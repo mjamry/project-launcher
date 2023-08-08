@@ -147,7 +147,7 @@ function MainMenu() {
   }, [projects]);
 
   useEffect(() => {
-    if (windowSize < WindowSize.medium) {
+    if (windowSize <= WindowSize.large) {
       setCanCollapse(false);
       setIsCollapsed(true);
     } else {
