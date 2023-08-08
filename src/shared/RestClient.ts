@@ -2,15 +2,22 @@
 import fetch, { HeadersInit } from 'electron-fetch';
 import useLoggerService from '../app/common/LoggerService';
 import {
-  RestClientOptions, IRestClient, RestMethod, Request
+  RestClientOptions, IRestClient, RestMethod, Request, DefaultRestClientOptions
 } from './dto/RestClientTypes';
 
-const useAuthenticationMiddleware = (token: string) => {
+const useAuthenticationMiddleware = (options: RestClientOptions) => {
   const getAuthenticationHeaders = async (headers: HeadersInit) => {
-    if (token) {
+    if (options.isCloudService) {
+      if (options.token && options.user) {
+        headers = {
+          ...headers,
+          Authorization: `Basic ${Buffer.from(`${options.user}:${options.token}`).toString('base64')}`,
+        };
+      }
+    } else if (options.token) {
       headers = {
         ...headers,
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${options.token}`,
       };
     }
 
@@ -23,10 +30,10 @@ const useAuthenticationMiddleware = (token: string) => {
 };
 
 const useRestClient = (options?: RestClientOptions): IRestClient => {
-  options = options || { token: '' };
+  options = options || DefaultRestClientOptions;
 
   const logger = useLoggerService('RestClient');
-  const authenticationMiddleware = useAuthenticationMiddleware(options.token);
+  const authenticationMiddleware = useAuthenticationMiddleware(options);
 
   const getHeaders = (headers?: HeadersInit): HeadersInit => ({
     ...headers,

@@ -16,6 +16,14 @@ type Request = {
 
 type RestClientOptions = {
   token: string;
+  user: string;
+  isCloudService: boolean;
+};
+
+const DefaultRestClientOptions: RestClientOptions = {
+  token: '',
+  user: '',
+  isCloudService: false,
 };
 
 interface IRestClient {
@@ -25,5 +33,7 @@ interface IRestClient {
   del<T>(url: string, body: object, headers?: HeadersInit): Promise<T>;
 }
 
-export { RestMethod };
-export type { Request, RestClientOptions, IRestClient };
+export { RestMethod, DefaultRestClientOptions };
+export type {
+  Request, RestClientOptions, IRestClient,
+};
