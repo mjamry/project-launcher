@@ -12,6 +12,7 @@ import AppLoadingPage from './app/pages/AppLoadingPage';
 import appLoadingState from './app/state/AppLoadingState';
 import { appSettingsState } from './app/state/AppSettingsState';
 import AppState from './shared/dto/AppState';
+import WindowSizeMonitor from './app/root/WindowSizeMonitor';
 
 const AppContainer = styled('div')(({ theme }) => ({
   textAlign: 'center',
@@ -24,6 +25,7 @@ function App() {
 
   return (
     <>
+      <WindowSizeMonitor />
       <IpcCommunicationService />
       <JiraDataProvider />
       {appState !== AppState.ready
