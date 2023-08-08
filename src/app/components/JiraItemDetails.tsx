@@ -24,7 +24,7 @@ function JiraItemDetails(props: Props) {
           <TableCell width="10%">{change.field}</TableCell>
           <TableCell width="50%">
             {change.field === JiraIssueFields.comment
-              ? <ReducedContent content={change.content} maxLength={300} />
+              ? <ReducedContent content={change.content} />
               : <>{change.content}</>}
           </TableCell>
         </TableRow>

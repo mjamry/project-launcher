@@ -1,5 +1,5 @@
 import {
-  Box, Button, Collapse, TableCell, TableRow, styled,
+  Box, Collapse, TableCell, TableRow, styled,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -13,8 +13,9 @@ import CollapseButton from './CollapseButton';
 import ReducedContent from './ReducedContent';
 import { useLinkLaunchService } from '../services/IpcLaunchServices';
 
-const ItemLink = styled(Button)({
+const ItemLink = styled('a')({
   fontWeight: 'bold',
+  cursor: 'pointer',
 });
 const headCells: HeadCell[] = [
   {
@@ -121,7 +122,7 @@ function JiraItemDetailsTable(props: Props) {
           </ItemLink>
         </TableCell>
         <TableCell width="48%">
-          <ReducedContent content={item.summary} maxLength={50} />
+          <ReducedContent content={item.summary} maxLength={10} />
         </TableCell>
         <TableCell width="8%" align="right">{item.status}</TableCell>
         <TableCell width="8%" align="right">{item.priority}</TableCell>
