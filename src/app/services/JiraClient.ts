@@ -18,7 +18,11 @@ type IJiraClient = {
 const oneMinuteInMS = 60000;
 
 const useJiraClient = (appSettings: AppSettings): IJiraClient => {
-  const restClient = useRestClientAdapter({ token: appSettings.jiraToken });
+  const restClient = useRestClientAdapter({
+    token: appSettings.jiraToken,
+    user: appSettings.jiraUserEmail,
+    isCloudService: appSettings.isJiraCloud,
+  });
   const logger = useLoggerService('JiraClient');
 
   const getJiraDataForProject = async (projectKey: string, timeout: number):
@@ -26,12 +30,16 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
     const requestData = {
       jql: `project=${projectKey} AND updated > -${timeout}m`,
       fields: Object.keys(JiraIssueFields),
-      expand: ['changelog'],
+      expand: 'changelog',
     };
 
     let response: JiraResponse = { issues: [] };
     try {
-      response = await restClient.post<JiraResponse>(`${appSettings.jiraUrl}/rest/api/2/search`, requestData);
+      const requestUrl = `${appSettings.jiraUrl}/rest/api/2/search`
+        .concat('?jql=', requestData.jql)
+        .concat('&fields=', requestData.fields.join(','))
+        .concat('&expand=', requestData.expand);
+      response = await restClient.get<JiraResponse>(requestUrl);
     } catch (ex: any) {
       logger.debug('JiraGettingUpdateError', ex);
     }
@@ -59,7 +67,7 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
 
             changes.push({
               id: change.id,
-              author: history.author.name.split('@')[0],
+              author: history.author.displayName,
               created: changeTime,
               field: fieldName,
               content: `${change.fromString} -> ${change.toString}`,
@@ -80,7 +88,7 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
         const updated = new Date(comment.updated);
         comments.push({
           id: issue.fields.comment.id,
-          author: comment.author.name.split('@')[0],
+          author: comment.author.displayName,
           created: updated,
           field: 'comment',
           content: comment.body,
@@ -104,7 +112,7 @@ const useJiraClient = (appSettings: AppSettings): IJiraClient => {
           id: issue[JiraIssueFields.key],
           summary: issue.fields[JiraIssueFields.summary],
           url: `${appSettings.jiraUrl}\\browse\\${issue[JiraIssueFields.key]}`,
-          assignee: issue.fields[JiraIssueFields.assignee] ? issue.fields[JiraIssueFields.assignee].name.split('@')[0] : '',
+          assignee: issue.fields[JiraIssueFields.assignee] ? issue.fields[JiraIssueFields.assignee].displayName : '',
           status: issue.fields[JiraIssueFields.status].name,
           description: issue.fields[JiraIssueFields.description],
           updated: new Date(issue.fields[JiraIssueFields.updated]),
