@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import TerminalIcon from '@mui/icons-material/Terminal';
+import { Collapse } from '@mui/material';
 import { ProjectScript } from '../../shared/dto/ProjectDto';
 import { useScriptLaunchService } from '../services/IpcLaunchServices';
 import {
@@ -29,22 +30,20 @@ function ProjectScriptList({ scripts }: Props) {
         )}
         title="Scripts"
       />
-      {!isCollapsed
-        ? (
-          <ProjectCardContent>
-            {scripts.map((l) => (
-              <ProjectListItem
-                variant="contained"
-                key={l.name}
-                onClick={() => scriptLauncher.launch(l.path)}
-                title={l.description}
-              >
-                {l.name}
-              </ProjectListItem>
-            ))}
-          </ProjectCardContent>
-        )
-        : <></>}
+      <Collapse in={isCollapsed} timeout="auto" unmountOnExit>
+        <ProjectCardContent>
+          {scripts.map((l) => (
+            <ProjectListItem
+              variant="contained"
+              key={l.name}
+              onClick={() => scriptLauncher.launch(l.path)}
+              title={l.description}
+            >
+              {l.name}
+            </ProjectListItem>
+          ))}
+        </ProjectCardContent>
+      </Collapse>
 
     </ProjectCard>
   );
