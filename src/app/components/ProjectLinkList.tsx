@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LinkIcon from '@mui/icons-material/Link';
-import { Collapse } from '@mui/material';
+import { Collapse, styled } from '@mui/material';
 import { useLinkLaunchService } from '../services/IpcLaunchServices';
 import {
   ProjectCard, ProjectCardContent, ProjectCardHeader, ProjectListItem,
@@ -8,13 +8,23 @@ import {
 import { ProjectLink } from '../../shared/dto/ProjectDto';
 import CollapseButton from './CollapseButton';
 
+const Icon = styled(LinkIcon)({
+  margin: '10px',
+});
+
 type Props = {
   links: ProjectLink[];
+  isDefaultCollapsed?: boolean;
 };
 
-function ProjectLinkList({ links }: Props) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+function ProjectLinkList(props: Props) {
+  const { links, isDefaultCollapsed } = props;
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const linkLauncher = useLinkLaunchService();
+
+  useEffect(() => {
+    setIsCollapsed(isDefaultCollapsed !== undefined ? isDefaultCollapsed : true);
+  }, [isDefaultCollapsed]);
 
   const render = () => (
     <ProjectCard>
@@ -23,8 +33,9 @@ function ProjectLinkList({ links }: Props) {
           <>
             <CollapseButton
               onClick={() => setIsCollapsed(!isCollapsed)}
+              isDefaultCollapsed={isCollapsed}
             />
-            <LinkIcon />
+            <Icon />
           </>
         )}
         title="Links"

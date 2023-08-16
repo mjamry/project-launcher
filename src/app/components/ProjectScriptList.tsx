@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TerminalIcon from '@mui/icons-material/Terminal';
-import { Collapse } from '@mui/material';
+import { Collapse, styled } from '@mui/material';
 import { ProjectScript } from '../../shared/dto/ProjectDto';
 import { useScriptLaunchService } from '../services/IpcLaunchServices';
 import {
@@ -8,12 +8,20 @@ import {
 } from './ProjectStyledComponents';
 import CollapseButton from './CollapseButton';
 
+const Icon = styled(TerminalIcon)({
+  margin: '10px',
+});
+
 type Props = {
   scripts: ProjectScript[];
+  isDefaultCollapsed?: boolean;
 };
 
-function ProjectScriptList({ scripts }: Props) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+function ProjectScriptList(props: Props) {
+  const { scripts, isDefaultCollapsed } = props;
+  const [isCollapsed, setIsCollapsed] = useState(
+    isDefaultCollapsed !== undefined ? isDefaultCollapsed : true,
+  );
   const scriptLauncher = useScriptLaunchService();
 
   const render = () => (
@@ -25,7 +33,7 @@ function ProjectScriptList({ scripts }: Props) {
               onClick={() => setIsCollapsed(!isCollapsed)}
               isDefaultCollapsed={false}
             />
-            <TerminalIcon />
+            <Icon />
           </>
         )}
         title="Scripts"
