@@ -1,15 +1,10 @@
 import React from 'react';
 import TerminalIcon from '@mui/icons-material/Terminal';
-import { styled } from '@mui/material';
 import { ProjectScript } from '../../../shared/dto/ProjectDto';
 import { useScriptLaunchService } from '../../services/IpcLaunchServices';
 import ProjectCard from '../ProjectCard/ProjectCard';
 import ProjectListItem from './ProjectListItem';
 import { ContentAsColumn } from './ProjectStyledComponents';
-
-const Icon = styled(TerminalIcon)({
-  margin: '8px',
-});
 
 type Props = {
   scripts: ProjectScript[];
@@ -21,10 +16,11 @@ function ProjectScriptList(props: Props) {
 
   return (
     <ProjectCard>
-      <ProjectCard.Title
-        title="Scripts"
-        icon={<Icon />}
-      />
+      <ProjectCard.Title>
+        <TerminalIcon />
+        <div>Scripts</div>
+        <div />
+      </ProjectCard.Title>
       <ProjectCard.Content>
         <ContentAsColumn>
           {scripts.map((script) => (

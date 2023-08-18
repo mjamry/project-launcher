@@ -1,28 +1,37 @@
 import React, { useContext } from 'react';
+import styled from '@emotion/styled';
 import CollapseButton from '../CollapseButton';
-import { ProjectCardHeader } from '../ProjectItem/ProjectStyledComponents';
 import ProjectCardContext from './ProjectCardContext';
 
+const Root = styled('div')({
+  padding: '0 10px',
+  display: 'flex',
+  flexDirection: 'row',
+});
+
+const Container = styled('div')({
+  display: 'flex',
+  justifyContent: 'space-between',
+  width: '100%',
+  padding: '8px',
+});
+
 type ProjectCardTitleProps = {
-  title?: React.ReactElement | string,
-  icon?: React.ReactElement,
+  children: React.ReactElement | React.ReactElement[],
 };
 
-function ProjectCardTitle({ title, icon }: ProjectCardTitleProps) {
+function ProjectCardTitle({ children }: ProjectCardTitleProps) {
   const { isCollapsed, setIsCollapsed } = useContext(ProjectCardContext);
 
   return (
-    <ProjectCardHeader
-      avatar={(
-        <>
-          <CollapseButton
-            onClick={() => setIsCollapsed(!isCollapsed)}
-          />
-          {icon}
-        </>
-          )}
-      title={title}
-    />
+    <Root>
+      <CollapseButton
+        onClick={() => setIsCollapsed(!isCollapsed)}
+      />
+      <Container>
+        {children}
+      </Container>
+    </Root>
   );
 }
 
