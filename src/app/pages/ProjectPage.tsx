@@ -1,13 +1,14 @@
-import { styled, Typography } from '@mui/material';
 import React from 'react';
+import { styled, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router';
 import { useRecoilValue } from 'recoil';
+
 import RouteTypes from '../common/dto/RouteTypes';
-import ProjectScriptList from '../components/ProjectScriptList';
-import ProjectLinkList from '../components/ProjectLinkList';
-import { ProjectCard } from '../components/ProjectStyledComponents';
+import ProjectLinkList from '../components/ProjectItem/ProjectLinkList';
+import { ProjectCardContainer } from '../components/ProjectItem/ProjectStyledComponents';
 import JiraItemsTable from '../components/JiraItemsTable';
 import { projectsState } from '../state/ProjectState';
+import ProjectScriptList from '../components/ProjectItem/ProjectScriptList';
 
 const Root = styled('div')({
   margin: '20px',
@@ -45,11 +46,11 @@ function ProjectPage() {
 
     return (
       <Root>
-        <ProjectCard>
+        <ProjectCardContainer>
           <Typography variant="h6">
             {project!.name}
           </Typography>
-        </ProjectCard>
+        </ProjectCardContainer>
         <RowContainer>
           <RowItem>
             {project.links && project.links.length > 0
