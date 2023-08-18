@@ -15,7 +15,7 @@ function ProjectLinkList(props: Props) {
   const linkLauncher = useLinkLaunchService();
 
   return (
-    <ProjectCard>
+    <ProjectCard isDefaultCollapsed>
       <ProjectCard.Title>
         <LinkIcon />
         <div>Links</div>

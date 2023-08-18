@@ -15,7 +15,7 @@ function ProjectScriptList(props: Props) {
   const scriptLauncher = useScriptLaunchService();
 
   return (
-    <ProjectCard>
+    <ProjectCard isDefaultCollapsed>
       <ProjectCard.Title>
         <TerminalIcon />
         <div>Scripts</div>

@@ -6,7 +6,7 @@ type ContextValueType = {
 };
 
 const contextDefaultValue: ContextValueType = {
-  isCollapsed: false,
+  isCollapsed: true,
   setIsCollapsed: () => {},
 };
 

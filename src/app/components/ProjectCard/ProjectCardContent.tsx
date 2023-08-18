@@ -15,7 +15,7 @@ function ProjectCardContent({ children }: ProjectCardContentProps) {
   const { isCollapsed } = useContext(ProjectCardContext);
 
   return (
-    <Collapse in={isCollapsed} timeout="auto" unmountOnExit>
+    <Collapse in={!isCollapsed} timeout="auto" unmountOnExit>
       <ContentContainer>
         { children }
       </ContentContainer>
