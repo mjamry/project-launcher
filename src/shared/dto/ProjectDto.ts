@@ -1,16 +1,17 @@
-export type ProjectLink = {
+type ProjectItem = {
   name: string;
+  description?: string;
+};
+
+type ProjectLink = ProjectItem & {
   url: string;
-  description?: string;
 };
 
-export type ProjectScript = {
-  name: string;
+type ProjectScript = ProjectItem & {
   path: string;
-  description?: string;
 };
 
-export type Project = {
+type Project = {
   id: string;
   name: string;
   iconUrl?: string;
@@ -19,7 +20,11 @@ export type Project = {
   scripts?: ProjectScript[];
 };
 
-export type ProjectFileName = {
+type ProjectFileName = {
   id: string;
   fileName: string;
+};
+
+export type {
+  ProjectItem, ProjectLink, ProjectScript, Project, ProjectFileName,
 };
