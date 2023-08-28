@@ -1,10 +1,10 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { jiraHistoryState } from '../state/JiraState';
-import { ProjectCardContainer } from './ProjectItem/ProjectStyledComponents';
 import JiraItems from './JiraItems';
 import EnhancedTable from './EnhancedTable/EnhancedTable';
 import { HeadCell } from './EnhancedTable/EnhancedTableTypes';
+import { ProjectCardContainer } from './ProjectItem/ProjectStyledComponents';
 
 type Props = {
   projectKey: string;

@@ -4,10 +4,10 @@ import { useLinkLaunchService } from '../../services/IpcLaunchServices';
 import { ProjectLink } from '../../../shared/dto/ProjectDto';
 import ProjectCard from '../ProjectCard/ProjectCard';
 import ProjectListItem from './ProjectListItem';
-import { ContentAsColumn } from './ProjectStyledComponents';
+import { ContentAsColumn, ProjectCardContainer } from './ProjectStyledComponents';
 
 type Props = {
-  links: ProjectLink[];
+  links?: ProjectLink[];
 };
 
 function ProjectLinkList(props: Props) {
@@ -16,21 +16,27 @@ function ProjectLinkList(props: Props) {
 
   return (
     <ProjectCard isDefaultCollapsed>
-      <ProjectCard.Title>
-        <LinkIcon />
-        <div>Links</div>
-        <div />
-      </ProjectCard.Title>
-      <ProjectCard.Content>
-        <ContentAsColumn>
-          {links.map((link) => (
-            <ProjectListItem
-              item={link}
-              onClick={() => linkLauncher.launch(link.url)}
-            />
-          ))}
-        </ContentAsColumn>
-      </ProjectCard.Content>
+      {links !== undefined && links.length > 0
+        ? (
+          <ProjectCardContainer>
+            <ProjectCard.Title>
+              <LinkIcon />
+              <div>Links</div>
+              <div />
+            </ProjectCard.Title>
+            <ProjectCard.Content>
+              <ContentAsColumn>
+                {links.map((link) => (
+                  <ProjectListItem
+                    item={link}
+                    onClick={() => linkLauncher.launch(link.url)}
+                  />
+                ))}
+              </ContentAsColumn>
+            </ProjectCard.Content>
+          </ProjectCardContainer>
+        )
+        : <></>}
     </ProjectCard>
   );
 }

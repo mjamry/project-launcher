@@ -2,7 +2,6 @@ import React, {
   useEffect,
   useMemo, useState,
 } from 'react';
-import { ProjectCardContainer } from '../ProjectItem/ProjectStyledComponents';
 import ProjectCardContent from './ProjectCardContent';
 import ProjectCardTitle from './ProjectCardTitle';
 import ProjectCardContext from './ProjectCardContext';
@@ -14,10 +13,10 @@ type ProjectCardProps = {
 
 function ProjectCard(props: ProjectCardProps) {
   const { children, isDefaultCollapsed } = props;
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   useEffect(() => {
-    setIsCollapsed(isDefaultCollapsed || false);
+    setIsCollapsed(isDefaultCollapsed || true);
   }, [isDefaultCollapsed]);
 
   const contextValue = useMemo(
@@ -26,11 +25,9 @@ function ProjectCard(props: ProjectCardProps) {
   );
 
   return (
-    <ProjectCardContainer>
-      <ProjectCardContext.Provider value={contextValue}>
-        {children}
-      </ProjectCardContext.Provider>
-    </ProjectCardContainer>
+    <ProjectCardContext.Provider value={contextValue}>
+      {children}
+    </ProjectCardContext.Provider>
   );
 }
 

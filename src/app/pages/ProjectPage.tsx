@@ -5,10 +5,10 @@ import { useRecoilValue } from 'recoil';
 
 import RouteTypes from '../common/dto/RouteTypes';
 import ProjectLinkList from '../components/ProjectItem/ProjectLinkList';
-import { ProjectCardContainer } from '../components/ProjectItem/ProjectStyledComponents';
 import JiraItemsTable from '../components/JiraItemsTable';
 import { projectsState } from '../state/ProjectState';
 import ProjectScriptList from '../components/ProjectItem/ProjectScriptList';
+import { ProjectCardContainer } from '../components/ProjectItem/ProjectStyledComponents';
 
 const Root = styled('div')({
   margin: '20px',
@@ -53,18 +53,10 @@ function ProjectPage() {
         </ProjectCardContainer>
         <RowContainer>
           <RowItem>
-            {project.links && project.links.length > 0
-              ? (
-                <ProjectLinkList links={project.links} />
-              )
-              : <></>}
+            <ProjectLinkList links={project.links} />
           </RowItem>
           <RowItem>
-            {project.scripts && project.scripts.length > 0
-              ? (
-                <ProjectScriptList scripts={project.scripts} />
-              )
-              : <></>}
+            <ProjectScriptList scripts={project.scripts} />
           </RowItem>
         </RowContainer>
         <JiraItemsTable projectKey={project.jiraId ? project.jiraId : ''} />

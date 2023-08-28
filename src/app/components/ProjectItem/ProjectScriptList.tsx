@@ -4,10 +4,10 @@ import { ProjectScript } from '../../../shared/dto/ProjectDto';
 import { useScriptLaunchService } from '../../services/IpcLaunchServices';
 import ProjectCard from '../ProjectCard/ProjectCard';
 import ProjectListItem from './ProjectListItem';
-import { ContentAsColumn } from './ProjectStyledComponents';
+import { ContentAsColumn, ProjectCardContainer } from './ProjectStyledComponents';
 
 type Props = {
-  scripts: ProjectScript[];
+  scripts?: ProjectScript[];
 };
 
 function ProjectScriptList(props: Props) {
@@ -16,21 +16,27 @@ function ProjectScriptList(props: Props) {
 
   return (
     <ProjectCard isDefaultCollapsed>
-      <ProjectCard.Title>
-        <TerminalIcon />
-        <div>Scripts</div>
-        <div />
-      </ProjectCard.Title>
-      <ProjectCard.Content>
-        <ContentAsColumn>
-          {scripts.map((script) => (
-            <ProjectListItem
-              item={script}
-              onClick={() => scriptLauncher.launch(script.path)}
-            />
-          ))}
-        </ContentAsColumn>
-      </ProjectCard.Content>
+      {scripts !== undefined && scripts.length > 0
+        ? (
+          <ProjectCardContainer>
+            <ProjectCard.Title>
+              <TerminalIcon />
+              <div>Scripts</div>
+              <div />
+            </ProjectCard.Title>
+            <ProjectCard.Content>
+              <ContentAsColumn>
+                {scripts.map((script) => (
+                  <ProjectListItem
+                    item={script}
+                    onClick={() => scriptLauncher.launch(script.path)}
+                  />
+                ))}
+              </ContentAsColumn>
+            </ProjectCard.Content>
+          </ProjectCardContainer>
+        )
+        : <></>}
     </ProjectCard>
   );
 }

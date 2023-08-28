@@ -3,10 +3,10 @@ import {
 } from '@mui/material';
 
 export const ProjectCardContainer = styled(Card)(({ theme }) => ({
-  padding: '8px 0 8px 0',
+  padding: '8px',
+  margin: '12px 0',
   backgroundColor: theme.palette.secondary.main,
   color: theme.palette.text.secondary,
-  marginBottom: '24px',
 }));
 
 export const ContentAsColumn = styled('div')({
