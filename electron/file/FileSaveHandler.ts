@@ -1,16 +1,15 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { BrowserWindow, ipcMain } from 'electron';
+import { ipcMain } from 'electron';
 import IpcChannelTypes from '../../src/shared/dto/IpcChannelTypes';
-import useDialogService from '../DialogService';
+import IpcResponseTypes from '../../src/shared/dto/IpcResponseTypes';
 import useFileWriter from './FileWriter';
 
 type IFileSaverHandler = {
   init: () => void;
 };
 
-const useFileSaveHandler = (win: BrowserWindow, filePath: string): IFileSaverHandler => {
+const useFileSaveHandler = (filePath: string): IFileSaverHandler => {
   const fileWriter = useFileWriter();
-  const dialogService = useDialogService(win);
 
   const init = () => {
     ipcMain.handle(IpcChannelTypes.saveConfigFile, (
@@ -18,12 +17,13 @@ const useFileSaveHandler = (win: BrowserWindow, filePath: string): IFileSaverHan
       fileName: string,
       fileContent: string,
     ) => {
+      const response = IpcResponseTypes.noError;
       fileWriter.writeFile(
         `${filePath}\\${fileName}`,
         fileContent,
-        () => {},
-        () => dialogService.fileSavedRestartAppQuestion(fileName),
       );
+
+      return response;
     });
 
     ipcMain.handle(IpcChannelTypes.createConfigFile, (
@@ -31,12 +31,14 @@ const useFileSaveHandler = (win: BrowserWindow, filePath: string): IFileSaverHan
       fileName: string,
       fileContent: string,
     ) => {
-      fileWriter.writeFile(
+      let response = IpcResponseTypes.noError;
+      fileWriter.createFile(
         `${filePath}\\${fileName}.prjson`,
         fileContent,
-        () => {},
-        () => dialogService.fileSavedRestartAppQuestion(`${fileName}.prjson`),
+        () => { response = IpcResponseTypes.fileExistsError; },
       );
+
+      return response;
     });
   };
 

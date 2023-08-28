@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { useRecoilState } from 'recoil';
 import { SettingsFileName } from '../../shared/dto/AppSettings';
 import IpcChannelTypes from '../../shared/dto/IpcChannelTypes';
@@ -5,6 +6,7 @@ import { projectsConfigFileNameState } from '../state/ProjectState';
 import useLoggerService from '../common/LoggerService';
 import { Project } from '../../shared/dto/ProjectDto';
 import useSnackbarService from './SnackbarService';
+import IpcResponseTypes from '../../shared/dto/IpcResponseTypes';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -19,13 +21,33 @@ const useSettingsFileWriterService = (): ISettingsFileWriterService => {
   const logger = useLoggerService('SFWS');
   const snackbar = useSnackbarService();
 
-  const invoke = (channel: string, filleName: string, content: string) => {
+  const handleFileWriteResponse = (fileName: string, response: IpcResponseTypes) => {
+    let message;
+    switch (response) {
+      case IpcResponseTypes.noError:
+        message = `File "${fileName}" write success.\nDo you want to restart the app to apply changes ?`;
+        logger.info(message);
+        snackbar.showInfoWithRestartAction(message);
+        break;
+      case IpcResponseTypes.fileExistsError:
+        message = `File "${fileName}" already exists`;
+        logger.warning(message);
+        snackbar.showError(message);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const invoke = (channel: string, fileName: string, content: string) => {
     try {
       ipcRenderer.invoke(
         channel,
-        filleName,
+        fileName,
         JSON.parse(content),
-      );
+      ).then((result) => {
+        handleFileWriteResponse(fileName, result);
+      });
     } catch (ex: any) {
       const error = `${ex.message}`;
       logger.error(error);

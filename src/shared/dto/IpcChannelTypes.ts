@@ -12,6 +12,7 @@ enum IpcChannelTypes {
   appClose = 'appClose',
   appMaximize = 'appMaximize',
   appUnMaximize = 'appUnMaximize',
+  appRestart = 'appRestart',
 }
 
 export default IpcChannelTypes;
