@@ -13,6 +13,7 @@ import appLoadingState from './app/state/AppLoadingState';
 import { appSettingsState } from './app/state/AppSettingsState';
 import AppState from './shared/dto/AppState';
 import WindowSizeMonitor from './app/root/WindowSizeMonitor';
+import { SnackbarProvider } from 'notistack';
 
 const AppContainer = styled('div')(({ theme }) => ({
   textAlign: 'center',
@@ -37,9 +38,16 @@ function App() {
               : <></>}
             <StyledEngineProvider injectFirst>
               <ThemeProvider theme={getTheme(appSettings.theme)}>
-                <AppContainer>
-                  <AppContent />
-                </AppContainer>
+                <SnackbarProvider
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                >
+                  <AppContainer>
+                    <AppContent />
+                  </AppContainer>
+                </SnackbarProvider>
               </ThemeProvider>
             </StyledEngineProvider>
           </>

@@ -4,7 +4,13 @@ type IFileWriter = {
   writeFile<T>(
     fileName: string,
     content: T,
-    error?: (error: string) => void,
+    error?: (error?: string) => void,
+    success?: () => void): void;
+
+  createFile<T>(
+    fileName: string,
+    content: T,
+    error?: (error?: string) => void,
     success?: () => void): void;
 };
 
@@ -29,8 +35,22 @@ const useFileWriter = () : IFileWriter => {
     }
   }
 
+  function createFile<T>(
+    fileName: string,
+    content: T,
+    error?: (error?: string) => void,
+    success?: () => void,
+  ): void {
+    if (!fs.existsSync(fileName)) {
+      writeFile(fileName, content, error, success);
+    } else if (error) {
+      error();
+    }
+  }
+
   return {
     writeFile,
+    createFile,
   };
 };
 
