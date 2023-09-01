@@ -73,9 +73,9 @@ const useRestClient = (options?: RestClientOptions): IRestClient => {
       const responseData: any = await rawResponse.json();
       resolve(responseData);
     } else {
-      reject(rawResponse);
       logger.error(rawResponse.statusText);
       snackbar.showError(`Connection error: ${rawResponse.statusText}`);
+      reject(rawResponse);
     }
   };
 

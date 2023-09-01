@@ -64,6 +64,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "react-app-rewired": "^2.2.1",
+    "simple-git-hooks": "^2.9.0",
     "wait-on": "^6.0.1"
   },
   "scripts": {
@@ -94,5 +95,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "simple-git-hooks": {
+    "pre-push": "npm run build"
   }
 }

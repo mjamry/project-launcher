@@ -3,6 +3,7 @@ import { styled, StyledEngineProvider } from '@mui/material';
 import React from 'react';
 import './App.css';
 import { useRecoilValue } from 'recoil';
+import { SnackbarProvider } from 'notistack';
 import IpcCommunicationService from './app/services/IpcCommunicationService';
 import AppContent from './app/root/AppContent';
 import DebugStateObserver from './app/state/DebugStateObserver';
@@ -13,7 +14,6 @@ import appLoadingState from './app/state/AppLoadingState';
 import { appSettingsState } from './app/state/AppSettingsState';
 import AppState from './shared/dto/AppState';
 import WindowSizeMonitor from './app/root/WindowSizeMonitor';
-import { SnackbarProvider } from 'notistack';
 
 const AppContainer = styled('div')(({ theme }) => ({
   textAlign: 'center',

@@ -4,9 +4,10 @@ import { SettingsFileName } from '../../shared/dto/AppSettings';
 import IpcChannelTypes from '../../shared/dto/IpcChannelTypes';
 import { projectsConfigFileNameState } from '../state/ProjectState';
 import useLoggerService from '../common/LoggerService';
-import { Project } from '../../shared/dto/ProjectDto';
+import { ProjectFileName } from '../../shared/dto/ProjectDto';
 import useSnackbarService from './SnackbarService';
 import IpcResponseTypes from '../../shared/dto/IpcResponseTypes';
+import RestartAppButtons from '../components/Snackbar/RestartAppButtons';
 
 const { ipcRenderer } = window.require('electron');
 
@@ -27,7 +28,7 @@ const useSettingsFileWriterService = (): ISettingsFileWriterService => {
       case IpcResponseTypes.noError:
         message = `File "${fileName}" write success.\nDo you want to restart the app to apply changes ?`;
         logger.info(message);
-        snackbar.showInfoWithRestartAction(message);
+        snackbar.showInfoWithAction(message, (key) => <RestartAppButtons snackbarKey={key} />);
         break;
       case IpcResponseTypes.fileExistsError:
         message = `File "${fileName}" already exists`;
@@ -66,7 +67,7 @@ const useSettingsFileWriterService = (): ISettingsFileWriterService => {
   const writeProjectSettingsFile = (projectId: string, fileContent: string) => {
     invoke(
       IpcChannelTypes.saveConfigFile,
-      projectsFileName.find((p: Project) => p.id === projectId)!.fileName,
+      projectsFileName.find((p: ProjectFileName) => p.id === projectId)!.fileName,
       fileContent,
     );
   };
