@@ -108,7 +108,7 @@ function JiraItemDetailsTable(props: Props) {
       <TableRow sx={getThemeColors()}>
         <TableCell width="2%">
           {hasChanges()
-            ? <CollapseButton onClick={handleRowClick} />
+            ? <CollapseButton onClick={handleRowClick} isDefaultCollapsed={!canShowDetails} />
             : <></>}
         </TableCell>
         <TableCell
