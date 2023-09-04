@@ -61,6 +61,8 @@ function JiraItemDetailsTable(props: Props) {
   const [allUpdates, setUpdates] = useRecoilState(jiraUpdatesState);
 
   useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log(projectKey);
     setCanShowDetails(false);
   }, [projectKey]);
 
@@ -108,7 +110,7 @@ function JiraItemDetailsTable(props: Props) {
       <TableRow sx={getThemeColors()}>
         <TableCell width="2%">
           {hasChanges()
-            ? <CollapseButton onClick={handleRowClick} />
+            ? <CollapseButton onClick={handleRowClick} isDefaultCollapsed={!canShowDetails} />
             : <></>}
         </TableCell>
         <TableCell
