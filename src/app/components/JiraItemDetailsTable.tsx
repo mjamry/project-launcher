@@ -61,8 +61,6 @@ function JiraItemDetailsTable(props: Props) {
   const [allUpdates, setUpdates] = useRecoilState(jiraUpdatesState);
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log(projectKey);
     setCanShowDetails(false);
   }, [projectKey]);
 
