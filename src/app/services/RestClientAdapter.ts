@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/comma-dangle */
 import { HeadersInit } from 'electron-fetch';
 import {
-  RestClientOptions, IRestClient, RestMethod
+  RestClientOptions, IRestClient, RestMethod, DefaultRestClientOptions
 } from '../../shared/dto/RestClientTypes';
 
 const { ipcRenderer } = window.require('electron');
 
 const useRestClientAdapter = (options?: RestClientOptions): IRestClient => {
-  options = options || { token: '' };
+  options = options || DefaultRestClientOptions;
 
   const makeRequest = async <T, >(
     url: string,

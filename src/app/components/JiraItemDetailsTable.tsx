@@ -1,5 +1,5 @@
 import {
-  Box, Button, Collapse, styled, TableCell, TableRow,
+  Box, Collapse, TableCell, TableRow, styled,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -9,14 +9,14 @@ import JiraItemDetails from './JiraItemDetails';
 import EnhancedTable from './EnhancedTable/EnhancedTable';
 import { HeadCell } from './EnhancedTable/EnhancedTableTypes';
 import { appThemeState } from '../state/AppSettingsState';
-import { useLinkLaunchService } from '../services/IpcLaunchServices';
 import CollapseButton from './CollapseButton';
-import CollapsibleContent from './CollapsibleContent';
+import ReducedContent from './ReducedContent';
+import { useLinkLaunchService } from '../services/IpcLaunchServices';
 
-const ItemLink = styled(Button)({
+const ItemLink = styled('a')({
   fontWeight: 'bold',
+  cursor: 'pointer',
 });
-
 const headCells: HeadCell[] = [
   {
     id: 'date',
@@ -55,7 +55,6 @@ function JiraItemDetailsTable(props: Props) {
   const [isUpdated, setIsUpdated] = useState<boolean>(false);
   const appTheme = useRecoilValue(appThemeState);
   const linkLauncher = useLinkLaunchService();
-
   const updatedProjectIssues = useRecoilValue(jiraUpdatesState)
     .find((u) => u.project === projectKey)?.issues;
 
@@ -107,12 +106,14 @@ function JiraItemDetailsTable(props: Props) {
   return (
     <>
       <TableRow sx={getThemeColors()}>
-        <TableCell>
+        <TableCell width="2%">
           {hasChanges()
-            ? <CollapseButton onClick={handleRowClick} />
+            ? <CollapseButton onClick={handleRowClick} isDefaultCollapsed={!canShowDetails} />
             : <></>}
         </TableCell>
-        <TableCell component="th" scope="item">
+        <TableCell
+          width="12%"
+        >
           <ItemLink
             sx={getThemeColors()}
             onClick={() => linkLauncher.launch(item.url)}
@@ -120,11 +121,13 @@ function JiraItemDetailsTable(props: Props) {
             {item.id}
           </ItemLink>
         </TableCell>
-        <TableCell>{item.summary}</TableCell>
-        <TableCell align="right">{item.status}</TableCell>
-        <TableCell align="right">{item.priority}</TableCell>
-        <TableCell align="right">{item.updated.toLocaleString()}</TableCell>
-        <TableCell align="right">{item.assignee}</TableCell>
+        <TableCell width="48%">
+          <ReducedContent content={item.summary} maxLength={10} />
+        </TableCell>
+        <TableCell width="8%" align="right">{item.status}</TableCell>
+        <TableCell width="8%" align="right">{item.priority}</TableCell>
+        <TableCell width="16%" align="right">{item.updated.toLocaleString()}</TableCell>
+        <TableCell width="8%" align="right">{item.assignee}</TableCell>
       </TableRow>
       {hasChanges()
         ? (
@@ -133,7 +136,7 @@ function JiraItemDetailsTable(props: Props) {
               <Collapse in={canShowDetails} timeout="auto" unmountOnExit>
                 <Box sx={{ margin: 1 }}>
                   <EnhancedTable
-                    title={<CollapsibleContent content={item.description} />}
+                    title={<ReducedContent content={item.description} />}
                     data={item.changes ? item.changes : []}
                     headCells={headCells}
                   >

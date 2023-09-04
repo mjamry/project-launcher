@@ -1,10 +1,10 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { jiraHistoryState } from '../state/JiraState';
-import { ProjectCard } from './ProjectStyledComponents';
 import JiraItems from './JiraItems';
 import EnhancedTable from './EnhancedTable/EnhancedTable';
 import { HeadCell } from './EnhancedTable/EnhancedTableTypes';
+import { ProjectCardContainer } from './ProjectItem/ProjectStyledComponents';
 
 type Props = {
   projectKey: string;
@@ -19,7 +19,7 @@ const headCells: HeadCell[] = [
   },
   {
     id: 'id',
-    disablePadding: true,
+    disablePadding: false,
     label: 'Id',
   },
   {
@@ -62,14 +62,14 @@ function JiraItemsTable(props: Props) {
     <>
       { issues
       && (
-      <ProjectCard>
+      <ProjectCardContainer>
         <EnhancedTable
           data={issues}
           headCells={headCells}
         >
           <JiraItems projectKey={projectKey} />
         </EnhancedTable>
-      </ProjectCard>
+      </ProjectCardContainer>
       )}
     </>
   );

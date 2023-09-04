@@ -3,6 +3,7 @@ import { styled, StyledEngineProvider } from '@mui/material';
 import React from 'react';
 import './App.css';
 import { useRecoilValue } from 'recoil';
+import { SnackbarProvider } from 'notistack';
 import IpcCommunicationService from './app/services/IpcCommunicationService';
 import AppContent from './app/root/AppContent';
 import DebugStateObserver from './app/state/DebugStateObserver';
@@ -12,6 +13,7 @@ import AppLoadingPage from './app/pages/AppLoadingPage';
 import appLoadingState from './app/state/AppLoadingState';
 import { appSettingsState } from './app/state/AppSettingsState';
 import AppState from './shared/dto/AppState';
+import WindowSizeMonitor from './app/root/WindowSizeMonitor';
 
 const AppContainer = styled('div')(({ theme }) => ({
   textAlign: 'center',
@@ -24,6 +26,7 @@ function App() {
 
   return (
     <>
+      <WindowSizeMonitor />
       <IpcCommunicationService />
       <JiraDataProvider />
       {appState !== AppState.ready
@@ -35,9 +38,16 @@ function App() {
               : <></>}
             <StyledEngineProvider injectFirst>
               <ThemeProvider theme={getTheme(appSettings.theme)}>
-                <AppContainer>
-                  <AppContent />
-                </AppContainer>
+                <SnackbarProvider
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                >
+                  <AppContainer>
+                    <AppContent />
+                  </AppContainer>
+                </SnackbarProvider>
               </ThemeProvider>
             </StyledEngineProvider>
           </>

@@ -24,6 +24,8 @@ export type AppSettings = {
   isDevelopment: boolean;
   jiraUrl: string;
   jiraToken: string;
+  jiraUserEmail: string,
+  isJiraCloud: boolean,
   jiraRefreshTimeoutInMinutes: number;
   jiraHistoryTimeInMinutes: number;
   jiraChangelogFields: string[];
@@ -34,6 +36,8 @@ export const DefaultAppSettings: AppSettings = {
   isDevelopment: false,
   jiraUrl: '',
   jiraToken: '',
+  jiraUserEmail: '',
+  isJiraCloud: false,
   jiraRefreshTimeoutInMinutes: 1,
   jiraHistoryTimeInMinutes: 600,
   jiraChangelogFields: ['assignee', 'status', 'priority', 'type'],

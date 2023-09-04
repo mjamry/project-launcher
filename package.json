@@ -35,6 +35,7 @@
     "electron-is-dev": "^2.0.0",
     "electron-reload": "^2.0.0-alpha.1",
     "esm": "^3.2.25",
+    "notistack": "^3.0.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-router": "^6.3.0",
@@ -63,6 +64,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "react-app-rewired": "^2.2.1",
+    "simple-git-hooks": "^2.9.0",
     "wait-on": "^6.0.1"
   },
   "scripts": {
@@ -73,8 +75,8 @@
     "lint-fix": "eslint . --ext .tsx --fix",
     "electron:dev": "concurrently \"cross-env BROWSER=none npm run start\" \"wait-on http://localhost:3000 && tsc -p electron -w\" \"wait-on http://localhost:3000 && tsc -p electron && electron .\"",
     "postinstall": "electron-builder install-app-deps",
-		"build:win": "electron-builder --windows --publish=never",
-		"release:win": "electron-builder --windows --publish always"
+    "build:win": "electron-builder --windows --publish=never",
+    "release:win": "electron-builder --windows --publish always"
   },
   "eslintConfig": {
     "extends": [
@@ -93,5 +95,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "simple-git-hooks": {
+    "pre-push": "npm run build"
   }
 }

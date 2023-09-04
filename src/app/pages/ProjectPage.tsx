@@ -1,19 +1,30 @@
-import {
-  Grid, styled, Typography,
-} from '@mui/material';
 import React from 'react';
+import { styled, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router';
 import { useRecoilValue } from 'recoil';
+
 import RouteTypes from '../common/dto/RouteTypes';
-import ProjectScriptList from '../components/ProjectScriptList';
-import ProjectLinkList from '../components/ProjectLinkList';
-import { ProjectCard } from '../components/ProjectStyledComponents';
+import ProjectLinkList from '../components/ProjectItem/ProjectLinkList';
 import JiraItemsTable from '../components/JiraItemsTable';
 import { projectsState } from '../state/ProjectState';
+import ProjectScriptList from '../components/ProjectItem/ProjectScriptList';
+import { ProjectCardContainer } from '../components/ProjectItem/ProjectStyledComponents';
 
 const Root = styled('div')({
-  margin: '10px',
-  marginRight: '30px',
+  margin: '20px',
+});
+
+const RowContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'row',
+  columnGap: '20px',
+  justifyContent: 'space-between',
+  alignContent: 'stretch',
+  alignItem: 'stretch',
+});
+
+const RowItem = styled('div')({
+  flexGrow: 1,
 });
 
 type RouteParams = {
@@ -35,24 +46,20 @@ function ProjectPage() {
 
     return (
       <Root>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <ProjectCard>
-              <Typography variant="h6">
-                {project!.name}
-              </Typography>
-            </ProjectCard>
-          </Grid>
-          <Grid item xs={12} sm={6}>
+        <ProjectCardContainer>
+          <Typography variant="h6">
+            {project!.name}
+          </Typography>
+        </ProjectCardContainer>
+        <RowContainer>
+          <RowItem>
             <ProjectLinkList links={project.links} />
-          </Grid>
-          <Grid item xs={12} sm={6}>
+          </RowItem>
+          <RowItem>
             <ProjectScriptList scripts={project.scripts} />
-          </Grid>
-          <Grid item xs={12}>
-            <JiraItemsTable projectKey={project.jiraId ? project.jiraId : ''} />
-          </Grid>
-        </Grid>
+          </RowItem>
+        </RowContainer>
+        <JiraItemsTable projectKey={project.jiraId ? project.jiraId : ''} />
       </Root>
     );
   };

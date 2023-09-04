@@ -23,6 +23,7 @@ function createWindow() {
       contextIsolation: false,
       webSecurity: false,
     },
+    titleBarStyle: 'hidden',
   });
 
   if (app.isPackaged) {
@@ -60,7 +61,7 @@ app.whenReady().then(() => {
 
   const win = createWindow();
   const restRequestsHandler = useRestRequestsHandler();
-  const fileEditHandler = useFileSaveHandler(win, app.getPath('userData'));
+  const fileEditHandler = useFileSaveHandler(app.getPath('userData'));
   restRequestsHandler.init();
   fileEditHandler.init();
 
@@ -126,5 +127,26 @@ app.whenReady().then(() => {
 
   ipcMain.on('error', (event, data) => {
     dialog.showErrorBox(IpcChannelTypes.error, data);
+  });
+
+  ipcMain.on(IpcChannelTypes.appMinimize, () => {
+    win.minimize();
+  });
+
+  ipcMain.on(IpcChannelTypes.appClose, () => {
+    win.close();
+  });
+
+  ipcMain.on(IpcChannelTypes.appMaximize, () => {
+    win.maximize();
+  });
+
+  ipcMain.on(IpcChannelTypes.appUnMaximize, () => {
+    win.unmaximize();
+  });
+
+  ipcMain.on(IpcChannelTypes.appRestart, () => {
+    app.relaunch();
+    app.exit();
   });
 });

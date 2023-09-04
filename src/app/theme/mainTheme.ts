@@ -154,6 +154,46 @@ export function getTheme(userTheme: AppTheme): Theme {
       },
     },
     components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          '*': {
+            boxSizing: 'border-box',
+            margin: 0,
+            padding: 0,
+          },
+          html: {
+            MozOsxFontSmoothing: 'grayscale',
+            WebkitFontSmoothing: 'antialiased',
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100%',
+            width: '100%',
+          },
+          body: {
+            display: 'flex',
+            flex: '1 1 auto',
+            flexDirection: 'column',
+            minHeight: '100%',
+            width: '100%',
+            '&::-webkit-scrollbar': {
+              width: '10px',
+            },
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: userTheme && userTheme.primaryColor ? userTheme.primaryColor : DefaultTheme.primaryColor,
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: userTheme && userTheme.secondaryColor ? userTheme.secondaryColor : DefaultTheme.secondaryColor,
+            },
+          },
+          '#__next': {
+            display: 'flex',
+            flex: '1 1 auto',
+            flexDirection: 'column',
+            height: '100%',
+            width: '100%',
+          },
+        },
+      },
       MuiBadge: {
         styleOverrides: {
           root: {
@@ -169,6 +209,8 @@ export function getTheme(userTheme: AppTheme): Theme {
         styleOverrides: {
           root: {
             borderBottom: 'none',
+            paddingTop: '8px',
+            paddingBottom: '8px',
           },
         },
       },
@@ -295,43 +337,33 @@ export function getTheme(userTheme: AppTheme): Theme {
           },
         },
       },
-      MuiCssBaseline: {
-        styleOverrides: {
-          '*': {
-            boxSizing: 'border-box',
-            margin: 0,
-            padding: 0,
-          },
-          html: {
-            MozOsxFontSmoothing: 'grayscale',
-            WebkitFontSmoothing: 'antialiased',
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: '100%',
-            width: '100%',
-          },
-          body: {
-            display: 'flex',
-            flex: '1 1 auto',
-            flexDirection: 'column',
-            minHeight: '100%',
-            width: '100%',
-          },
-          '#__next': {
-            display: 'flex',
-            flex: '1 1 auto',
-            flexDirection: 'column',
-            height: '100%',
-            width: '100%',
-          },
-        },
-      },
       MuiOutlinedInput: {
         styleOverrides: {
           notchedOutline: {
             borderColor: userTheme && userTheme.primaryBackgroundColor ? userTheme.primaryBackgroundColor : '#fff',
             color: 'red',
             padding: '3px',
+          },
+        },
+      },
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: '1em',
+            padding: '10px 15px 10px 15px',
+            textJustify: 'inter-word',
+            textAlign: 'justify',
+            color: userTheme && userTheme.primaryColor ? userTheme.primaryColor : DefaultTheme.primaryColor,
+            backgroundColor: userTheme && userTheme.primaryBackgroundColor ? userTheme.primaryBackgroundColor : DefaultTheme.primaryBackgroundColor,
+            border: 'solid 1px',
+            borderColor: userTheme && userTheme.primaryColor ? userTheme.primaryColor : DefaultTheme.primaryColor,
+          },
+          arrow: {
+            color: userTheme && userTheme.primaryBackgroundColor ? userTheme.primaryBackgroundColor : DefaultTheme.primaryBackgroundColor,
+            '&:before': {
+              border: 'solid 1px',
+              borderColor: userTheme && userTheme.primaryColor ? userTheme.primaryColor : DefaultTheme.primaryColor,
+            },
           },
         },
       },
