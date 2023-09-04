@@ -4,7 +4,6 @@ import useLoggerService from '../app/common/LoggerService';
 import {
   RestClientOptions, IRestClient, RestMethod, Request, DefaultRestClientOptions
 } from './dto/RestClientTypes';
-import useSnackbarService from '../app/services/SnackbarService';
 
 const useAuthenticationMiddleware = (options: RestClientOptions) => {
   const getAuthenticationHeaders = async (headers: HeadersInit) => {
@@ -34,7 +33,6 @@ const useRestClient = (options?: RestClientOptions): IRestClient => {
   options = options || DefaultRestClientOptions;
 
   const logger = useLoggerService('RestClient');
-  const snackbar = useSnackbarService();
   const authenticationMiddleware = useAuthenticationMiddleware(options);
 
   const getHeaders = (headers?: HeadersInit): HeadersInit => ({
@@ -56,6 +54,7 @@ const useRestClient = (options?: RestClientOptions): IRestClient => {
             Body: ${request.body}`,
     );
 
+    // TODO handle fetch errors and no internet connection scenarios
     const rawResponse = await fetch(request.url, {
       method: request.method,
       headers: request.headers,
@@ -74,7 +73,6 @@ const useRestClient = (options?: RestClientOptions): IRestClient => {
       resolve(responseData);
     } else {
       logger.error(rawResponse.statusText);
-      snackbar.showError(`Connection error: ${rawResponse.statusText}`);
       reject(rawResponse);
     }
   };
