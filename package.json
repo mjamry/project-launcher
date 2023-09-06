@@ -4,7 +4,7 @@
   "copyright": "Copyright (c) 2023 michal.jamry@gmail.com",
   "author": "michal.jamry@gmail.com",
   "description": "project launcher and dashboard",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "main": "build/electron/electron.js",
   "homepage": "./",
