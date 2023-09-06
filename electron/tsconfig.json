@@ -9,6 +9,8 @@
     "noEmitOnError": true,
     "typeRoots": [
       "node_modules/@types"
-    ]
+    ],
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
   }
 }

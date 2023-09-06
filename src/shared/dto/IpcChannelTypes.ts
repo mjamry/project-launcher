@@ -1,5 +1,6 @@
 enum IpcChannelTypes {
   appSettingsLoaded = 'appSettingsLoaded',
+  appDetails = 'appDetails',
   projectsConfigsLoaded = 'projectsConfigsLoaded',
   projectsFileNameLoaded = 'projectsFileNameLoaded',
   saveConfigFile = 'saveConfigFile',

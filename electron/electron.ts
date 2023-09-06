@@ -14,6 +14,8 @@ import useAppSettingsService from './AppSettingsService';
 import useRestRequestsHandler from './RestRequestsHandler';
 import useFileSaveHandler from './file/FileSaveHandler';
 
+import packageJSON from '../package.json';
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 800,
@@ -87,6 +89,13 @@ app.whenReady().then(() => {
     ipcMain.on(IpcChannelTypes.appInitialized, () => {
       if (!isAlreadyHandled) {
         isAlreadyHandled = true;
+
+        win.webContents.send(IpcChannelTypes.appDetails, {
+          version: packageJSON.version,
+          name: packageJSON.appName,
+          copyright: packageJSON.copyright,
+        });
+
         console.debug('Loading app settings...');
         const settingsPath = app.getPath('userData');
         console.log(settingsPath);
