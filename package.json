@@ -1,6 +1,6 @@
 {
   "name": "project-launcher",
-  "appName":"Project Launcher",
+  "appName": "Project Launcher",
   "copyright": "Copyright (c) 2023 michal.jamry@gmail.com",
   "author": "michal.jamry@gmail.com",
   "description": "project launcher and dashboard",
@@ -35,7 +35,9 @@
     "electron-devtools-installer": "^3.2.0",
     "electron-fetch": "^1.7.4",
     "electron-is-dev": "^2.0.0",
+    "electron-log": "^4.4.8",
     "electron-reload": "^2.0.0-alpha.1",
+    "electron-updater": "^6.1.4",
     "esm": "^3.2.25",
     "notistack": "^3.0.1",
     "react": "^18.1.0",

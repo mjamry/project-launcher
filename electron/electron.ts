@@ -8,13 +8,15 @@ import {
 } from 'electron';
 import * as path from 'path';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
+import log from 'electron-log';
 import IpcChannelTypes from '../src/shared/dto/IpcChannelTypes';
 import useProjectFileConfigReader from './ConfigReader';
 import useAppSettingsService from './AppSettingsService';
 import useRestRequestsHandler from './RestRequestsHandler';
 import useFileSaveHandler from './file/FileSaveHandler';
-
 import packageJSON from '../package.json';
+
+const { autoUpdater } = require('electron-updater');
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -53,6 +55,31 @@ function createWindow() {
   return win;
 }
 
+log.transports.file.level = 'debug';
+autoUpdater.logger = log;
+
+autoUpdater.on('checking-for-update', () => {
+  console.debug('Checking for update...');
+});
+autoUpdater.on('update-available', (info: any) => {
+  console.debug('Update available.', info);
+});
+autoUpdater.on('update-not-available', (info: any) => {
+  console.debug('Update not available.', info);
+});
+autoUpdater.on('error', (err: any) => {
+  console.debug('Error in auto-updater. ', err);
+});
+autoUpdater.on('download-progress', (progressObj: any) => {
+  let logMessage = `Download speed: ${progressObj.bytesPerSecond}`;
+  logMessage = `${logMessage} - Downloaded ${progressObj.percent}%`;
+  logMessage = `${logMessage} (${progressObj.transferred}/${progressObj.total})`;
+  console.debug(logMessage);
+});
+autoUpdater.on('update-downloaded', (info: any) => {
+  console.debug('Update downloaded', info);
+});
+
 app.whenReady().then(() => {
   // DevTools
   installExtension(REACT_DEVELOPER_TOOLS)
@@ -88,6 +115,7 @@ app.whenReady().then(() => {
 
     ipcMain.on(IpcChannelTypes.appInitialized, () => {
       if (!isAlreadyHandled) {
+        autoUpdater.checkForUpdatesAndNotify();
         isAlreadyHandled = true;
 
         win.webContents.send(IpcChannelTypes.appDetails, {
