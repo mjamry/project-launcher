@@ -14,6 +14,9 @@ enum IpcChannelTypes {
   appMaximize = 'appMaximize',
   appUnMaximize = 'appUnMaximize',
   appRestart = 'appRestart',
+  autoUpdateNewVersion = 'autoUpdateNewVersion',
+  autoUpdateDownloaded = 'autoUpdateDownloaded',
+  autoUpdateInstall = 'autoUpdateInstall',
 }
 
 export default IpcChannelTypes;
