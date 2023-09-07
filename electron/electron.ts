@@ -115,7 +115,8 @@ app.whenReady().then(() => {
 
     ipcMain.on(IpcChannelTypes.appInitialized, () => {
       if (!isAlreadyHandled) {
-        autoUpdater.checkForUpdatesAndNotify();
+        console.log('check for updates');
+        autoUpdater.checkForUpdates();
         isAlreadyHandled = true;
 
         win.webContents.send(IpcChannelTypes.appDetails, {
