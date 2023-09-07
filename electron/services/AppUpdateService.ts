@@ -15,13 +15,25 @@ const useAppUpdater = (): IAppUpdater => {
   const init = (win: BrowserWindow) => {
     log.transports.file.level = 'debug';
     autoUpdater.logger = log;
+    log.debug('win', win);
 
     autoUpdater.on('update-available', (info: any) => {
-      log.debug('Update available', info);
+      log.debug('test1');
+      log.debug('Update available', {
+        version: info.version,
+        tag: info.tag,
+        releaseDate: info.releaseDate,
+        path: info.path,
+        sha512: info.sha512,
+      });
+      log.debug('test2');
+      log.debug('win', win);
       win.webContents.send(IpcChannelTypes.autoUpdateNewVersion, {
         version: info.version,
         releaseDate: info.releaseDate,
       });
+      log.debug('test3');
+      log.debug('finish');
     });
 
     autoUpdater.on('error', (err: any) => {
@@ -29,7 +41,24 @@ const useAppUpdater = (): IAppUpdater => {
     });
 
     autoUpdater.on('update-downloaded', (info: any) => {
-      log.debug('Update downloaded', info);
+      log.debug('test1');
+      log.debug('Update available', {
+        version: info.version,
+        tag: info.tag,
+        releaseDate: info.releaseDate,
+        path: info.path,
+        sha512: info.sha512,
+      });
+      log.debug('test2');
+      log.debug('win', win);
+      log.debug('Update downloaded', {
+        version: info.version,
+        tag: info.tag,
+        releaseDate: info.releaseDate,
+        path: info.path,
+        sha512: info.sha512,
+        downloadedFile: info.downloadedFile,
+      });
       win.webContents.send(IpcChannelTypes.autoUpdateDownloaded, {
         version: info.version,
         releaseDate: info.releaseDate,
@@ -37,9 +66,8 @@ const useAppUpdater = (): IAppUpdater => {
     });
   };
 
-  const checkForUpdate = async () => {
-    const result = await autoUpdater.checkForUpdates();
-    log.debug('Check for updates', result);
+  const checkForUpdate = () => {
+    autoUpdater.checkForUpdates();
   };
 
   const install = () => {
