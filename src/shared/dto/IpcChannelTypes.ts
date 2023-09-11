@@ -19,8 +19,7 @@ enum AppRuntime {
   error = 'error',
   appMinimize = 'appMinimize',
   appClose = 'appClose',
-  appMaximize = 'appMaximize',
-  appUnMaximize = 'appUnMaximize',
+  appToggleMaximize = 'appMaximize',
   appRestart = 'appRestart',
 
 }

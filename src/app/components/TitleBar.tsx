@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Typography, styled } from '@mui/material';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CloseIcon from '@mui/icons-material/Close';
@@ -63,17 +63,6 @@ const Button = styled('div')(({ theme }) => ({
 }));
 
 function TitleBar() {
-  const [isMax, setIsMax] = useState(false);
-
-  const handleMaximize = () => {
-    if (isMax) {
-      ipcRenderer.send(IpcChannelTypes.appUnMaximize);
-    } else {
-      ipcRenderer.send(IpcChannelTypes.appMaximize);
-    }
-    setIsMax(!isMax);
-  };
-
   return (
     <Root>
       <Title>
@@ -94,7 +83,7 @@ function TitleBar() {
         <Button>
           <CropSquareIcon
             fontSize="small"
-            onClick={handleMaximize}
+            onClick={() => { ipcRenderer.send(IpcChannelTypes.appToggleMaximize); }}
           />
         </Button>
         <Button>
