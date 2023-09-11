@@ -21,8 +21,8 @@ log.info('');
 log.info('============= START');
 function createWindow() {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 600,
+    height: 400,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -154,6 +154,12 @@ app.whenReady().then(() => {
   });
 
   ipcMain.on(IpcChannelTypes.appMaximize, () => {
+    win.maximize();
+  });
+
+  ipcMain.on(IpcChannelTypes.appInit_done, () => {
+    win.setSize(1200, 800);
+    win.center();
     win.maximize();
   });
 
