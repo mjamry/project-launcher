@@ -30,7 +30,7 @@ function App() {
       <WindowSizeMonitor />
       <IpcCommunicationService />
       <JiraDataProvider />
-      {appState !== AppState.ready
+      {appState !== AppState.initDone
         ? <AppLoadingPage />
         : (
           <>
