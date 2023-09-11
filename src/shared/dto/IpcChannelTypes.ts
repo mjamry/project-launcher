@@ -1,22 +1,30 @@
-enum IpcChannelTypes {
-  appSettingsLoaded = 'appSettingsLoaded',
-  appDetails = 'appDetails',
-  projectsConfigsLoaded = 'projectsConfigsLoaded',
-  projectsFileNameLoaded = 'projectsFileNameLoaded',
+enum AppInit {
+  appInit_settingsLoaded = 'appInit_SettingsLoaded',
+  appInit_projectsConfigsLoaded = 'appInit_projectsConfigsLoaded',
+  appInit_projectsFileNameLoaded = 'appInit_projectsFileNameLoaded',
+  appInit_ready = 'appInit_ready',
+  appInit_done = 'appInit_done',
+  appInit_appDetails = 'appInit_appDetails',
+}
+
+enum AppUpdate {
+  appUpdate_newVersion = 'appUpdate_newVersion',
+  appUpdate_readyToInstall = 'appUpdate_readyToInstall',
+  appUpdate_install = 'appUpdate_install',
+}
+
+enum AppRuntime {
   saveConfigFile = 'saveConfigFile',
   createConfigFile = 'createConfigFile',
-  appInitialized = 'appInitialized',
   error = 'error',
-  jiraUpdate = 'jiraUpdate',
-  jiraHistory = 'jiraHistory',
   appMinimize = 'appMinimize',
   appClose = 'appClose',
   appMaximize = 'appMaximize',
   appUnMaximize = 'appUnMaximize',
   appRestart = 'appRestart',
-  autoUpdateNewVersion = 'autoUpdateNewVersion',
-  autoUpdateDownloaded = 'autoUpdateDownloaded',
-  autoUpdateInstall = 'autoUpdateInstall',
+
 }
+
+const IpcChannelTypes = { ...AppInit, ...AppUpdate, ...AppRuntime };
 
 export default IpcChannelTypes;

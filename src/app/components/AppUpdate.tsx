@@ -12,16 +12,16 @@ function AppUpdate() {
   const logger = useLoggerService('appUpdate');
 
   useEffect(() => {
-    ipcRenderer.on(IpcChannelTypes.autoUpdateNewVersion, (event: any, data: AppUpdateDetails) => {
+    ipcRenderer.on(IpcChannelTypes.appUpdate_newVersion, (event: any, data: AppUpdateDetails) => {
       logger.info(`New version available: ${data.version}, date: ${data.releaseDate}`);
     });
 
-    ipcRenderer.on(IpcChannelTypes.autoUpdateDownloaded, (event: any, data: AppUpdateDetails) => {
+    ipcRenderer.on(IpcChannelTypes.appUpdate_readyToInstall, (event: any, data: AppUpdateDetails) => {
       logger.info(`New version ready to install: ${data.version}, date: ${data.releaseDate}`);
       snackbar.showInfoWithAction(`New app version is available: ${data.version}.\nIt will be installed after closing the app.\nDo you want to restart the app to apply changes ?`, (key) => (
         <RestartAppButtons
           snackbarKey={key}
-          onClick={() => { ipcRenderer.send(IpcChannelTypes.autoUpdateInstall); }}
+          onClick={() => { ipcRenderer.send(IpcChannelTypes.appUpdate_install); }}
         />
       ));
     });

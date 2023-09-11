@@ -69,7 +69,7 @@ function AppLoadingPage() {
       logger.debug('Init state');
       setAppLoadingState(AppState.loadingConfigs);
       if (canSendRequest) {
-        ipcRenderer.send(IpcChannelTypes.appInitialized);
+        ipcRenderer.send(IpcChannelTypes.appInit_ready);
         setCanSendRequest(false);
       }
       logger.debug('Reading configuration');

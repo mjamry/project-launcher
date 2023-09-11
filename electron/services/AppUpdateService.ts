@@ -24,7 +24,7 @@ const useAppUpdater = (): IAppUpdater => {
         path: info.path,
         sha512: info.sha512,
       });
-      win.webContents.send(IpcChannelTypes.autoUpdateNewVersion, {
+      win.webContents.send(IpcChannelTypes.appUpdate_newVersion, {
         version: info.version,
         releaseDate: info.releaseDate,
       });
@@ -43,7 +43,7 @@ const useAppUpdater = (): IAppUpdater => {
         sha512: info.sha512,
         downloadedFile: info.downloadedFile,
       });
-      win.webContents.send(IpcChannelTypes.autoUpdateDownloaded, {
+      win.webContents.send(IpcChannelTypes.appUpdate_readyToInstall, {
         version: info.version,
         releaseDate: info.releaseDate,
       });

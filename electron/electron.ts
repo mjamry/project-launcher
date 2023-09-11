@@ -91,13 +91,13 @@ app.whenReady().then(() => {
     // so to avoid double file load and history fetch a simple flag was used
     let isAlreadyHandled = false;
 
-    ipcMain.on(IpcChannelTypes.appInitialized, () => {
+    ipcMain.on(IpcChannelTypes.appInit_ready, () => {
       if (!isAlreadyHandled) {
         isAlreadyHandled = true;
 
         updater.checkForUpdate();
 
-        win.webContents.send(IpcChannelTypes.appDetails, {
+        win.webContents.send(IpcChannelTypes.appInit_appDetails, {
           version: packageJSON.version,
           name: packageJSON.appName,
           copyright: packageJSON.copyright,
@@ -115,7 +115,7 @@ app.whenReady().then(() => {
               win.webContents.openDevTools({ mode: 'detach' });
             }
             log.debug('App settings loaded', appSettings);
-            win.webContents.send(IpcChannelTypes.appSettingsLoaded, appSettings);
+            win.webContents.send(IpcChannelTypes.appInit_settingsLoaded, appSettings);
           })
           .then(() => {
             log.debug('Loading projects configs...');
@@ -127,12 +127,12 @@ app.whenReady().then(() => {
                 log.debug(`Loaded ${projectsConfig.length} projects`);
 
                 win.webContents.send(
-                  IpcChannelTypes.projectsConfigsLoaded,
+                  IpcChannelTypes.appInit_projectsConfigsLoaded,
                   projectsConfig.map((p) => p.config),
                 );
 
                 win.webContents.send(
-                  IpcChannelTypes.projectsFileNameLoaded,
+                  IpcChannelTypes.appInit_projectsFileNameLoaded,
                   projectsConfig.map((p) => p.fileName),
                 );
               });
@@ -166,7 +166,7 @@ app.whenReady().then(() => {
     app.exit();
   });
 
-  ipcMain.on(IpcChannelTypes.autoUpdateInstall, () => {
+  ipcMain.on(IpcChannelTypes.appUpdate_install, () => {
     updater.install();
   });
 });
