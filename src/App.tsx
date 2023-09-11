@@ -14,6 +14,7 @@ import appLoadingState from './app/state/AppLoadingState';
 import { appSettingsState } from './app/state/AppSettingsState';
 import AppState from './shared/dto/AppState';
 import WindowSizeMonitor from './app/root/WindowSizeMonitor';
+import AppUpdate from './app/components/AppUpdate';
 
 const AppContainer = styled('div')(({ theme }) => ({
   textAlign: 'center',
@@ -45,6 +46,7 @@ function App() {
                   }}
                 >
                   <AppContainer>
+                    <AppUpdate />
                     <AppContent />
                   </AppContainer>
                 </SnackbarProvider>

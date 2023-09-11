@@ -1,5 +1,6 @@
 enum IpcChannelTypes {
   appSettingsLoaded = 'appSettingsLoaded',
+  appDetails = 'appDetails',
   projectsConfigsLoaded = 'projectsConfigsLoaded',
   projectsFileNameLoaded = 'projectsFileNameLoaded',
   saveConfigFile = 'saveConfigFile',
@@ -13,6 +14,9 @@ enum IpcChannelTypes {
   appMaximize = 'appMaximize',
   appUnMaximize = 'appUnMaximize',
   appRestart = 'appRestart',
+  autoUpdateNewVersion = 'autoUpdateNewVersion',
+  autoUpdateDownloaded = 'autoUpdateDownloaded',
+  autoUpdateInstall = 'autoUpdateInstall',
 }
 
 export default IpcChannelTypes;

@@ -9,6 +9,8 @@ import { appSettingsState, appThemeState } from '../state/AppSettingsState';
 import { JiraUpdate } from '../../shared/dto/JiraTypes';
 import { jiraUpdatesState, jiraHistoryState } from '../state/JiraState';
 import { projectsConfigFileNameState, projectsState } from '../state/ProjectState';
+import appDetailsState from '../state/AppDetailsState';
+import { AppDetails } from '../../shared/dto/AppDetails';
 
 function IpcCommunicationService() {
   const setProjects = useSetRecoilState(projectsState);
@@ -17,6 +19,7 @@ function IpcCommunicationService() {
   const setJiraUpdates = useSetRecoilState(jiraUpdatesState);
   const setJiraHistory = useSetRecoilState(jiraHistoryState);
   const setAppTheme = useSetRecoilState(appThemeState);
+  const setAppDetails = useSetRecoilState(appDetailsState);
 
   useEffect(() => {
     ipcRenderer.on(IpcChannelTypes.appSettingsLoaded, (event: any, data: AppSettings) => {
@@ -42,6 +45,10 @@ function IpcCommunicationService() {
     ipcRenderer.on(IpcChannelTypes.jiraHistory, (event: any, data: JiraUpdate[]) => {
       setJiraHistory(data);
     });
+
+    ipcRenderer.on(IpcChannelTypes.appDetails, (event: any, data: AppDetails) => {
+      setAppDetails(data);
+    });
   }, [
     setProjects,
     setAppSettings,
@@ -49,6 +56,7 @@ function IpcCommunicationService() {
     setJiraHistory,
     setProjectsFileName,
     setAppTheme,
+    setAppDetails,
   ]);
 
   return (
