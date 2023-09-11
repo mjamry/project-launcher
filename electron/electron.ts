@@ -153,18 +153,18 @@ app.whenReady().then(() => {
     win.close();
   });
 
-  ipcMain.on(IpcChannelTypes.appMaximize, () => {
-    win.maximize();
+  ipcMain.on(IpcChannelTypes.appToggleMaximize, () => {
+    if (win.isMaximized()) {
+      win.unmaximize();
+    } else {
+      win.maximize();
+    }
   });
 
   ipcMain.on(IpcChannelTypes.appInit_done, () => {
     win.setSize(1200, 800);
     win.center();
     win.maximize();
-  });
-
-  ipcMain.on(IpcChannelTypes.appUnMaximize, () => {
-    win.unmaximize();
   });
 
   ipcMain.on(IpcChannelTypes.appRestart, () => {
