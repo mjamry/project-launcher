@@ -3,7 +3,9 @@ import {
 } from '@mui/material';
 import React from 'react';
 import InfoIcon from '@mui/icons-material/Info';
+import { useRecoilValue } from 'recoil';
 import { useLinkLaunchService } from '../services/IpcLaunchServices';
+import appDetailsState from '../state/AppDetailsState';
 
 const Root = styled('div')({
   display: 'flex',
@@ -56,6 +58,7 @@ export const AboutCardHeader = styled(CardHeader)({
 });
 
 function AboutPage() {
+  const appDetails = useRecoilValue(appDetailsState);
   const scriptLauncher = useLinkLaunchService();
 
   return (
@@ -66,16 +69,15 @@ function AboutPage() {
           title="About"
         />
         <Details>
-          <DetailsItemTitle>{process.env.REACT_APP_NAME}</DetailsItemTitle>
+          <DetailsItemTitle>{appDetails.name}</DetailsItemTitle>
           <DetailsItem>
             version
             {' '}
-            {process.env.REACT_APP_VERSION}
+            {appDetails.version}
           </DetailsItem>
           <DetailsItem>
-            Copyrights 2023
             {' '}
-            {process.env.REACT_APP_AUTHOR}
+            {appDetails.copyright}
           </DetailsItem>
           <DetailsItemLink
             onClick={() => scriptLauncher.launch('https://github.com/mjamry/project-launcher/')}

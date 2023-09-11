@@ -1,5 +1,7 @@
-/* eslint-disable react/react-in-jsx-scope */
+import React from 'react';
 import { useRecoilState } from 'recoil';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { ipcRenderer } from 'electron';
 import { SettingsFileName } from '../../shared/dto/AppSettings';
 import IpcChannelTypes from '../../shared/dto/IpcChannelTypes';
 import { projectsConfigFileNameState } from '../state/ProjectState';
@@ -8,8 +10,6 @@ import { ProjectFileName } from '../../shared/dto/ProjectDto';
 import useSnackbarService from './SnackbarService';
 import IpcResponseTypes from '../../shared/dto/IpcResponseTypes';
 import RestartAppButtons from '../components/Snackbar/RestartAppButtons';
-
-const { ipcRenderer } = window.require('electron');
 
 type ISettingsFileWriterService = {
   writeAppSettingsFile: (fileContent: string) => void;
@@ -28,7 +28,12 @@ const useSettingsFileWriterService = (): ISettingsFileWriterService => {
       case IpcResponseTypes.noError:
         message = `File "${fileName}" write success.\nDo you want to restart the app to apply changes ?`;
         logger.info(message);
-        snackbar.showInfoWithAction(message, (key) => <RestartAppButtons snackbarKey={key} />);
+        snackbar.showInfoWithAction(message, (key) => (
+          <RestartAppButtons
+            snackbarKey={key}
+            onClick={() => { ipcRenderer.send(IpcChannelTypes.appRestart); }}
+          />
+        ));
         break;
       case IpcResponseTypes.fileExistsError:
         message = `File "${fileName}" already exists`;

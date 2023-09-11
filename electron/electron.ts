@@ -8,16 +8,21 @@ import {
 } from 'electron';
 import * as path from 'path';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
+import log from 'electron-log';
 import IpcChannelTypes from '../src/shared/dto/IpcChannelTypes';
 import useProjectFileConfigReader from './ConfigReader';
 import useAppSettingsService from './AppSettingsService';
 import useRestRequestsHandler from './RestRequestsHandler';
 import useFileSaveHandler from './file/FileSaveHandler';
+import packageJSON from '../package.json';
+import useAppUpdater from './services/AppUpdateService';
 
+log.info('');
+log.info('============= START');
 function createWindow() {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 600,
+    height: 400,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -55,13 +60,15 @@ app.whenReady().then(() => {
   // DevTools
   installExtension(REACT_DEVELOPER_TOOLS)
     // eslint-disable-next-line no-console
-    .then((name) => console.log(`Added Extension:  ${name}`))
+    .then((name) => log.log(`Added Extension:  ${name}`))
     // eslint-disable-next-line no-console
-    .catch((err) => console.log('An error occurred: ', err));
+    .catch((err) => log.log('An error occurred: ', err));
 
   const win = createWindow();
+  const updater = useAppUpdater();
   const restRequestsHandler = useRestRequestsHandler();
   const fileEditHandler = useFileSaveHandler(app.getPath('userData'));
+  updater.init(win);
   restRequestsHandler.init();
   fileEditHandler.init();
 
@@ -78,18 +85,27 @@ app.whenReady().then(() => {
   });
 
   win.webContents.on('did-finish-load', async () => {
-    console.log('did-finish-load');
+    log.log('did-finish-load');
 
     // this is required because <App /> is rendered twice,
     // so to avoid double file load and history fetch a simple flag was used
     let isAlreadyHandled = false;
 
-    ipcMain.on(IpcChannelTypes.appInitialized, () => {
+    ipcMain.on(IpcChannelTypes.appInit_ready, () => {
       if (!isAlreadyHandled) {
         isAlreadyHandled = true;
-        console.debug('Loading app settings...');
+
+        updater.checkForUpdate();
+
+        win.webContents.send(IpcChannelTypes.appInit_appDetails, {
+          version: packageJSON.version,
+          name: packageJSON.appName,
+          copyright: packageJSON.copyright,
+        });
+
+        log.debug('Loading app settings...');
         const settingsPath = app.getPath('userData');
-        console.log(settingsPath);
+        log.log(settingsPath);
         const appSettingsService = useAppSettingsService(settingsPath);
 
         appSettingsService
@@ -98,25 +114,25 @@ app.whenReady().then(() => {
             if (appSettings.isDevelopment) {
               win.webContents.openDevTools({ mode: 'detach' });
             }
-            console.debug('App settings loaded', appSettings);
-            win.webContents.send(IpcChannelTypes.appSettingsLoaded, appSettings);
+            log.debug('App settings loaded', appSettings);
+            win.webContents.send(IpcChannelTypes.appInit_settingsLoaded, appSettings);
           })
           .then(() => {
-            console.debug('Loading projects configs...');
+            log.debug('Loading projects configs...');
             const configPath = app.getPath('userData');
             const configReader = useProjectFileConfigReader(configPath);
             configReader
               .readAllFiles()
               .then((projectsConfig) => {
-                console.debug(`Loaded ${projectsConfig.length} projects`);
+                log.debug(`Loaded ${projectsConfig.length} projects`);
 
                 win.webContents.send(
-                  IpcChannelTypes.projectsConfigsLoaded,
+                  IpcChannelTypes.appInit_projectsConfigsLoaded,
                   projectsConfig.map((p) => p.config),
                 );
 
                 win.webContents.send(
-                  IpcChannelTypes.projectsFileNameLoaded,
+                  IpcChannelTypes.appInit_projectsFileNameLoaded,
                   projectsConfig.map((p) => p.fileName),
                 );
               });
@@ -137,16 +153,26 @@ app.whenReady().then(() => {
     win.close();
   });
 
-  ipcMain.on(IpcChannelTypes.appMaximize, () => {
-    win.maximize();
+  ipcMain.on(IpcChannelTypes.appToggleMaximize, () => {
+    if (win.isMaximized()) {
+      win.unmaximize();
+    } else {
+      win.maximize();
+    }
   });
 
-  ipcMain.on(IpcChannelTypes.appUnMaximize, () => {
-    win.unmaximize();
+  ipcMain.on(IpcChannelTypes.appInit_done, () => {
+    win.setSize(1200, 800);
+    win.center();
+    win.maximize();
   });
 
   ipcMain.on(IpcChannelTypes.appRestart, () => {
     app.relaunch();
     app.exit();
+  });
+
+  ipcMain.on(IpcChannelTypes.appUpdate_install, () => {
+    updater.install();
   });
 });
