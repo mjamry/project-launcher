@@ -11,8 +11,6 @@ import { jiraUpdatesState, jiraHistoryState } from '../state/JiraState';
 import { projectsConfigFileNameState, projectsState } from '../state/ProjectState';
 import appDetailsState from '../state/AppDetailsState';
 import { AppDetails } from '../../shared/dto/AppDetails';
-import useAppUpdateService from './AppUpdateService';
-import { AppUpdateDetails } from '../../shared/AppUpdateDetails';
 
 function IpcCommunicationService() {
   const setProjects = useSetRecoilState(projectsState);
@@ -22,7 +20,6 @@ function IpcCommunicationService() {
   const setJiraHistory = useSetRecoilState(jiraHistoryState);
   const setAppTheme = useSetRecoilState(appThemeState);
   const setAppDetails = useSetRecoilState(appDetailsState);
-  const appUpdater = useAppUpdateService();
 
   useEffect(() => {
     ipcRenderer.on(IpcChannelTypes.appSettingsLoaded, (event: any, data: AppSettings) => {
@@ -52,18 +49,6 @@ function IpcCommunicationService() {
     ipcRenderer.on(IpcChannelTypes.appDetails, (event: any, data: AppDetails) => {
       setAppDetails(data);
     });
-
-    ipcRenderer.on(IpcChannelTypes.autoUpdateNewVersion, (event: any, data: AppUpdateDetails) => {
-      // eslint-disable-next-line no-console
-      console.log(`update: ${data.version}`);
-      appUpdater.updateAvailable(data);
-    });
-
-    ipcRenderer.on(IpcChannelTypes.autoUpdateDownloaded, (event: any, data: AppUpdateDetails) => {
-      // eslint-disable-next-line no-console
-      console.log(`update: ${data.version}`);
-      appUpdater.updateDownloaded(data);
-    });
   }, [
     setProjects,
     setAppSettings,
@@ -72,7 +57,6 @@ function IpcCommunicationService() {
     setProjectsFileName,
     setAppTheme,
     setAppDetails,
-    appUpdater,
   ]);
 
   return (

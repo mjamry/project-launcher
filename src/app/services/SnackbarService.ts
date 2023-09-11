@@ -22,6 +22,7 @@ function useSnackbarService(): ISnackbarService {
 
   const showInfoWithAction = (msg: string, action: SnackbarAction) => {
     enqueueSnackbar(msg, {
+      persist: true,
       variant: 'success',
       style: { whiteSpace: 'pre-line' },
       action,
