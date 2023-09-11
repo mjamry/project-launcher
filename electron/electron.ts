@@ -125,15 +125,7 @@ app.whenReady().then(() => {
               .readAllFiles()
               .then((projectsConfig) => {
                 log.debug(`Loaded ${projectsConfig.length} projects`);
-                win.webContents.send(IpcChannelTypes.autoUpdateDownloaded, {
-                  version: 'v2',
-                  releaseDate: '2023-08-16',
-                });
 
-                win.webContents.send(IpcChannelTypes.autoUpdateNewVersion, {
-                  version: 'v3',
-                  releaseDate: '2023-08-16',
-                });
                 win.webContents.send(
                   IpcChannelTypes.projectsConfigsLoaded,
                   projectsConfig.map((p) => p.config),

@@ -15,10 +15,8 @@ const useAppUpdater = (): IAppUpdater => {
   const init = (win: BrowserWindow) => {
     log.transports.file.level = 'debug';
     autoUpdater.logger = log;
-    log.debug('win', win);
 
     autoUpdater.on('update-available', (info: any) => {
-      log.debug('test1');
       log.debug('Update available', {
         version: info.version,
         tag: info.tag,
@@ -26,14 +24,10 @@ const useAppUpdater = (): IAppUpdater => {
         path: info.path,
         sha512: info.sha512,
       });
-      log.debug('test2');
-      log.debug('win', win);
       win.webContents.send(IpcChannelTypes.autoUpdateNewVersion, {
         version: info.version,
         releaseDate: info.releaseDate,
       });
-      log.debug('test3');
-      log.debug('finish');
     });
 
     autoUpdater.on('error', (err: any) => {
@@ -41,16 +35,6 @@ const useAppUpdater = (): IAppUpdater => {
     });
 
     autoUpdater.on('update-downloaded', (info: any) => {
-      log.debug('test1');
-      log.debug('Update available', {
-        version: info.version,
-        tag: info.tag,
-        releaseDate: info.releaseDate,
-        path: info.path,
-        sha512: info.sha512,
-      });
-      log.debug('test2');
-      log.debug('win', win);
       log.debug('Update downloaded', {
         version: info.version,
         tag: info.tag,
