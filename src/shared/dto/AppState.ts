@@ -2,7 +2,7 @@ enum AppState {
   init,
   loadingConfigs,
   readingHistory,
-  ready,
+  initDone,
 }
 
 export default AppState;

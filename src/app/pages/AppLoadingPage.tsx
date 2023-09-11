@@ -56,7 +56,7 @@ function AppLoadingPage() {
       case AppState.readingHistory:
         setProgress(75);
         break;
-      case AppState.ready:
+      case AppState.initDone:
         setProgress(100);
         break;
       default:
@@ -69,7 +69,7 @@ function AppLoadingPage() {
       logger.debug('Init state');
       setAppLoadingState(AppState.loadingConfigs);
       if (canSendRequest) {
-        ipcRenderer.send(IpcChannelTypes.appInitialized);
+        ipcRenderer.send(IpcChannelTypes.appInit_ready);
         setCanSendRequest(false);
       }
       logger.debug('Reading configuration');
@@ -90,7 +90,8 @@ function AppLoadingPage() {
   useEffect(() => {
     if (appState === AppState.readingHistory) {
       if (jiraHistory !== undefined) {
-        setAppLoadingState(AppState.ready);
+        setAppLoadingState(AppState.initDone);
+        ipcRenderer.send(IpcChannelTypes.appInit_done);
         logger.debug('App fully loaded');
       }
     }

@@ -89,7 +89,7 @@ function JiraDataProvider() {
   }, [appState, getJiraHistory]);
 
   useEffect(() => {
-    if (appState === AppState.ready) {
+    if (appState === AppState.initDone) {
       let interval: any = null;
       if (appSettings !== undefined) {
         interval = setInterval(async () => {
